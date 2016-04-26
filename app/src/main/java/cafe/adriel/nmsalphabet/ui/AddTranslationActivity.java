@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,7 +43,7 @@ public class AddTranslationActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(new IconicsDrawable(this)
                 .icon(MaterialDesignIconic.Icon.gmi_close)
                 .color(Color.WHITE)
-                .sizeDp(20));
+                .sizeDp(16));
         setTitle(R.string.new_translation);
         init();
     }

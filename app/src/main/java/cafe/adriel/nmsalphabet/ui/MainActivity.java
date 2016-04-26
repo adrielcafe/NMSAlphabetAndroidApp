@@ -25,6 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.Util;
 import cafe.adriel.nmsalphabet.ui.view.ViewPagerFadeTransformer;
 
 public class MainActivity extends BaseActivity {
@@ -48,6 +49,16 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         checkPermissions();
         init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(pagerView.getCurrentItem() == 1 || pagerView.getCurrentItem() == 3){
+            fabView.hide();
+        } else {
+            fabView.show();
+        }
     }
 
     @Override
@@ -77,6 +88,7 @@ public class MainActivity extends BaseActivity {
             }
             @Override
             public void onEndTabSelected(NavigationTabBar.Model model, int index) {
+                Util.hideSoftKeyboard(MainActivity.this);
                 if(index == 0 || index == 2){
                     fabView.show();
                 } else {

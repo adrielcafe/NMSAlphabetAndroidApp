@@ -1,8 +1,11 @@
 package cafe.adriel.nmsalphabet.ui;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -14,9 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.ramotion.foldingcell.FoldingCell;
 import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
@@ -48,8 +54,14 @@ public class WordsFragment extends BaseFragment {
     RefreshLayout refreshLayout;
     @Bind(R.id.words)
     RecyclerView wordsView;
-    @Bind(R.id.control_layout)
-    LinearLayout controlLayout;
+    @Bind(R.id.header_home_layout)
+    LinearLayout headerHomeLayout;
+    @Bind(R.id.header_profile)
+    LinearLayout headerProfileLayout;
+    @Bind(R.id.user_image)
+    ImageView userImageView;
+    @Bind(R.id.user_name)
+    TextView userNameView;
     @Bind(R.id.search)
     EditText searchView;
     @Bind(R.id.search_icon)
@@ -98,11 +110,20 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void initControls(){
-        controlLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        headerHomeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (controlLayout != null) {
-                    controlLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (headerHomeLayout != null) {
+                    headerHomeLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                updateList();
+            }
+        });
+        headerProfileLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (headerProfileLayout != null) {
+                    headerProfileLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
                 updateList();
             }
@@ -123,23 +144,20 @@ public class WordsFragment extends BaseFragment {
             }
         });
         if(type == Type.PROFILE){
-            controlLayout.setVisibility(View.GONE);
-            refreshLayout.setBackgroundColor(getResources().getColor(R.color.bg_gray));
-            refreshLayout.post(new Runnable() {
+            headerProfileLayout.setVisibility(View.VISIBLE);
+            headerHomeLayout.setVisibility(View.GONE);
+            Glide.with(getContext()).load(R.drawable.default_user_image).asBitmap().centerCrop()
+                    .into(new BitmapImageViewTarget(userImageView) {
                 @Override
-                public void run() {
-                    refreshLayout.setAniForeColor(getResources().getColor(R.color.bg_gray));
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    userImageView.setImageDrawable(circularBitmapDrawable);
                 }
             });
         } else {
-            controlLayout.setVisibility(View.VISIBLE);
-            refreshLayout.setBackgroundColor(getResources().getColor(R.color.home_controls));
-            refreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.setAniForeColor(getResources().getColor(R.color.home_controls));
-                }
-            });
+            headerHomeLayout.setVisibility(View.VISIBLE);
+            headerProfileLayout.setVisibility(View.GONE);
 
             racesView.setBackgroundResource(R.drawable.home_control);
             racesView.setTextColor(Color.WHITE);
@@ -153,15 +171,6 @@ public class WordsFragment extends BaseFragment {
                 }
             });
 
-            searchView.getViewTreeObserver().addOnGlobalFocusChangeListener(new ViewTreeObserver.OnGlobalFocusChangeListener() {
-                @Override
-                public void onGlobalFocusChanged(View oldFocus, View newFocus) {
-                    if (searchView != null) {
-                        searchView.getViewTreeObserver().removeOnGlobalFocusChangeListener(this);
-                        searchView.clearFocus();
-                    }
-                }
-            });
             searchView.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -233,8 +242,11 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void updateList(){
-        FoldingCell homeHeaderLayout = (FoldingCell) LayoutInflater.from(getContext()).inflate(R.layout.home_header, null);
-        homeHeaderLayout.getChildAt(0).setMinimumHeight(controlLayout.getHeight());
+        FoldingCell listHeaderHomeLayout = (FoldingCell) LayoutInflater.from(getContext()).inflate(R.layout.list_header_home, null);
+        listHeaderHomeLayout.getChildAt(0).setMinimumHeight(headerHomeLayout.getHeight());
+        View listHeaderProfileLayout = LayoutInflater.from(getContext()).inflate(R.layout.list_header_profile, null);
+        listHeaderProfileLayout.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
+
         List<String> l = new ArrayList<>();
         l.add("Sadipscing");
         l.add("Consetetur");
@@ -249,12 +261,12 @@ public class WordsFragment extends BaseFragment {
         switch (type){
             case HOME:
                 Bookends<HomeAdapter> homeAdapter = new Bookends<>(new HomeAdapter(getContext(), l));
-                homeAdapter.addHeader(homeHeaderLayout);
+                homeAdapter.addHeader(listHeaderHomeLayout);
                 wordsView.swapAdapter(homeAdapter, true);
                 break;
             case PROFILE:
                 Bookends<ProfileAdapter> profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), l));
-                profileAdapter.addHeader(LayoutInflater.from(getContext()).inflate(R.layout.profile_header, null));
+                profileAdapter.addHeader(listHeaderProfileLayout);
                 wordsView.swapAdapter(profileAdapter, true);
                 break;
         }

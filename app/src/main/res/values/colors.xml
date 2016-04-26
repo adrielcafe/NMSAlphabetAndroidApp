@@ -7,7 +7,7 @@
 
     <color name="bg_gray">#E0E0E0</color>
     <color name="bg_white">#FAFAFA</color>
-    <color name="home_controls">#EE009688</color>
+    <color name="bg_header">#EE009688</color>
 
     <color name="gray">#BDBDBD</color>
     <color name="gray_light">#EEEEEE</color>
