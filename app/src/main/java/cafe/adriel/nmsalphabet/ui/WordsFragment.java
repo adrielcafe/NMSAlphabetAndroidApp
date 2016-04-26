@@ -32,7 +32,7 @@ import com.tumblr.bookends.Bookends;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
@@ -50,25 +50,25 @@ public class WordsFragment extends BaseFragment {
 
     private Type type;
 
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     RefreshLayout refreshLayout;
-    @Bind(R.id.words)
+    @BindView(R.id.words)
     RecyclerView wordsView;
-    @Bind(R.id.header_home_layout)
+    @BindView(R.id.header_home_layout)
     LinearLayout headerHomeLayout;
-    @Bind(R.id.header_profile)
+    @BindView(R.id.header_profile)
     LinearLayout headerProfileLayout;
-    @Bind(R.id.user_image)
+    @BindView(R.id.user_image)
     ImageView userImageView;
-    @Bind(R.id.user_name)
+    @BindView(R.id.user_name)
     TextView userNameView;
-    @Bind(R.id.search)
+    @BindView(R.id.search)
     EditText searchView;
-    @Bind(R.id.search_icon)
+    @BindView(R.id.search_icon)
     TextView searchIconView;
-    @Bind(R.id.search_clear)
+    @BindView(R.id.search_clear)
     TextView searchClearView;
-    @Bind(R.id.races)
+    @BindView(R.id.races)
     MaterialSpinner racesView;
 
     public static WordsFragment newInstance(Type type) {
@@ -89,7 +89,7 @@ public class WordsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_words, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         init();
         return rootView;
     }

@@ -21,7 +21,7 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
@@ -35,11 +35,11 @@ public class MainActivity extends BaseActivity {
     private WordsFragment profileFrag;
     private SettingsFragment settingsFrag;
 
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     NavigationTabBar tabView;
-    @Bind(R.id.pager)
+    @BindView(R.id.pager)
     ViewPager pagerView;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fabView;
 
     @Override
@@ -54,10 +54,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(pagerView.getCurrentItem() == 1 || pagerView.getCurrentItem() == 3){
-            fabView.hide();
-        } else {
-            fabView.show();
+        if(pagerView != null && fabView != null) {
+            if (pagerView.getCurrentItem() == 1 || pagerView.getCurrentItem() == 3) {
+                fabView.hide();
+            } else {
+                fabView.show();
+            }
         }
     }
 
