@@ -22,37 +22,37 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
 
 public class TranslateFragment extends BaseFragment {
 
 
-    @Bind(R.id.phrase_layout)
+    @BindView(R.id.phrase_layout)
     RelativeLayout phraseLayout;
-    @Bind(R.id.phrase)
+    @BindView(R.id.phrase)
     EditText phraseView;
-    @Bind(R.id.phrase_clear)
+    @BindView(R.id.phrase_clear)
     TextView phraseClearView;
-    @Bind(R.id.races)
+    @BindView(R.id.races)
     MaterialSpinner racesView;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fabView;
-    @Bind(R.id.translation_header)
+    @BindView(R.id.translation_header)
     LinearLayout translationHeaderView;
-    @Bind(R.id.country_flag)
+    @BindView(R.id.country_flag)
     ImageView countryFlagView;
-    @Bind(R.id.translation_separator)
+    @BindView(R.id.translation_separator)
     View translationSeparatorView;
-    @Bind(R.id.translated_phrase)
+    @BindView(R.id.translated_phrase)
     EditText translatedPhraseView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_translate, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         init();
         return rootView;
     }

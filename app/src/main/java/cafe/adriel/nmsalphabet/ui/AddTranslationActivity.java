@@ -14,23 +14,23 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
 
 public class AddTranslationActivity extends BaseActivity {
 
-    @Bind(R.id.races)
+    @BindView(R.id.races)
     MaterialSpinner racesView;
-    @Bind(R.id.alien_word)
+    @BindView(R.id.alien_word)
     EditText alienWordView;
-    @Bind(R.id.english_translation)
+    @BindView(R.id.english_translation)
     EditText englishTranslationView;
-    @Bind(R.id.portuguese_translation)
+    @BindView(R.id.portuguese_translation)
     EditText portugueseTranslationView;
-    @Bind(R.id.german_translation)
+    @BindView(R.id.german_translation)
     EditText germanTranslationView;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fabView;
 
     @Override
