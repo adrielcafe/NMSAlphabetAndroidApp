@@ -61,22 +61,6 @@ public class MainActivity extends BaseActivity {
 
     private void initTabs(){
         int tabColor = getResources().getColor(R.color.colorPrimaryDark);
-        Drawable icon1 = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_home)
-                .color(Color.WHITE)
-                .sizeDp(50);
-        Drawable icon2 = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_comments)
-                .color(Color.WHITE)
-                .sizeDp(50);
-        Drawable icon3 = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_account)
-                .color(Color.WHITE)
-                .sizeDp(50);
-        Drawable icon4 = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_tune)
-                .color(Color.WHITE)
-                .sizeDp(50);
         ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_home), tabColor, getString(R.string.home)));
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_translation), tabColor, getString(R.string.translate)));
