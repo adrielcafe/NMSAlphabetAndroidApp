@@ -2,7 +2,6 @@ package cafe.adriel.nmsalphabet.ui;
 
 import android.support.v4.app.Fragment;
 
-import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public abstract class BaseFragment extends Fragment {
