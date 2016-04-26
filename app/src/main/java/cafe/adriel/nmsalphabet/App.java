@@ -2,12 +2,8 @@ package cafe.adriel.nmsalphabet;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.SaveCallback;
 
 public class App extends Application {
 

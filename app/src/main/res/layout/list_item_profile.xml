@@ -47,6 +47,7 @@
                 android:layout_marginBottom="0dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/my_translations"
+                android:textAllCaps="false"
                 style="@style/AlienWordTranslationTextView"/>
 
             <View

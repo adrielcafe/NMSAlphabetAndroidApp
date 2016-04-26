@@ -10,7 +10,7 @@
     <string name="select_alien_race">Select an Alien Race</string>
     <string name="signout">Sign Out</string>
     <string name="signin">Sign In</string>
-    <string name="signin_google">Sign In with Google</string>
+    <string name="signin_facebook">Sign In with Facebook</string>
     <string name="signin_to_add_translations">Sign in to add translations</string>
     <string name="not_now">Not Now</string>
     <string name="new_translation">New Translation</string>
@@ -35,7 +35,7 @@
     <string name="german">German</string>
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
-    <string name="feedback_summary">Send me a email</string>
+    <string name="feedback_summary">Send suggestions or ask questions</string>
     <string name="share">Share</string>
     <string name="share_summary">Share this app with your friends</string>
     <string name="share_msg">Hey explorer, take a look at NMS Alphabet: an app for translate alien words of No Man\'s Sky!</string>

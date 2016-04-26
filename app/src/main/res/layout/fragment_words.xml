@@ -5,9 +5,9 @@
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/home_controls"
+    android:background="@color/bg_header"
     app:AniBackColor="@color/colorPrimaryDark"
-    app:AniForeColor="@color/home_controls"
+    app:AniForeColor="@color/bg_header"
     app:CircleSmaller="6">
 
     <FrameLayout
@@ -24,7 +24,9 @@
             android:scrollbars="none"
             android:background="@color/bg_gray"/>
 
-        <include layout="@layout/home_controls"/>
+        <include layout="@layout/header_home"/>
+
+        <include layout="@layout/header_profile"/>
 
     </FrameLayout>
 

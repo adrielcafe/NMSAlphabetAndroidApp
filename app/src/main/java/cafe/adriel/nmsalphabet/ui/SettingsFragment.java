@@ -36,7 +36,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if(rootView != null) {
             View settingsView = rootView.findViewById(android.R.id.list);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) settingsView.getLayoutParams();
-            params.setMargins(40, 40, 40, 40);
+            params.setMargins(60, 60, 60, 60);
             settingsView.setLayoutParams(params);
             settingsView.setBackgroundColor(getResources().getColor(R.color.bg_white));
             settingsView.setElevation(4);

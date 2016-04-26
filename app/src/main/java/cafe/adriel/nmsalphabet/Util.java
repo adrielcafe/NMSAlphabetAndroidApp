@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.telephony.TelephonyManager;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.Locale;
 
@@ -71,6 +72,13 @@ public class Util {
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.finish();
         activity.startActivity(i);
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        if(activity.getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     public static String getAppVersionName(Context context) {
