@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/account">
+
+        <Preference
+            android:key="account_status"
+            android:selectable="true" />
+
+        <ListPreference
+            android:key="account_language"
+            android:title="@string/language"
+            android:dialogTitle="@string/language"
+            android:entries="@array/language_entries"
+            android:entryValues="@array/language_values"
+            android:defaultValue="@string/english"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/about">
+
+        <Preference
+            android:key="about_feedback"
+            android:title="@string/feedback"
+            android:summary="@string/feedback_summary" />
+
+        <Preference
+            android:key="about_share"
+            android:title="@string/share"
+            android:summary="@string/share_summary" />
+
+        <Preference
+            android:key="about_rate"
+            android:title="@string/rate"
+            android:summary="@string/rate_summary" />
+
+        <Preference
+            android:key="about_version"
+            android:title="@string/version"
+            android:selectable="false"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

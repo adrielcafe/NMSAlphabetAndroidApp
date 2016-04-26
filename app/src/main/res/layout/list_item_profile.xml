@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ramotion.foldingcell.FoldingCell
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_white"
+        android:elevation="4dp"
+        android:visibility="gone">
+
+        <in.raveesh.customtype.TextView
+            android:id="@+id/alien_word"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:background="@color/colorAccent"
+            app:typeface="fonts/Geomanist-Regular.otf"
+            style="@style/AlienWordTextView"/>
+
+        <TextView
+            android:id="@+id/tag"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="85dp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:background="@drawable/word_tag"
+            style="@style/AlienRaceTextView"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:minHeight="200dp"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginBottom="0dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/my_translations"
+                style="@style/AlienWordTranslationTextView"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center"
+                android:background="@color/gray_light"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/flag_uk"/>
+
+                <in.raveesh.customtype.TextView
+                    android:id="@+id/english_translation"
+                    app:typeface="fonts/Geomanist-Regular.otf"
+                    android:text="Lorem"
+                    style="@style/AlienWordUserTranslationTextView"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/flag_brazil"/>
+
+                <in.raveesh.customtype.TextView
+                    android:id="@+id/portuguese_translation"
+                    app:typeface="fonts/Geomanist-Regular.otf"
+                    android:text="Ipsum"
+                    style="@style/AlienWordUserTranslationTextView"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/flag_germany"/>
+
+                <in.raveesh.customtype.TextView
+                    android:id="@+id/german_translation"
+                    app:typeface="fonts/Geomanist-Regular.otf"
+                    android:text="Dolor"
+                    style="@style/AlienWordUserTranslationTextView"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="center"
+                android:background="@color/gray_light"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/delete_translation"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/delete_translation_with_icon"
+                    style="@style/AlienWordControlTextView"/>
+
+                <TextView
+                    android:id="@+id/edit_translation"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/edit_translation_with_icon"
+                    style="@style/AlienWordControlTextView"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_white"
+        android:elevation="2dp">
+
+        <TextView
+            android:id="@+id/tag_title"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/word_tag_title"
+            style="@style/AlienRaceTextView"/>
+
+        <in.raveesh.customtype.TextView
+            android:id="@+id/alien_word_title"
+            android:textColor="@android:color/black"
+            app:typeface="fonts/Geomanist-Regular.otf"
+            style="@style/AlienWordTextView"/>
+
+    </RelativeLayout>
+
+</com.ramotion.foldingcell.FoldingCell>

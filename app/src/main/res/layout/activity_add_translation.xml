@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?actionBarSize"
+    android:paddingBottom="?actionBarSize"
+    android:background="@color/colorPrimary">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/races"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/home_control"/>
+
+            <EditText
+                android:id="@+id/alien_word"
+                android:hint="@string/alien_word"
+                android:drawableStart="@drawable/alien_face"
+                style="@style/AddTranslationTextView"/>
+
+            <EditText
+                android:id="@+id/english_translation"
+                android:hint="@string/english_translation"
+                android:drawableLeft="@drawable/flag_uk"
+                style="@style/AddTranslationTextView"/>
+
+            <EditText
+                android:id="@+id/portuguese_translation"
+                android:hint="@string/portuguese_translation"
+                android:drawableLeft="@drawable/flag_brazil"
+                style="@style/AddTranslationTextView"/>
+
+            <EditText
+                android:id="@+id/german_translation"
+                android:hint="@string/german_translation"
+                android:drawableLeft="@drawable/flag_germany"
+                style="@style/AddTranslationTextView"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"/>
+
+</FrameLayout>

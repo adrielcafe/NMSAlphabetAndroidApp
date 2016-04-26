@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="connect_internet">Conecte-se a Internet</string>
+    <string name="home">Início</string>
+    <string name="translate">Traduzir</string>
+    <string name="profile">Perfil</string>
+    <string name="settings">Preferências</string>
+    <string name="search_word">Procurar Palavra</string>
+    <string name="all_alien_races">Todas as Raças Alienígenas</string>
+    <string name="possible_translations">Possíveis Traduções</string>
+    <string name="new_translation_with_icon">{gmi-plus-circle} Nova Tradução</string>
+    <string name="report_translation_with_icon">{gmi-flag} Reportar</string>
+    <string name="not_now">Agora Não</string>
+    <string name="signin_google">Entrar com Google</string>
+    <string name="new_translation">Nova Tradução</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Salvar</string>
+    <string name="alien_word">Palavra Alienígena</string>
+    <string name="english_translation">Tradução em Inglês</string>
+    <string name="german_translation">Tradução em Alemão</string>
+    <string name="portuguese_translation">Tradução em Português</string>
+    <string name="select_alien_race">Selecione a Raça Alienígena</string>
+    <string name="my_translations">Minhas Traduções</string>
+    <string name="delete_translation_with_icon">{gmi-delete} Excluir</string>
+    <string name="edit_translation_with_icon">{gmi-edit} Editar</string>
+    <string name="about">Sobre</string>
+    <string name="account">Conta</string>
+    <string name="english">Inglês</string>
+    <string name="feedback">Contato</string>
+    <string name="feedback_summary">Envie-me um email</string>
+    <string name="german">Alemão</string>
+    <string name="language">Idioma</string>
+    <string name="portuguese">Português</string>
+    <string name="rate">Avaliar</string>
+    <string name="rate_summary">Gostou do app? Dê 5 estrelas no Google Play!</string>
+    <string name="share">Compartilhar</string>
+    <string name="share_summary">Compartilhe este app com seus amigos</string>
+    <string name="version">Versão</string>
+    <string name="share_msg">Ei explorador, dá uma olhada em NMS Alphabet: um app para traduzir palavras alienígenas de No Man\'s Sky!</string>
+    <string name="connected_as">Conectado como</string>
+    <string name="signin">Entrar</string>
+    <string name="signout">Sair</string>
+    <string name="signin_to_add_translations">Entre para adicionar traduções</string>
+    <string name="my_contributions">Minhas Contribuições</string>
+    <string name="type_alien_phrase">Digite uma frase alienígena</string>
+    <string name="possible_translation">Possível Tradução</string>
+
+</resources>

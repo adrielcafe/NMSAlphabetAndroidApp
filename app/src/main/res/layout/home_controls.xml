@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/control_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:orientation="vertical"
+    android:background="@color/home_controls"
+    android:elevation="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:background="@drawable/home_control">
+
+        <TextView
+            android:id="@+id/search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="10dp"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@android:color/white"
+            android:text="{gmi-search}"/>
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/search_icon"
+            android:layout_toStartOf="@+id/search_clear"
+            android:singleLine="true"
+            android:hint="@string/search_word"
+            android:textColorHint="@color/gray"
+            android:textColor="@android:color/white"
+            android:background="@android:color/transparent"
+            android:inputType="textCapCharacters|textCapWords|textCapSentences|textNoSuggestions"
+            android:imeOptions="actionSearch"/>
+
+        <TextView
+            android:id="@+id/search_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@android:color/white"
+            android:text="{gmi-close}"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/races"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/home_control"/>
+
+</LinearLayout>

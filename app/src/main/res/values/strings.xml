@@ -1,0 +1,60 @@
+<resources>
+
+    <string name="connect_internet">Connect to the Internet</string>
+    <string name="home">Home</string>
+    <string name="translate">Translate</string>
+    <string name="profile">Profile</string>
+    <string name="settings">Settings</string>
+    <string name="search_word">Search Word</string>
+    <string name="all_alien_races">All Alien Races</string>
+    <string name="select_alien_race">Select an Alien Race</string>
+    <string name="signout">Sign Out</string>
+    <string name="signin">Sign In</string>
+    <string name="signin_google">Sign In with Google</string>
+    <string name="signin_to_add_translations">Sign in to add translations</string>
+    <string name="not_now">Not Now</string>
+    <string name="new_translation">New Translation</string>
+    <string name="possible_translation">Possible Translation</string>
+    <string name="possible_translations">Possible Translations</string>
+    <string name="my_translations">My Translations</string>
+    <string name="my_contributions">My Contributions</string>
+    <string name="new_translation_with_icon">{gmi-plus-circle} New Translation</string>
+    <string name="report_translation_with_icon">{gmi-flag} Report</string>
+    <string name="delete_translation_with_icon">{gmi-delete} Delete</string>
+    <string name="edit_translation_with_icon">{gmi-edit} Edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="alien_word">Alien Word</string>
+    <string name="english_translation">English Translation</string>
+    <string name="portuguese_translation">Portuguese Translation</string>
+    <string name="german_translation">German Translation</string>
+    <string name="account">Account</string>
+    <string name="language">Language</string>
+    <string name="english">English</string>
+    <string name="portuguese">Portuguese</string>
+    <string name="german">German</string>
+    <string name="about">About</string>
+    <string name="feedback">Feedback</string>
+    <string name="feedback_summary">Send me a email</string>
+    <string name="share">Share</string>
+    <string name="share_summary">Share this app with your friends</string>
+    <string name="share_msg">Hey explorer, take a look at NMS Alphabet: an app for translate alien words of No Man\'s Sky!</string>
+    <string name="rate">Rate</string>
+    <string name="rate_summary">Like this app? Give 5 stars on Google Play!</string>
+    <string name="version">Version</string>
+    <string name="connected_as">Connected as</string>
+    <string name="type_alien_phrase">Type an alien phrase</string>
+
+    <string-array name="language_entries">
+        <item>@string/english</item>
+        <item>@string/portuguese</item>
+        <item>@string/german</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>en</item>
+        <item>pt</item>
+        <item>de</item>
+    </string-array>
+
+</resources>
