@@ -10,12 +10,16 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.SubscriberExceptionEvent;
+
 import java.util.List;
 
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.model.User;
+import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 
 public class App extends Application {
 
@@ -24,7 +28,15 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        CustomActivityOnCrash.install(this);
         initParse();
+    }
+
+    @Subscribe(sticky = true)
+    public void onEvent(SubscriberExceptionEvent event){
+        if(event != null){
+            event.throwable.printStackTrace();
+        }
     }
 
     public static void signIn(Context context){
