@@ -9,6 +9,7 @@
     <color name="bg_white">#FAFAFA</color>
     <color name="bg_header">#EE009688</color>
 
+    <color name="gray_dark">#616161</color>
     <color name="gray">#BDBDBD</color>
     <color name="gray_light">#EEEEEE</color>
 

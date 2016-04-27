@@ -47,7 +47,7 @@
             android:layout_marginBottom="20dp"
             android:padding="15dp"
             android:orientation="horizontal"
-            android:background="@drawable/signin_button"
+            android:background="@drawable/button_white"
             android:clickable="true">
 
             <TextView
@@ -67,7 +67,6 @@
                 android:textColor="@android:color/black"
                 app:typeface="fonts/Geomanist-Regular.otf"/>
 
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -76,7 +75,7 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:orientation="horizontal"
-            android:background="@drawable/signin_button_outline"
+            android:background="@drawable/button_white_outline"
             android:clickable="true">
 
             <in.raveesh.customtype.TextView

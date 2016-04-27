@@ -1,9 +1,7 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

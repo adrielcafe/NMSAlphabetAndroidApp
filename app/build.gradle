@@ -72,11 +72,11 @@ dependencies {
     compile 'com.github.machinarius:preferencefragment:0.1.2@aar'
     compile 'cat.ereza:customactivityoncrash:1.5.0@aar'
     compile 'io.github.kobakei:ratethisapp:1.0.3@aar'
+    compile 'com.github.medyo:dynamicbox:1.2@aar'
 
 //    FABRIC
 //    ADS
 //    compile 'com.github.iammert:MaterialIntroView:1.5@aar'
-//    compile 'com.github.medyo:dynamicbox:1.2@aar'
 
 }
 
