@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.ofg.uptodate'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 23
@@ -54,6 +55,9 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.parse:parse-android:1.13.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
 
     compile 'com.mikepenz:iconics-core:2.5.11@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
@@ -81,5 +85,6 @@ dependencies {
 }
 
 repositories {
-    maven { url "https://jitpack.io" }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.fabric.io/public' }
 }
