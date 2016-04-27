@@ -3,6 +3,7 @@ package cafe.adriel.nmsalphabet;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -14,6 +15,7 @@ import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.model.User;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
+import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
 
@@ -23,6 +25,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         CustomActivityOnCrash.install(this);
+        initFabric();
         initParse();
     }
 
@@ -39,6 +42,10 @@ public class App extends Application {
 
     public static void signOut(Context context){
 
+    }
+
+    private void initFabric(){
+        Fabric.with(this, new Crashlytics.Builder().build());
     }
 
     private void initParse(){
