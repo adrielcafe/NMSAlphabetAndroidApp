@@ -2,14 +2,16 @@ package cafe.adriel.nmsalphabet.ui;
 
 import android.support.v4.app.Fragment;
 
-import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public abstract class BaseFragment extends Fragment {
+
+    protected Unbinder unbinder;
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     protected abstract void init();

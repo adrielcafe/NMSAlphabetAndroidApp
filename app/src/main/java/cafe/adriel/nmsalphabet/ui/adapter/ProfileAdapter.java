@@ -13,7 +13,7 @@ import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
 import me.grantland.widget.AutofitHelper;
@@ -63,25 +63,25 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.card_layout)
+        @BindView(R.id.card_layout)
         FoldingCell cardLayout;
-        @Bind(R.id.alien_word_title)
+        @BindView(R.id.alien_word_title)
         TextView alienWordTitleView;
-        @Bind(R.id.alien_word)
+        @BindView(R.id.alien_word)
         TextView alienWordView;
-        @Bind(R.id.tag_title)
+        @BindView(R.id.tag_title)
         TextView alienRaceTitleView;
-        @Bind(R.id.tag)
+        @BindView(R.id.tag)
         TextView alienRaceView;
-        @Bind(R.id.english_translation)
+        @BindView(R.id.english_translation)
         TextView englishTranslationView;
-        @Bind(R.id.portuguese_translation)
+        @BindView(R.id.portuguese_translation)
         TextView portugueseTranslationView;
-        @Bind(R.id.german_translation)
+        @BindView(R.id.german_translation)
         TextView germanTranslationView;
-        @Bind(R.id.delete_translation)
+        @BindView(R.id.delete_translation)
         TextView removeTranslationView;
-        @Bind(R.id.edit_translation)
+        @BindView(R.id.edit_translation)
         TextView editTranslationView;
 
         public ViewHolder(View v) {

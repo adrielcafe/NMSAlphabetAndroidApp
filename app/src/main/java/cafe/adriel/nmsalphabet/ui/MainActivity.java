@@ -1,6 +1,7 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -21,30 +22,30 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.Util;
 import cafe.adriel.nmsalphabet.ui.view.ViewPagerFadeTransformer;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class MainActivity extends BaseActivity {
+    private static Activity instance;
 
     private WordsFragment homeFrag;
     private TranslateFragment translateFrag;
     private WordsFragment profileFrag;
-    private SettingsFragment settingsFrag;
 
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     NavigationTabBar tabView;
-    @Bind(R.id.pager)
+    @BindView(R.id.pager)
     ViewPager pagerView;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fabView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity.instance = this;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         checkPermissions();
@@ -54,10 +55,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(pagerView.getCurrentItem() == 1 || pagerView.getCurrentItem() == 3){
-            fabView.hide();
-        } else {
-            fabView.show();
+        if(pagerView != null && fabView != null) {
+            if (pagerView.getCurrentItem() == 1 || pagerView.getCurrentItem() == 3) {
+                fabView.hide();
+            } else {
+                fabView.show();
+            }
         }
     }
 
@@ -70,15 +73,16 @@ public class MainActivity extends BaseActivity {
         initFab();
     }
 
+    public static Activity getInstance(){
+        return instance;
+    }
+
     private void initTabs(){
         int tabColor = getResources().getColor(R.color.colorPrimaryDark);
         ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_home), tabColor, getString(R.string.home)));
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_translation), tabColor, getString(R.string.translate)));
-        if(App.isLoggedIn) {
-            models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_profile), tabColor, getString(R.string.profile)));
-        }
-        models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_settings), tabColor, getString(R.string.settings)));
+        models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_profile), tabColor, getString(R.string.profile)));
         tabView.setModels(models);
         tabView.setViewPager(pagerView);
         tabView.setOnTabBarSelectedIndexListener(new NavigationTabBar.OnTabBarSelectedIndexListener() {
@@ -146,20 +150,8 @@ public class MainActivity extends BaseActivity {
                     translateFrag = new TranslateFragment();
                     return translateFrag;
                 case 2:
-                    if(App.isLoggedIn) {
-                        profileFrag = WordsFragment.newInstance(WordsFragment.Type.PROFILE);
-                        return profileFrag;
-                    } else {
-                        settingsFrag = new SettingsFragment();
-                        return settingsFrag;
-                    }
-                case 3:
-                    if(App.isLoggedIn) {
-                        settingsFrag = new SettingsFragment();
-                        return settingsFrag;
-                    } else {
-                        return null;
-                    }
+                    profileFrag = WordsFragment.newInstance(WordsFragment.Type.PROFILE);
+                    return profileFrag;
                 default:
                     return null;
             }
@@ -167,7 +159,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return App.isLoggedIn ? 4 : 3;
+            return 3;
         }
 
     }
