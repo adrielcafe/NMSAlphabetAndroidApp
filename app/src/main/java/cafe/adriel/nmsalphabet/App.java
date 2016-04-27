@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -45,7 +46,9 @@ public class App extends Application {
     }
 
     private void initFabric(){
-        Fabric.with(this, new Crashlytics.Builder().build());
+        Fabric.with(this,
+                new Crashlytics(),
+                new Answers());
     }
 
     private void initParse(){
