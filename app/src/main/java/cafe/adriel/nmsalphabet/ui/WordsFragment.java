@@ -1,5 +1,6 @@
 package cafe.adriel.nmsalphabet.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,11 +39,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.Util;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
 import cafe.adriel.nmsalphabet.ui.view.EndlessRecyclerOnScrollListener;
 import cafe.adriel.nmsalphabet.ui.view.RefreshLayout;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class WordsFragment extends BaseFragment {
     public enum Type {
@@ -57,11 +60,13 @@ public class WordsFragment extends BaseFragment {
     @BindView(R.id.header_home_layout)
     LinearLayout headerHomeLayout;
     @BindView(R.id.header_profile)
-    LinearLayout headerProfileLayout;
+    RelativeLayout headerProfileLayout;
     @BindView(R.id.user_image)
     ImageView userImageView;
     @BindView(R.id.user_name)
     TextView userNameView;
+    @BindView(R.id.settings)
+    Button settingsView;
     @BindView(R.id.search)
     EditText searchView;
     @BindView(R.id.search_icon)
@@ -146,6 +151,12 @@ public class WordsFragment extends BaseFragment {
         if(type == Type.PROFILE){
             headerProfileLayout.setVisibility(View.VISIBLE);
             headerHomeLayout.setVisibility(View.GONE);
+            settingsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getContext(), SettingsActivity.class));
+                }
+            });
             Glide.with(getContext()).load(R.drawable.default_user_image).asBitmap().centerCrop()
                     .into(new BitmapImageViewTarget(userImageView) {
                 @Override

@@ -8,6 +8,8 @@ public class Constant {
     public static final String GOOGLE_PLAY_URL     		= "https://play.google.com/store/apps/details?id=" + PACKAGE_NAME;
     public static final Uri    MARKET_URI          		= Uri.parse("market://details?id=" + PACKAGE_NAME);
 
+    public static final String PARSE_SERVER_URL = "https://nmsalphabet.herokuapp.com/api/";
+
     public static final String EXTRA_TYPE = "type";
 
     public static final String SETTINGS_ACCOUNT_STATUS      = "account_status";

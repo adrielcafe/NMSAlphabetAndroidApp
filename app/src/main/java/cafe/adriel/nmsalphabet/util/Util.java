@@ -1,4 +1,4 @@
-package cafe.adriel.nmsalphabet;
+package cafe.adriel.nmsalphabet.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,9 @@ import android.telephony.TelephonyManager;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.Locale;
+
+import cafe.adriel.nmsalphabet.Constant;
+import cafe.adriel.nmsalphabet.R;
 
 public class Util {
     public enum Language {

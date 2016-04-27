@@ -8,14 +8,13 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.Util;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -24,7 +23,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Util.updateLanguage(getContext());
         addPreferencesFromResource(R.xml.settings);
         init();
         PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
@@ -36,9 +34,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         View rootView = getView();
         if(rootView != null) {
             View settingsView = rootView.findViewById(android.R.id.list);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) settingsView.getLayoutParams();
-            params.setMargins(60, 60, 60, 60);
-            settingsView.setLayoutParams(params);
             settingsView.setBackgroundColor(getResources().getColor(R.color.bg_white));
             settingsView.setElevation(4);
         }
@@ -70,6 +65,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 case Constant.SETTINGS_ACCOUNT_LANGUAGE:
                     String language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, "en");
                     accountLanguage.setSummary(getLanguageEntry(language));
+                    Util.restartActivity(MainActivity.getInstance());
                     Util.restartActivity(getActivity());
                     break;
             }

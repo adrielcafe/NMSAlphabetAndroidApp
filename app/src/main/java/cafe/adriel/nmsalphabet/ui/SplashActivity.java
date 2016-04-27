@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.Util;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class SplashActivity extends BaseActivity {
 
