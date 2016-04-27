@@ -44,14 +44,21 @@ import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
 import cafe.adriel.nmsalphabet.ui.view.EndlessRecyclerOnScrollListener;
 import cafe.adriel.nmsalphabet.ui.view.RefreshLayout;
 import cafe.adriel.nmsalphabet.util.Util;
+import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class WordsFragment extends BaseFragment {
+    private static final String STATE_LOADING           = "loading";
+    private static final String STATE_EMPTY             = "empty";
+    private static final String STATE_NO_INTERNET       = "noInternet";
+    private static final String STATE_REQUIRE_SIGN_IN   = "requireSignIn";
+
     public enum Type {
         HOME,
         PROFILE
     }
 
     private Type type;
+    private DynamicBox stateBox;
 
     @BindView(R.id.refresh_layout)
     RefreshLayout refreshLayout;
@@ -115,24 +122,6 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void initControls(){
-        headerHomeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (headerHomeLayout != null) {
-                    headerHomeLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-                updateList();
-            }
-        });
-        headerProfileLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (headerProfileLayout != null) {
-                    headerProfileLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-                updateList();
-            }
-        });
         refreshLayout.setOnRefreshListener(new CircleRefreshLayout.OnCircleRefreshListener() {
             @Override
             public void refreshing() {
@@ -149,8 +138,18 @@ public class WordsFragment extends BaseFragment {
             }
         });
         if(type == Type.PROFILE){
-            headerProfileLayout.setVisibility(View.VISIBLE);
             headerHomeLayout.setVisibility(View.GONE);
+            headerProfileLayout.setVisibility(View.VISIBLE);
+            headerProfileLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (headerProfileLayout != null) {
+                        headerProfileLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                    initState();
+                    updateList();
+                }
+            });
             settingsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -167,8 +166,18 @@ public class WordsFragment extends BaseFragment {
                 }
             });
         } else {
-            headerHomeLayout.setVisibility(View.VISIBLE);
             headerProfileLayout.setVisibility(View.GONE);
+            headerHomeLayout.setVisibility(View.VISIBLE);
+            headerHomeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (headerHomeLayout != null) {
+                        headerHomeLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                    initState();
+                    updateList();
+                }
+            });
 
             racesView.setBackgroundResource(R.drawable.home_control);
             racesView.setTextColor(Color.WHITE);
@@ -230,6 +239,32 @@ public class WordsFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    private void initState(){
+        View loadingState = LayoutInflater.from(getContext()).inflate(R.layout.state_loading, null, false);
+        View emptyState = LayoutInflater.from(getContext()).inflate(R.layout.state_empty, null, false);
+        View noInternetState = LayoutInflater.from(getContext()).inflate(R.layout.state_no_internet, null, false);
+        View requireSignInState = LayoutInflater.from(getContext()).inflate(R.layout.state_require_sign_in, null, false);
+
+        if(type == Type.PROFILE){
+            loadingState.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
+            emptyState.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
+            noInternetState.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
+            requireSignInState.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
+        } else {
+            loadingState.setPadding(0, headerHomeLayout.getHeight(), 0, 0);
+            emptyState.setPadding(0, headerHomeLayout.getHeight(), 0, 0);
+            noInternetState.setPadding(0, headerHomeLayout.getHeight(), 0, 0);
+            requireSignInState.setPadding(0, headerHomeLayout.getHeight(), 0, 0);
+        }
+
+        stateBox = new DynamicBox(getContext(), wordsView);
+        stateBox.addCustomView(loadingState, STATE_LOADING);
+        stateBox.addCustomView(emptyState, STATE_EMPTY);
+        stateBox.addCustomView(noInternetState, STATE_NO_INTERNET);
+        stateBox.addCustomView(requireSignInState, STATE_REQUIRE_SIGN_IN);
+//        stateBox.showCustomView(STATE_LOADING);
     }
 
     private void initList(){

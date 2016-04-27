@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.gigamole.library.NavigationTabBar;
+import com.kobakei.ratethisapp.RateThisApp;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
@@ -50,6 +51,8 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         checkPermissions();
         init();
+        RateThisApp.onStart(this);
+        RateThisApp.showRateDialogIfNeeded(this);
     }
 
     @Override

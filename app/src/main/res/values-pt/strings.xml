@@ -45,5 +45,9 @@
     <string name="my_contributions">Minhas Contribuições</string>
     <string name="type_alien_phrase">Digite uma frase alienígena</string>
     <string name="possible_translation">Possível Tradução</string>
+    <string name="restart_app">Reiniciar App</string>
+    <string name="crash_msg">Parece que um buraco negro passou por aqui e quebrou o app</string>
+    <string name="refresh">Atualizar</string>
+    <string name="nothing_found">Nada foi encontrado</string>
 
 </resources>
