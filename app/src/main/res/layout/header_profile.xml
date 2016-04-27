@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_profile"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
     android:gravity="center_vertical"
-    android:padding="10dp"
-    android:orientation="horizontal"
     android:background="@color/bg_header"
-    android:elevation="8dp"
-    android:visibility="gone">
+    android:elevation="8dp">
 
     <ImageView
         android:id="@+id/user_image"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="5dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/default_user_image"/>
@@ -25,7 +24,9 @@
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/user_image"
+        android:layout_toStartOf="@+id/settings"
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@android:color/white"
@@ -33,4 +34,17 @@
         android:text="John Doe"
         app:typeface="fonts/Geomanist-Regular.otf"/>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:text="{gmi-settings}"/>
+
+</RelativeLayout>

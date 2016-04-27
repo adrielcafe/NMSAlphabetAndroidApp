@@ -16,23 +16,23 @@ import com.easyandroidanimations.library.FadeInAnimation;
 import com.easyandroidanimations.library.FadeOutAnimation;
 import com.github.ybq.android.spinkit.SpinKitView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.Util;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class SplashActivity extends BaseActivity {
 
-    @Bind(R.id.atlas)
+    @BindView(R.id.atlas)
     ImageView atlasView;
-    @Bind(R.id.signin_layout)
+    @BindView(R.id.signin_layout)
     LinearLayout signInLayout;
-    @Bind(R.id.google_signin)
+    @BindView(R.id.google_signin)
     RelativeLayout googleSignInView;
-    @Bind(R.id.anonymous_signin)
+    @BindView(R.id.anonymous_signin)
     RelativeLayout anonymousSignInView;
-    @Bind(R.id.load)
+    @BindView(R.id.load)
     SpinKitView loadView;
 
     @Override

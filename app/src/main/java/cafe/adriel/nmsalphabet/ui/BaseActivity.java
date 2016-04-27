@@ -12,7 +12,7 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.Util;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected SystemBarTintManager tintManager;

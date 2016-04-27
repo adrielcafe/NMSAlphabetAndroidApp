@@ -1,5 +1,6 @@
 package cafe.adriel.nmsalphabet.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,15 +35,15 @@ import com.tumblr.bookends.Bookends;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.Util;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
 import cafe.adriel.nmsalphabet.ui.view.EndlessRecyclerOnScrollListener;
 import cafe.adriel.nmsalphabet.ui.view.RefreshLayout;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class WordsFragment extends BaseFragment {
     public enum Type {
@@ -50,25 +53,27 @@ public class WordsFragment extends BaseFragment {
 
     private Type type;
 
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     RefreshLayout refreshLayout;
-    @Bind(R.id.words)
+    @BindView(R.id.words)
     RecyclerView wordsView;
-    @Bind(R.id.header_home_layout)
+    @BindView(R.id.header_home_layout)
     LinearLayout headerHomeLayout;
-    @Bind(R.id.header_profile)
-    LinearLayout headerProfileLayout;
-    @Bind(R.id.user_image)
+    @BindView(R.id.header_profile)
+    RelativeLayout headerProfileLayout;
+    @BindView(R.id.user_image)
     ImageView userImageView;
-    @Bind(R.id.user_name)
+    @BindView(R.id.user_name)
     TextView userNameView;
-    @Bind(R.id.search)
+    @BindView(R.id.settings)
+    Button settingsView;
+    @BindView(R.id.search)
     EditText searchView;
-    @Bind(R.id.search_icon)
+    @BindView(R.id.search_icon)
     TextView searchIconView;
-    @Bind(R.id.search_clear)
+    @BindView(R.id.search_clear)
     TextView searchClearView;
-    @Bind(R.id.races)
+    @BindView(R.id.races)
     MaterialSpinner racesView;
 
     public static WordsFragment newInstance(Type type) {
@@ -89,7 +94,7 @@ public class WordsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_words, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         init();
         return rootView;
     }
@@ -146,6 +151,12 @@ public class WordsFragment extends BaseFragment {
         if(type == Type.PROFILE){
             headerProfileLayout.setVisibility(View.VISIBLE);
             headerHomeLayout.setVisibility(View.GONE);
+            settingsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getContext(), SettingsActivity.class));
+                }
+            });
             Glide.with(getContext()).load(R.drawable.default_user_image).asBitmap().centerCrop()
                     .into(new BitmapImageViewTarget(userImageView) {
                 @Override
