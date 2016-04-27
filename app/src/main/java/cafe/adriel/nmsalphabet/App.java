@@ -2,18 +2,12 @@ package cafe.adriel.nmsalphabet;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
 
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.SubscriberExceptionEvent;
-
-import java.util.List;
 
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;

@@ -1,6 +1,7 @@
 <resources>
 
     <string name="connect_internet">Connect to the Internet</string>
+    <string name="nothing_found">Nothing Found</string>
     <string name="home">Home</string>
     <string name="translate">Translate</string>
     <string name="profile">Profile</string>
@@ -45,6 +46,7 @@
     <string name="connected_as">Connected as</string>
     <string name="type_alien_phrase">Type an alien phrase</string>
     <string name="restart_app">Restart App</string>
+    <string name="refresh">Refresh</string>
     <string name="crash_msg">Looks like a black hole passed by here and crashes the app</string>
 
     <string-array name="language_entries">

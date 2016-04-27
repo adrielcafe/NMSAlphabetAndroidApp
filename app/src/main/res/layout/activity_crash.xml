@@ -41,7 +41,7 @@
         android:layout_margin="20dp"
         android:padding="15dp"
         android:orientation="horizontal"
-        android:background="@drawable/signin_button_outline"
+        android:background="@drawable/button_white_outline"
         android:clickable="true">
 
         <TextView
