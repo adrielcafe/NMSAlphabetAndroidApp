@@ -1,8 +1,10 @@
 package cafe.adriel.nmsalphabet.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -11,9 +13,14 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import cafe.adriel.nmsalphabet.Constant;
@@ -27,6 +34,11 @@ public class Util {
     }
 
     private static final Handler ASYNC_HANDLER = new Handler();
+    private static final String[] PERMISSIONS = {
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     private static ConnectivityManager connectivityManager;
 
@@ -42,12 +54,23 @@ public class Util {
         ASYNC_HANDLER.postDelayed(runnable, delay);
     }
 
-    public static void shareText(Context context, String text){
-        Intent i = new Intent();
-        i.setAction(Intent.ACTION_SEND);
-        i.putExtra(Intent.EXTRA_TEXT, text);
-        i.setType("text/plain");
-        context.startActivity(i);
+    public static void shareText(Activity activity, String text){
+        ShareCompat.IntentBuilder.from(activity)
+                .setText(text)
+                .setType("text/plain")
+                .startChooser();
+    }
+
+    public static void askForPermissions(Activity context){
+        List<String> missingPermissions = new ArrayList<>();
+        for(int i = 0; i < PERMISSIONS.length; i++){
+            if(ContextCompat.checkSelfPermission(context, PERMISSIONS[i]) != PackageManager.PERMISSION_GRANTED){
+                missingPermissions.add(PERMISSIONS[i]);
+            }
+        }
+        if(!missingPermissions.isEmpty()){
+            ActivityCompat.requestPermissions(context, missingPermissions.toArray(new String[]{}), 0);
+        }
     }
 
     public Language getLanguage(Context context){
