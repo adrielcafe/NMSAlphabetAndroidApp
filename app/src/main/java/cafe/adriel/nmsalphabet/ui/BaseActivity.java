@@ -1,6 +1,7 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
@@ -10,6 +11,7 @@ import android.view.WindowManager;
 
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.Util;
@@ -23,6 +25,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         tintBars();
         Util.updateLanguage(this);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
     }
 
     protected abstract void init();
