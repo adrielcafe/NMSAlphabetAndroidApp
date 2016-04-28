@@ -1,18 +1,14 @@
 package cafe.adriel.nmsalphabet.ui;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -49,10 +45,10 @@ public class MainActivity extends BaseActivity {
         MainActivity.instance = this;
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        checkPermissions();
-        init();
         RateThisApp.onStart(this);
         RateThisApp.showRateDialogIfNeeded(this);
+        Util.askForPermissions(this);
+        init();
     }
 
     @Override
@@ -69,7 +65,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        pagerView.setOffscreenPageLimit(4);
+        pagerView.setOffscreenPageLimit(2);
         pagerView.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
         pagerView.setPageTransformer(false, new ViewPagerFadeTransformer());
         initTabs();
@@ -117,24 +113,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(MainActivity.this, AddTranslationActivity.class));
             }
         });
-    }
-
-    private void checkPermissions(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.INTERNET,
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.ACCESS_WIFI_STATE,
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            }, 0);
-        }
     }
 
     private class TabPagerAdapter extends FragmentPagerAdapter {

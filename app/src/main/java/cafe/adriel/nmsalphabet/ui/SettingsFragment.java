@@ -124,7 +124,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void shareApp() {
-        Util.shareText(getContext(), getString(R.string.share_msg) + "\n" + Constant.GOOGLE_PLAY_URL);
+        Util.shareText(getActivity(), getString(R.string.share_msg) + "\n" + Constant.GOOGLE_PLAY_URL);
     }
 
     private void rateApp() {
