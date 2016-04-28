@@ -20,7 +20,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/default_user_image"/>
 
-    <in.raveesh.customtype.TextView
+    <TextView
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:textColor="@android:color/white"
         android:textAllCaps="true"
         android:text="John Doe"
-        app:typeface="fonts/Geomanist-Regular.otf"/>
+        app:font="custom1"/>
 
     <Button
         android:id="@+id/settings"
