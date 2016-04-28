@@ -50,7 +50,7 @@
         <item name="android:paddingStart">6dp</item>
         <item name="android:paddingEnd">6dp</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">?colorPrimary</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
     </style>
