@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_header"
-    app:AniBackColor="@color/colorPrimaryDark"
+    app:AniBackColor="?colorPrimaryDark"
     app:AniForeColor="@color/bg_header"
     app:CircleSmaller="6">
 

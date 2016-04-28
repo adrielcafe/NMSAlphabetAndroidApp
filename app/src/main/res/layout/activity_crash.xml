@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="50dp"
     android:gravity="center"
-    android:background="@color/colorAccent"
+    android:background="?colorAccent"
     android:orientation="vertical"
     tools:context=".ui.CrashActivity">
 
