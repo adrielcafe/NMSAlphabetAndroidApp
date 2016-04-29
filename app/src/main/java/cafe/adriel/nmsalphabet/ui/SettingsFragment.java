@@ -9,18 +9,23 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.ui.adapter.ThemePreferenceAdapter;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ListPreference accountLanguage;
-    private ListPreference accountTheme;
+    private ThemePreferenceAdapter accountTheme;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,11 +39,26 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        View rootView = getView();
+        LinearLayout rootView = (LinearLayout) getView();
         if(rootView != null) {
             View settingsView = rootView.findViewById(android.R.id.list);
             settingsView.setBackgroundColor(getResources().getColor(R.color.bg_white));
-            settingsView.setElevation(4);
+
+            final ListView l = (ListView) rootView.getChildAt(0);
+            l.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        LinearLayout themeLayout = (LinearLayout) l.getChildAt(3);
+                        RelativeLayout summaryLayout = (RelativeLayout) themeLayout.getChildAt(1);
+                        TextView summaryView = (TextView) summaryLayout.getChildAt(1);
+                        summaryView.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.getCurrentTheme(getContext())));
+                        summaryView.setTextSize(30);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
@@ -82,7 +102,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private void init(){
         accountLanguage = (ListPreference) findPreference(Constant.SETTINGS_ACCOUNT_LANGUAGE);
-        accountTheme = (ListPreference) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
+        accountTheme = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
         Preference accountStatus = findPreference(Constant.SETTINGS_ACCOUNT_STATUS);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
@@ -184,4 +204,5 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 return getString(R.string.theme1);
         }
     }
+
 }

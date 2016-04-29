@@ -15,7 +15,7 @@
             android:entryValues="@array/language_values"
             android:defaultValue="@string/english"/>
 
-        <ListPreference
+        <cafe.adriel.nmsalphabet.ui.adapter.ThemePreferenceAdapter
             android:key="account_theme"
             android:title="@string/theme"
             android:dialogTitle="@string/theme"

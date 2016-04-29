@@ -53,6 +53,10 @@ public class Util {
         return !isEmpty(cs);
     }
 
+    public static String toHex(int color){
+        return "#" + Integer.toHexString(color).replaceFirst("ff", "").toUpperCase();
+    }
+
     public static void asyncCall(int delay, Runnable runnable){
         ASYNC_HANDLER.postDelayed(runnable, delay);
     }

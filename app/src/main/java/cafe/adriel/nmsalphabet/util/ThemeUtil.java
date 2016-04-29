@@ -2,6 +2,8 @@ package cafe.adriel.nmsalphabet.util;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.Spanned;
 
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
@@ -18,7 +20,7 @@ public class ThemeUtil {
 
     private static String currentTheme = THEME_1;
 
-    private static String getCurrentTheme(Context context){
+    public static String getCurrentTheme(Context context){
         try {
             currentTheme = PreferenceManager.getDefaultSharedPreferences(context)
                     .getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
@@ -70,7 +72,11 @@ public class ThemeUtil {
     }
 
     public static int getPrimaryColor(Context context){
-        switch (currentTheme){
+        return getPrimaryColor(context, currentTheme);
+    }
+
+    public static int getPrimaryColor(Context context, String theme){
+        switch (theme){
             case THEME_2:
                 return context.getResources().getColor(R.color.colorPrimaryTheme2);
             case THEME_3:
@@ -85,7 +91,11 @@ public class ThemeUtil {
     }
 
     public static int getPrimaryDarkColor(Context context){
-        switch (currentTheme){
+        return getPrimaryDarkColor(context, currentTheme);
+    }
+
+    public static int getPrimaryDarkColor(Context context, String theme){
+        switch (theme){
             case THEME_2:
                 return context.getResources().getColor(R.color.colorPrimaryDarkTheme2);
             case THEME_3:
@@ -100,7 +110,11 @@ public class ThemeUtil {
     }
 
     public static int getAccentColor(Context context){
-        switch (currentTheme){
+        return getAccentColor(context, currentTheme);
+    }
+
+    public static int getAccentColor(Context context, String theme){
+        switch (theme){
             case THEME_2:
                 return context.getResources().getColor(R.color.colorAccentTheme2);
             case THEME_3:
@@ -114,4 +128,15 @@ public class ThemeUtil {
         }
     }
 
+    public static Spanned getThemeCircles(Context context, String theme){
+        String primaryDarkColor = Util.toHex(getPrimaryDarkColor(context, theme));
+        String primaryColor = Util.toHex(getPrimaryColor(context, theme));
+        String accentColor = Util.toHex(getAccentColor(context, theme));
+        String html = String.format(
+                "<font color='%s'>●</font>" +
+                "<font color='%s'>●</font>" +
+                "<font color='%s'>●</font>",
+                primaryDarkColor, primaryColor, accentColor);
+        return Html.fromHtml(html);
+    }
 }
