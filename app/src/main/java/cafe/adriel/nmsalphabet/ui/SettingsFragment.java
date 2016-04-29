@@ -6,10 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.View;
-
-import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;

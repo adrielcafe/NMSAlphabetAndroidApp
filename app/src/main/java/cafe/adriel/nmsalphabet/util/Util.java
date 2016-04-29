@@ -97,7 +97,9 @@ public class Util {
     }
 
     public static void restartActivity(Activity activity){
-        activity.recreate();
+        if(activity != null) {
+            activity.recreate();
+        }
     }
 
     public static void hideSoftKeyboard(Activity activity) {
