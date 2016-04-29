@@ -19,6 +19,7 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.adapter.ThemePreferenceAdapter;
+import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
@@ -30,7 +31,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Util.updateLanguage(getContext());
+        LanguageUtil.updateLanguage(getContext());
         addPreferencesFromResource(R.xml.settings);
         init();
         PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
@@ -44,19 +45,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             View settingsView = rootView.findViewById(android.R.id.list);
             settingsView.setBackgroundColor(getResources().getColor(R.color.bg_white));
 
-            final ListView l = (ListView) rootView.getChildAt(0);
-            l.post(new Runnable() {
+            final ListView accountList = (ListView) rootView.getChildAt(0);
+            accountList.post(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        LinearLayout themeLayout = (LinearLayout) l.getChildAt(3);
-                        RelativeLayout summaryLayout = (RelativeLayout) themeLayout.getChildAt(1);
-                        TextView summaryView = (TextView) summaryLayout.getChildAt(1);
-                        summaryView.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.getCurrentTheme(getContext())));
-                        summaryView.setTextSize(30);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    updateSummaries(accountList);
                 }
             });
         }
@@ -89,7 +82,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if(getContext() != null) {
             switch (key) {
                 case Constant.SETTINGS_ACCOUNT_LANGUAGE:
-                    String language = sharedPreferences.getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, Util.LANGUAGE_EN);
+                    String language = sharedPreferences.getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LanguageUtil.LANGUAGE_EN);
                     changeLanguage(language);
                     break;
                 case Constant.SETTINGS_ACCOUNT_THEME:
@@ -116,6 +109,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         aboutVersion.setOnPreferenceClickListener(this);
 
         if(App.isLoggedIn){
+            // TODO use dynamic username
             accountStatus.setTitle(getString(R.string.connected_as) + " Adriel Café");
             accountStatus.setSummary(R.string.signout);
         } else {
@@ -124,11 +118,33 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
         aboutVersion.setSummary(Util.getAppVersionName(getContext()));
 
-        String language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, "en");
+        String language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LanguageUtil.LANGUAGE_EN);
         accountLanguage.setSummary(getLanguageEntry(language));
 
         String theme = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
         accountTheme.setSummary(getThemeEntry(theme));
+    }
+
+    private void updateSummaries(ListView accountList){
+        try {
+            LinearLayout languageLayout = (LinearLayout) accountList.getChildAt(2);
+            RelativeLayout summaryLayout = (RelativeLayout) languageLayout.getChildAt(1);
+            TextView summaryView = (TextView) summaryLayout.getChildAt(1);
+            summaryView.setCompoundDrawablePadding(10);
+            summaryView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    LanguageUtil.getLanguageFlagDrawable(getContext(), LanguageUtil.getCurrentLanguage(getContext())), null, null, null);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            LinearLayout themeLayout = (LinearLayout) accountList.getChildAt(3);
+            RelativeLayout summaryLayout = (RelativeLayout) themeLayout.getChildAt(1);
+            TextView summaryView = (TextView) summaryLayout.getChildAt(1);
+            summaryView.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.getCurrentTheme(getContext())));
+            summaryView.setTextSize(30);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void changeStatus() {
@@ -181,9 +197,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private String getLanguageEntry(String value){
         switch (value){
-            case Util.LANGUAGE_PT:
+            case LanguageUtil.LANGUAGE_PT:
                 return getString(R.string.portuguese);
-            case Util.LANGUAGE_DE:
+            case LanguageUtil.LANGUAGE_DE:
                 return getString(R.string.german);
             default:
                 return getString(R.string.english);
