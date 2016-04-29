@@ -17,7 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
-import me.grantland.widget.AutofitHelper;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
@@ -48,9 +47,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         holder.alienWordView.setText(word);
         holder.alienRaceTitleView.setText("Korvax");
         holder.alienRaceView.setText("Korvax's Word");
-
-        AutofitHelper.create(holder.alienWordTitleView);
-        AutofitHelper.create(holder.alienWordView);
     }
 
     private void addBadge(View view, int count){

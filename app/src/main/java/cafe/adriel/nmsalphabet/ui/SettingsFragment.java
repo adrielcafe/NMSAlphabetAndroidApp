@@ -42,14 +42,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         super.onViewCreated(view, savedInstanceState);
         LinearLayout rootView = (LinearLayout) getView();
         if(rootView != null) {
-            View settingsView = rootView.findViewById(android.R.id.list);
-            settingsView.setBackgroundColor(getResources().getColor(R.color.bg_white));
-
-            final ListView accountList = (ListView) rootView.getChildAt(0);
-            accountList.post(new Runnable() {
+            final ListView settingsList = (ListView) rootView.findViewById(android.R.id.list);
+            settingsList.setBackgroundColor(getResources().getColor(R.color.bg_white));
+            settingsList.post(new Runnable() {
                 @Override
                 public void run() {
-                    updateSummaries(accountList);
+                    updatePreferencies(settingsList);
                 }
             });
         }
@@ -69,9 +67,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 break;
             case Constant.SETTINGS_ABOUT_RATE:
                 rateApp();
-                break;
-            case Constant.SETTINGS_ABOUT_VERSION:
-                showQuote();
                 break;
         }
         return true;
@@ -106,7 +101,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         aboutFeedback.setOnPreferenceClickListener(this);
         aboutShare.setOnPreferenceClickListener(this);
         aboutRate.setOnPreferenceClickListener(this);
-        aboutVersion.setOnPreferenceClickListener(this);
 
         if(App.isLoggedIn){
             // TODO use dynamic username
@@ -125,7 +119,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         accountTheme.setSummary(getThemeEntry(theme));
     }
 
-    private void updateSummaries(ListView accountList){
+    private void updatePreferencies(ListView accountList){
         try {
             LinearLayout languageLayout = (LinearLayout) accountList.getChildAt(2);
             RelativeLayout summaryLayout = (RelativeLayout) languageLayout.getChildAt(1);
@@ -142,6 +136,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             TextView summaryView = (TextView) summaryLayout.getChildAt(1);
             summaryView.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.getCurrentTheme(getContext())));
             summaryView.setTextSize(30);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            LinearLayout versionLayout = (LinearLayout) accountList.getChildAt(8);
+            versionLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showQuote();
+                    return true;
+                }
+            });
         } catch (Exception e){
             e.printStackTrace();
         }
