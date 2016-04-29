@@ -13,8 +13,8 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
+import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
-import cafe.adriel.nmsalphabet.util.Util;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected SystemBarTintManager tintManager;
@@ -24,7 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
         ThemeUtil.setCustomTheme(this);
-        Util.updateLanguage(this);
+        LanguageUtil.updateLanguage(this);
         tintBars();
     }
 
