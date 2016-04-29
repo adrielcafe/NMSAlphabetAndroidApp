@@ -62,6 +62,7 @@ public class TranslateFragment extends BaseFragment {
     protected void init(){
         initFab();
         racesView.setBackgroundResource(R.drawable.home_control);
+        racesView.setTextAppearance(android.R.style.TextAppearance_Large);
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
         racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));

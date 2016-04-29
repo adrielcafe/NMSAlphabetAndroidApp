@@ -18,7 +18,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
-import me.grantland.widget.AutofitHelper;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
@@ -49,9 +48,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         holder.alienWordView.setText(word);
         holder.alienRaceTitleView.setText("Korvax");
         holder.alienRaceView.setText("Korvax's Word");
-
-        AutofitHelper.create(holder.alienWordTitleView);
-        AutofitHelper.create(holder.alienWordView);
 
         addBadge(holder.translation1View, 12345);
         addBadge(holder.translation2View, 1234);

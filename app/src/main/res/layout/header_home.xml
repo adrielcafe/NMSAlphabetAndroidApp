@@ -10,10 +10,16 @@
     android:elevation="8dp"
     android:visibility="gone">
 
-    <RelativeLayout
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/races"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginBottom="10dp"
+        android:background="@drawable/home_control"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
         android:padding="10dp"
         android:background="@drawable/home_control">
 
@@ -58,11 +64,5 @@
             android:visibility="invisible"/>
 
     </RelativeLayout>
-
-    <com.jaredrummler.materialspinner.MaterialSpinner
-        android:id="@+id/races"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/home_control"/>
 
 </LinearLayout>
