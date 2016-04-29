@@ -5,9 +5,9 @@
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_header"
-    app:AniBackColor="@color/colorPrimaryDark"
-    app:AniForeColor="@color/bg_header"
+    android:background="?colorPrimary"
+    app:AniBackColor="?colorPrimaryDark"
+    app:AniForeColor="?colorPrimary"
     app:CircleSmaller="6">
 
     <FrameLayout

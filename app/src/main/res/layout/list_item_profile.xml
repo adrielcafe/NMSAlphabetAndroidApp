@@ -17,12 +17,12 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@color/colorAccent">
+            android:background="?colorAccent">
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:id="@+id/alien_word"
                 android:textColor="@android:color/white"
-                app:typeface="fonts/Geomanist-Regular.otf"
+                app:font="custom1"
                 style="@style/AlienWordTextView"/>
 
         </RelativeLayout>
@@ -72,9 +72,9 @@
                     android:layout_gravity="center"
                     android:src="@drawable/flag_uk"/>
 
-                <in.raveesh.customtype.TextView
+                <TextView
                     android:id="@+id/english_translation"
-                    app:typeface="fonts/Geomanist-Regular.otf"
+                    app:font="custom1"
                     android:text="Lorem"
                     style="@style/AlienWordUserTranslationTextView"/>
 
@@ -92,9 +92,9 @@
                     android:layout_gravity="center"
                     android:src="@drawable/flag_brazil"/>
 
-                <in.raveesh.customtype.TextView
+                <TextView
                     android:id="@+id/portuguese_translation"
-                    app:typeface="fonts/Geomanist-Regular.otf"
+                    app:font="custom1"
                     android:text="Ipsum"
                     style="@style/AlienWordUserTranslationTextView"/>
 
@@ -111,9 +111,9 @@
                     android:layout_gravity="center"
                     android:src="@drawable/flag_germany"/>
 
-                <in.raveesh.customtype.TextView
+                <TextView
                     android:id="@+id/german_translation"
-                    app:typeface="fonts/Geomanist-Regular.otf"
+                    app:font="custom1"
                     android:text="Dolor"
                     style="@style/AlienWordUserTranslationTextView"/>
 
@@ -164,10 +164,10 @@
             android:background="@drawable/word_tag_title"
             style="@style/AlienRaceTextView"/>
 
-        <in.raveesh.customtype.TextView
+        <TextView
             android:id="@+id/alien_word_title"
             android:textColor="@android:color/black"
-            app:typeface="fonts/Geomanist-Regular.otf"
+            app:font="custom1"
             style="@style/AlienWordTextView"/>
 
     </RelativeLayout>

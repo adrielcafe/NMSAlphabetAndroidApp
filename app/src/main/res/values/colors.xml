@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#009688</color>
-    <color name="colorPrimaryDark">#00796B</color>
-    <color name="colorAccent">#9575CD</color>
+    <color name="colorPrimaryTheme1">#3F3F3F</color>
+    <color name="colorPrimaryDarkTheme1">#333333</color>
+    <color name="colorAccentTheme1">#B7494E</color>
+
+    <color name="colorPrimaryTheme2">#009688</color>
+    <color name="colorPrimaryDarkTheme2">#00796b</color>
+    <color name="colorAccentTheme2">#9575cd</color>
+
+    <color name="colorPrimaryTheme3">#2196f3</color>
+    <color name="colorPrimaryDarkTheme3">#1976d2</color>
+    <color name="colorAccentTheme3">#ec407a</color>
+
+    <color name="colorPrimaryTheme4">#9c27b0</color>
+    <color name="colorPrimaryDarkTheme4">#7b1fa2</color>
+    <color name="colorAccentTheme4">#448aff</color>
+
+    <color name="colorPrimaryTheme5">#d32f2f</color>
+    <color name="colorPrimaryDarkTheme5">#b71c1c</color>
+    <color name="colorAccentTheme5">#8bc34a</color>
 
     <color name="bg_gray">#E0E0E0</color>
     <color name="bg_white">#FAFAFA</color>
-    <color name="bg_header">#EE009688</color>
 
     <color name="gray_dark">#616161</color>
     <color name="gray">#BDBDBD</color>

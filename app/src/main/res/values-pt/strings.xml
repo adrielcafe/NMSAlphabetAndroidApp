@@ -49,5 +49,11 @@
     <string name="crash_msg">Parece que um buraco negro passou por aqui e quebrou o app</string>
     <string name="refresh">Atualizar</string>
     <string name="nothing_found">Nada foi encontrado</string>
+    <string name="theme">Tema</string>
+    <string name="theme1">Tema 1</string>
+    <string name="theme2">Tema 2</string>
+    <string name="theme3">Tema 3</string>
+    <string name="theme4">Tema 4</string>
+    <string name="theme5">Tema 5</string>
 
 </resources>

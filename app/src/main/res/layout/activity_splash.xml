@@ -59,13 +59,13 @@
                 android:textColor="@android:color/black"
                 android:textAppearance="@android:style/TextAppearance.Large"/>
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/signin_facebook"
                 android:textColor="@android:color/black"
-                app:typeface="fonts/Geomanist-Regular.otf"/>
+                app:font="custom1"/>
 
         </RelativeLayout>
 
@@ -78,13 +78,13 @@
             android:background="@drawable/button_white_outline"
             android:clickable="true">
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/not_now"
                 android:textColor="@android:color/white"
-                app:typeface="fonts/Geomanist-Regular.otf"/>
+                app:font="custom1"/>
 
         </RelativeLayout>
 
