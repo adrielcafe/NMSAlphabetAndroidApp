@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -34,6 +35,8 @@ public class SplashActivity extends BaseActivity {
     RelativeLayout anonymousSignInView;
     @BindView(R.id.load)
     SpinKitView loadView;
+    @BindView(R.id.app_version)
+    TextView appVersionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public class SplashActivity extends BaseActivity {
                 });
             }
         });
+        appVersionView.setText(Util.getAppVersionName(this));
     }
 
     private void setLoading(boolean load){

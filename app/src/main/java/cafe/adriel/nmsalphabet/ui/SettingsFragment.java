@@ -9,6 +9,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.Toast;
 
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
@@ -55,6 +56,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 break;
             case Constant.SETTINGS_ABOUT_RATE:
                 rateApp();
+                break;
+            case Constant.SETTINGS_ABOUT_VERSION:
+                showQuote();
                 break;
         }
         return true;
@@ -149,6 +153,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void rateApp() {
         Intent i = new Intent(Intent.ACTION_VIEW, Constant.MARKET_URI);
         startActivity(i);
+    }
+
+    private void showQuote(){
+        Toast.makeText(getContext(), R.string.quote, Toast.LENGTH_SHORT).show();
     }
 
     private String getLanguageEntry(String value){

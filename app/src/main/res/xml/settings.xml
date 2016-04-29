@@ -44,8 +44,7 @@
 
         <Preference
             android:key="about_version"
-            android:title="@string/version"
-            android:selectable="false"/>
+            android:title="@string/version"/>
 
     </PreferenceCategory>
 
