@@ -14,15 +14,18 @@ import com.github.machinarius.preferencefragment.PreferenceFragment;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ListPreference accountLanguage;
+    private ListPreference accountTheme;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.updateLanguage(getContext());
         addPreferencesFromResource(R.xml.settings);
         init();
         PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
@@ -63,10 +66,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if(getContext() != null) {
             switch (key) {
                 case Constant.SETTINGS_ACCOUNT_LANGUAGE:
-                    String language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, "en");
-                    accountLanguage.setSummary(getLanguageEntry(language));
-                    Util.restartActivity(MainActivity.getInstance());
-                    Util.restartActivity(getActivity());
+                    String language = sharedPreferences.getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, Util.LANGUAGE_EN);
+                    changeLanguage(language);
+                    break;
+                case Constant.SETTINGS_ACCOUNT_THEME:
+                    String theme = sharedPreferences.getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
+                    changeTheme(theme);
                     break;
             }
         }
@@ -74,6 +79,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private void init(){
         accountLanguage = (ListPreference) findPreference(Constant.SETTINGS_ACCOUNT_LANGUAGE);
+        accountTheme = (ListPreference) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
         Preference accountStatus = findPreference(Constant.SETTINGS_ACCOUNT_STATUS);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
@@ -97,7 +103,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         String language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, "en");
         accountLanguage.setSummary(getLanguageEntry(language));
-        accountLanguage.setDefaultValue(language);
+
+        String theme = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
+        accountTheme.setSummary(getThemeEntry(theme));
     }
 
     private void changeStatus() {
@@ -111,6 +119,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             }
             activity.finish();
         }
+    }
+
+    private void changeLanguage(String language){
+        accountLanguage.setSummary(getLanguageEntry(language));
+        Util.restartActivity(MainActivity.getInstance());
+        Util.restartActivity(getActivity());
+    }
+
+    private void changeTheme(String theme){
+        accountTheme.setSummary(getThemeEntry(theme));
+        Util.restartActivity(MainActivity.getInstance());
+        Util.restartActivity(getActivity());
     }
 
     // TODO missing user name and ID
@@ -134,12 +154,27 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private String getLanguageEntry(String value){
         switch (value){
-            case "pt":
+            case Util.LANGUAGE_PT:
                 return getString(R.string.portuguese);
-            case "de":
+            case Util.LANGUAGE_DE:
                 return getString(R.string.german);
             default:
                 return getString(R.string.english);
+        }
+    }
+
+    private String getThemeEntry(String value){
+        switch (value){
+            case ThemeUtil.THEME_2:
+                return getString(R.string.theme2);
+            case ThemeUtil.THEME_3:
+                return getString(R.string.theme3);
+            case ThemeUtil.THEME_4:
+                return getString(R.string.theme4);
+            case ThemeUtil.THEME_5:
+                return getString(R.string.theme5);
+            default:
+                return getString(R.string.theme1);
         }
     }
 }

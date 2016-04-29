@@ -15,6 +15,14 @@
             android:entryValues="@array/language_values"
             android:defaultValue="@string/english"/>
 
+        <ListPreference
+            android:key="account_theme"
+            android:title="@string/theme"
+            android:dialogTitle="@string/theme"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:defaultValue="Theme1"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/about">

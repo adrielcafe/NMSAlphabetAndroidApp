@@ -3,7 +3,6 @@ package cafe.adriel.nmsalphabet.util;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -27,6 +26,10 @@ import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 
 public class Util {
+    public static final String LANGUAGE_EN = "en";
+    public static final String LANGUAGE_PT = "pt";
+    public static final String LANGUAGE_DE = "de";
+
     public enum Language {
         ENGLISH,
         PORTUGUESE,
@@ -74,11 +77,11 @@ public class Util {
     }
 
     public Language getLanguage(Context context){
-        String language = PreferenceManager.getDefaultSharedPreferences(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, "en");
+        String language = PreferenceManager.getDefaultSharedPreferences(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LANGUAGE_EN);
         switch (language){
-            case "pt":
+            case LANGUAGE_PT:
                 return Language.PORTUGUESE;
-            case "de":
+            case LANGUAGE_DE:
                 return Language.GERMAN;
             default:
                 return Language.ENGLISH;
@@ -94,10 +97,7 @@ public class Util {
     }
 
     public static void restartActivity(Activity activity){
-        Intent i = new Intent(activity, activity.getClass());
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        activity.finish();
-        activity.startActivity(i);
+        activity.recreate();
     }
 
     public static void hideSoftKeyboard(Activity activity) {

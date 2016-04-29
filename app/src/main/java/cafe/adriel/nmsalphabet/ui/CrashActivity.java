@@ -15,7 +15,7 @@ public class CrashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crash);
         ButterKnife.bind(this);
-        tintManager.setTintColor(getResources().getColor(R.color.colorAccent));
+        tintManager.setTintColor(getResources().getColor(R.color.colorAccentTheme1));
         init();
     }
 
