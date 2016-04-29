@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.view.ViewPagerFadeTransformer;
+import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class MainActivity extends BaseActivity {
@@ -77,7 +78,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initTabs(){
-        int tabColor = getResources().getColor(R.color.colorPrimaryDark);
+        int tabColor = ThemeUtil.getPrimaryDarkColor(this);
         ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_home), tabColor, getString(R.string.home)));
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_translation), tabColor, getString(R.string.translate)));

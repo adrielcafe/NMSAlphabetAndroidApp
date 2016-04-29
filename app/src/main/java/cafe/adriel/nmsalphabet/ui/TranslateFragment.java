@@ -25,6 +25,7 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.util.ThemeUtil;
 
 public class TranslateFragment extends BaseFragment {
 
@@ -63,7 +64,7 @@ public class TranslateFragment extends BaseFragment {
         racesView.setBackgroundResource(R.drawable.home_control);
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setDropdownColor(getResources().getColor(R.color.colorPrimaryDark));
+        racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setItems(getString(R.string.all_alien_races), "Korvax");
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override

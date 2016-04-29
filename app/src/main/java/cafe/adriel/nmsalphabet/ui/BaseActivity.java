@@ -13,7 +13,7 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
-import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -23,8 +23,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
-        tintBars();
+        ThemeUtil.setCustomTheme(this);
         Util.updateLanguage(this);
+        tintBars();
     }
 
     @Override
@@ -45,13 +46,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
-    public void tintBars(){
+    private void tintBars(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatusAndNavigationBar();
         }
         tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);
-        tintManager.setTintColor(getResources().getColor(R.color.colorPrimary));
+        tintManager.setTintColor(ThemeUtil.getPrimaryColor(this));
     }
 }
