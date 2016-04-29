@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -21,6 +22,8 @@ import cafe.adriel.nmsalphabet.util.ThemeUtil;
 
 public class AddTranslationActivity extends BaseActivity {
 
+    @BindView(R.id.content_layout)
+    FrameLayout contentLayout;
     @BindView(R.id.races)
     MaterialSpinner racesView;
     @BindView(R.id.alien_word)
@@ -73,6 +76,7 @@ public class AddTranslationActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        addPaddingBottomIfNeeded();
         initFab();
         racesView.setBackgroundResource(R.drawable.home_control);
         racesView.setTextColor(Color.WHITE);

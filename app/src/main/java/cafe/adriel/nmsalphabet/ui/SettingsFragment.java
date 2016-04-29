@@ -31,10 +31,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LanguageUtil.updateLanguage(getContext());
+        LanguageUtil.updateLanguage(getActivity());
         addPreferencesFromResource(R.xml.settings);
         init();
-        PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(getContext() != null) {
+        if(getActivity() != null) {
             switch (key) {
                 case Constant.SETTINGS_ACCOUNT_LANGUAGE:
                     String language = sharedPreferences.getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LanguageUtil.LANGUAGE_EN);
@@ -110,12 +110,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             accountStatus.setTitle(R.string.signin);
             accountStatus.setSummary(R.string.signin_to_add_translations);
         }
-        aboutVersion.setSummary(Util.getAppVersionName(getContext()));
+        aboutVersion.setSummary(Util.getAppVersionName(getActivity()));
 
-        String language = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LanguageUtil.LANGUAGE_EN);
+        String language = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LanguageUtil.LANGUAGE_EN);
         accountLanguage.setSummary(getLanguageEntry(language));
 
-        String theme = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
+        String theme = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
         accountTheme.setSummary(getThemeEntry(theme));
     }
 
@@ -126,7 +126,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             TextView summaryView = (TextView) summaryLayout.getChildAt(1);
             summaryView.setCompoundDrawablePadding(10);
             summaryView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    LanguageUtil.getLanguageFlagDrawable(getContext(), LanguageUtil.getCurrentLanguage(getContext())), null, null, null);
+                    LanguageUtil.getLanguageFlagDrawable(getActivity(), LanguageUtil.getCurrentLanguage(getActivity())), null, null, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -134,7 +134,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             LinearLayout themeLayout = (LinearLayout) accountList.getChildAt(3);
             RelativeLayout summaryLayout = (RelativeLayout) themeLayout.getChildAt(1);
             TextView summaryView = (TextView) summaryLayout.getChildAt(1);
-            summaryView.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.getCurrentTheme(getContext())));
+            summaryView.setText(ThemeUtil.getThemeCircles(getActivity(), ThemeUtil.getCurrentTheme(getActivity())));
             summaryView.setTextSize(30);
         } catch (Exception e){
             e.printStackTrace();
@@ -198,7 +198,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void showQuote(){
-        Toast.makeText(getContext(), R.string.quote, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.quote, Toast.LENGTH_SHORT).show();
     }
 
     private String getLanguageEntry(String value){
