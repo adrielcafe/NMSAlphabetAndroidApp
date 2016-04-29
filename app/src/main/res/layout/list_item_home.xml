@@ -17,12 +17,12 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@color/colorAccent">
+            android:background="?colorAccent">
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:id="@+id/alien_word"
                 android:textColor="@android:color/white"
-                app:typeface="fonts/Geomanist-Regular.otf"
+                app:font="custom1"
                 style="@style/AlienWordTextView"/>
 
         </RelativeLayout>
@@ -75,34 +75,34 @@
                 android:layout_gravity="center"
                 android:background="@color/gray_light"/>
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:id="@+id/translation_1"
                 android:text="Lorem"
-                app:typeface="fonts/Geomanist-Regular.otf"
+                app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:id="@+id/translation_2"
                 android:text="Ipsum"
-                app:typeface="fonts/Geomanist-Regular.otf"
+                app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:id="@+id/translation_3"
                 android:text="Dolor"
-                app:typeface="fonts/Geomanist-Regular.otf"
+                app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:id="@+id/translation_4"
                 android:text="Sit"
-                app:typeface="fonts/Geomanist-Regular.otf"
+                app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
-            <in.raveesh.customtype.TextView
+            <TextView
                 android:id="@+id/translation_5"
                 android:text="Amet"
-                app:typeface="fonts/Geomanist-Regular.otf"
+                app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
             <View
@@ -150,10 +150,10 @@
             android:background="@drawable/word_tag_title"
             style="@style/AlienRaceTextView"/>
 
-        <in.raveesh.customtype.TextView
+        <TextView
             android:id="@+id/alien_word_title"
             android:textColor="@android:color/black"
-            app:typeface="fonts/Geomanist-Regular.otf"
+            app:font="custom1"
             style="@style/AlienWordTextView"/>
 
     </RelativeLayout>

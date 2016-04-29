@@ -16,6 +16,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import me.grantland.widget.AutofitHelper;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
@@ -56,7 +57,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         BadgeView badge = new BadgeView(context, view);
         badge.setText(count+"");
         badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-        badge.setBadgeBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+        badge.setBadgeBackgroundColor(ThemeUtil.getAccentColor(context));
         badge.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
         badge.setTextSize(11);
         badge.show();

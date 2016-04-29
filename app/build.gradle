@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.ofg.uptodate'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 23
@@ -54,6 +55,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.parse:parse-android:1.13.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true; }
 
     compile 'com.mikepenz:iconics-core:2.5.11@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
@@ -66,7 +68,7 @@ dependencies {
     compile 'com.github.adrielcafe:CircleRefreshLayout:6e201fb04b@aar'
     compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1@aar'
     compile 'com.ramotion.foldingcell:folding-cell:1.0.0@aar'
-    compile 'in.raveesh:customtype:1.0.0@aar'
+    compile 'com.tsengvn:Typekit:1.0.0@aar'
     compile 'me.grantland:autofittextview:0.2.1@aar'
     compile 'com.github.deano2390:android-viewbadger:1.0.0@aar'
     compile 'com.github.machinarius:preferencefragment:0.1.2@aar'
@@ -74,12 +76,12 @@ dependencies {
     compile 'io.github.kobakei:ratethisapp:1.0.3@aar'
     compile 'com.github.medyo:dynamicbox:1.2@aar'
 
-//    FABRIC
 //    ADS
 //    compile 'com.github.iammert:MaterialIntroView:1.5@aar'
 
 }
 
 repositories {
-    maven { url "https://jitpack.io" }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.fabric.io/public' }
 }

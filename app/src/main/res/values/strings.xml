@@ -31,6 +31,7 @@
     <string name="german_translation">German Translation</string>
     <string name="account">Account</string>
     <string name="language">Language</string>
+    <string name="theme">Theme</string>
     <string name="english">English</string>
     <string name="portuguese">Portuguese</string>
     <string name="german">German</string>
@@ -48,17 +49,36 @@
     <string name="restart_app">Restart App</string>
     <string name="refresh">Refresh</string>
     <string name="crash_msg">Looks like a black hole passed by here and crashes the app</string>
+    <string name="theme1">Theme 1</string>
+    <string name="theme2">Theme 2</string>
+    <string name="theme3">Theme 3</string>
+    <string name="theme4">Theme 4</string>
+    <string name="theme5">Theme 5</string>
 
     <string-array name="language_entries">
         <item>@string/english</item>
         <item>@string/portuguese</item>
         <item>@string/german</item>
     </string-array>
-
     <string-array name="language_values">
         <item>en</item>
         <item>pt</item>
         <item>de</item>
+    </string-array>
+
+    <string-array name="theme_entries">
+        <item>@string/theme1</item>
+        <item>@string/theme2</item>
+        <item>@string/theme3</item>
+        <item>@string/theme4</item>
+        <item>@string/theme5</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>theme1</item>
+        <item>theme2</item>
+        <item>theme3</item>
+        <item>theme4</item>
+        <item>theme5</item>
     </string-array>
 
 </resources>

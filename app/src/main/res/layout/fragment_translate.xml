@@ -18,7 +18,7 @@
             android:gravity="center"
             android:padding="20dp"
             android:orientation="vertical"
-            android:background="@color/colorPrimary"
+            android:background="?colorPrimary"
             android:elevation="8dp">
 
             <RelativeLayout
