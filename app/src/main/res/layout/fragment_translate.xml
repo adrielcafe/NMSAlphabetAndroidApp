@@ -46,7 +46,7 @@
                     android:singleLine="true"
                     android:hint="@string/type_alien_phrase"
                     android:textColorHint="@color/gray"
-                    android:textAppearance="@android:style/TextAppearance.Large"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
                     android:textColor="@android:color/white"
                     android:drawablePadding="5dp"
                     android:drawableStart="@drawable/alien_face"

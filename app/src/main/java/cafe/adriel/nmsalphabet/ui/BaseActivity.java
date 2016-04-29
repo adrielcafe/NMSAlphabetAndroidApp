@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -13,8 +14,10 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
+import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected SystemBarTintManager tintManager;
@@ -54,5 +57,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);
         tintManager.setTintColor(ThemeUtil.getPrimaryColor(this));
+    }
+
+    protected void addPaddingBottomIfNeeded(){
+        View contentLayout = findViewById(R.id.content_layout);
+        if(contentLayout != null && Build.VERSION.SDK_INT >= 23){
+            contentLayout.setPaddingRelative(contentLayout.getPaddingStart(), contentLayout.getPaddingTop(),
+                    contentLayout.getPaddingEnd(), Util.getNavigationBarHeight(this));
+        }
     }
 }
