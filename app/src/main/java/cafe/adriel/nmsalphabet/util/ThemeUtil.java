@@ -1,6 +1,8 @@
 package cafe.adriel.nmsalphabet.util;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.Spanned;
@@ -138,5 +140,21 @@ public class ThemeUtil {
                 "<font color='%s'>●</font>",
                 primaryDarkColor, primaryColor, accentColor);
         return Html.fromHtml(html);
+    }
+
+    public static Drawable getHeaderControlDrawable(Context context){
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        shape.setColor(ThemeUtil.getPrimaryDarkColor(context));
+        shape.setCornerRadius(250);
+        return shape;
+    }
+
+    public static Drawable getWordRaceTitleDrawable(Context context){
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        shape.setColor(ThemeUtil.getAccentColor(context));
+        shape.setCornerRadii(new float [] {0, 0, 250, 250, 250, 250, 0, 0});
+        return shape;
     }
 }

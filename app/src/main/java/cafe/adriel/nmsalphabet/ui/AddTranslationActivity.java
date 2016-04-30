@@ -76,9 +76,9 @@ public class AddTranslationActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        addPaddingBottomIfNeeded();
+        adjustMarginAndPadding();
         initFab();
-        racesView.setBackgroundResource(R.drawable.home_control);
+        racesView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
         racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(this));
@@ -88,12 +88,17 @@ public class AddTranslationActivity extends BaseActivity {
 
             }
         });
+
         alienWordView.post(new Runnable() {
             @Override
             public void run() {
                 racesView.setHeight(alienWordView.getHeight());
             }
         });
+        alienWordView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        englishTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        portugueseTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        germanTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
     }
 
     private void initFab(){

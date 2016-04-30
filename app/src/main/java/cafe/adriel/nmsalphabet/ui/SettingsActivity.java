@@ -1,6 +1,5 @@
 package cafe.adriel.nmsalphabet.ui;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -8,7 +7,6 @@ import android.widget.FrameLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.util.Util;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -37,6 +35,6 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        addPaddingBottomIfNeeded();
+        adjustMarginAndPadding();
     }
 }

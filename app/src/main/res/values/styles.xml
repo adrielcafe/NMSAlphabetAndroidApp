@@ -64,7 +64,6 @@
         <item name="android:textColorHint">@color/gray</item>
         <item name="android:drawablePadding">5dp</item>
         <item name="android:singleLine">true</item>
-        <item name="android:background">@drawable/home_control</item>
         <item name="android:inputType">textCapCharacters|textCapWords|textCapSentences</item>
     </style>
 

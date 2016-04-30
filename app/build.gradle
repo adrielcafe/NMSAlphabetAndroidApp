@@ -20,7 +20,7 @@ android {
         }
         pro {
             applicationId "cafe.adriel.nmsalphabet.pro"
-            minSdkVersion 17
+            minSdkVersion 18
             resValue "string", "app_name", "NMS αβ Pro"
         }
     }

@@ -75,6 +75,8 @@ public class WordsFragment extends BaseFragment {
     TextView userNameView;
     @BindView(R.id.settings)
     Button settingsView;
+    @BindView(R.id.search_layout)
+    RelativeLayout searchLayout;
     @BindView(R.id.search)
     EditText searchView;
     @BindView(R.id.search_icon)
@@ -180,7 +182,7 @@ public class WordsFragment extends BaseFragment {
                 }
             });
 
-            racesView.setBackgroundResource(R.drawable.home_control);
+            racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
             racesView.setTextColor(Color.WHITE);
             racesView.setArrowColor(Color.WHITE);
             racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));
@@ -192,6 +194,7 @@ public class WordsFragment extends BaseFragment {
                 }
             });
 
+            searchLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
             searchView.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
