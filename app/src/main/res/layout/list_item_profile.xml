@@ -31,7 +31,7 @@
             android:id="@+id/tag"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="85dp"
+            android:layout_marginTop="90dp"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:background="@drawable/word_tag"
@@ -161,7 +161,6 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="5dp"
             android:textColor="@android:color/white"
-            android:background="@drawable/word_tag_title"
             style="@style/AlienRaceTextView"/>
 
         <TextView

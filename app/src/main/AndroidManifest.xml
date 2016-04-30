@@ -62,6 +62,8 @@
                 <action android:name="cat.ereza.customactivityoncrash.ERROR" />
             </intent-filter>
         </activity>
+
+        <meta-data android:name="io.fabric.ApiKey" android:value="ddc31cab4f4e58777548048f200abae359a82d7b"/>
     </application>
 
 </manifest>

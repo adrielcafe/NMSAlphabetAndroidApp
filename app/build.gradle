@@ -20,7 +20,7 @@ android {
         }
         pro {
             applicationId "cafe.adriel.nmsalphabet.pro"
-            minSdkVersion 17
+            minSdkVersion 18
             resValue "string", "app_name", "NMS αβ Pro"
         }
     }
@@ -50,8 +50,8 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
 
-    apt     'com.jakewharton:butterknife-compiler:8.0.0'
-    compile 'com.jakewharton:butterknife:8.0.0'
+    apt     'com.jakewharton:butterknife-compiler:8.0.1'
+    compile 'com.jakewharton:butterknife:8.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.parse:parse-android:1.13.0'
@@ -69,14 +69,12 @@ dependencies {
     compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1@aar'
     compile 'com.ramotion.foldingcell:folding-cell:1.0.0@aar'
     compile 'com.tsengvn:Typekit:1.0.0@aar'
-    compile 'me.grantland:autofittextview:0.2.1@aar'
     compile 'com.github.deano2390:android-viewbadger:1.0.0@aar'
-    compile 'com.github.machinarius:preferencefragment:0.1.2@aar'
     compile 'cat.ereza:customactivityoncrash:1.5.0@aar'
     compile 'io.github.kobakei:ratethisapp:1.0.3@aar'
     compile 'com.github.medyo:dynamicbox:1.2@aar'
 
-//    ADS
+//    https://developers.google.com/admob/android/banner#banner_size
 //    compile 'com.github.iammert:MaterialIntroView:1.5@aar'
 
 }
