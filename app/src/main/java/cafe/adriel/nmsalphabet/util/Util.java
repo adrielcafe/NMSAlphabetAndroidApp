@@ -4,12 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -20,21 +18,10 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 
 public class Util {
-    public static final String LANGUAGE_EN = "en";
-    public static final String LANGUAGE_PT = "pt";
-    public static final String LANGUAGE_DE = "de";
-
-    public enum Language {
-        ENGLISH,
-        PORTUGUESE,
-        GERMAN
-    }
 
     private static final Handler ASYNC_HANDLER = new Handler();
     private static final String[] PERMISSIONS = {
@@ -51,6 +38,10 @@ public class Util {
 
     public static boolean isNotEmpty(final CharSequence cs) {
         return !isEmpty(cs);
+    }
+
+    public static String toHex(int color){
+        return "#" + Integer.toHexString(color).replaceFirst("ff", "").toUpperCase();
     }
 
     public static void asyncCall(int delay, Runnable runnable){
@@ -76,28 +67,10 @@ public class Util {
         }
     }
 
-    public Language getLanguage(Context context){
-        String language = PreferenceManager.getDefaultSharedPreferences(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LANGUAGE_EN);
-        switch (language){
-            case LANGUAGE_PT:
-                return Language.PORTUGUESE;
-            case LANGUAGE_DE:
-                return Language.GERMAN;
-            default:
-                return Language.ENGLISH;
-        }
-    }
-
-    public static void updateLanguage(Context context){
-        String language = PreferenceManager.getDefaultSharedPreferences(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, "en");
-        Resources res = context.getResources();
-        Configuration conf = res.getConfiguration();
-        conf.locale = new Locale(language.toLowerCase());
-        res.updateConfiguration(conf, res.getDisplayMetrics());
-    }
-
     public static void restartActivity(Activity activity){
-        activity.recreate();
+        if(activity != null) {
+            activity.recreate();
+        }
     }
 
     public static void hideSoftKeyboard(Activity activity) {
@@ -112,6 +85,16 @@ public class Util {
             return "v" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (Exception e) {
             return "";
+        }
+    }
+
+    public static int getNavigationBarHeight(Context context){
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
         }
     }
 

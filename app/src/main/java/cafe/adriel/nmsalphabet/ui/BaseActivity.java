@@ -8,11 +8,15 @@ import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
+import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
@@ -24,7 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
         ThemeUtil.setCustomTheme(this);
-        Util.updateLanguage(this);
+        LanguageUtil.updateLanguage(this);
         tintBars();
     }
 
@@ -54,5 +58,27 @@ public abstract class BaseActivity extends AppCompatActivity {
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);
         tintManager.setTintColor(ThemeUtil.getPrimaryColor(this));
+    }
+
+    protected void adjustMarginAndPadding(){
+        FrameLayout contentLayout = (FrameLayout) findViewById(R.id.content_layout);
+        if(contentLayout != null){
+            if(Build.VERSION.SDK_INT >= 23) {
+                contentLayout.setPaddingRelative(0, contentLayout.getPaddingTop(), 0, Util.getNavigationBarHeight(this));
+            } else if(Build.VERSION.SDK_INT == 18){
+                contentLayout.setPaddingRelative(0, 0, 0, 0);
+                if(this instanceof AddTranslationActivity){
+                    LinearLayout childView = (LinearLayout) findViewById(R.id.form_layout);
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) childView.getLayoutParams();
+                    params.topMargin = 0;
+                    childView.setLayoutParams(params);
+                } else if(this instanceof SettingsActivity){
+                    LinearLayout childView = (LinearLayout) contentLayout.getChildAt(0);
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) childView.getLayoutParams();
+                    params.topMargin = params.bottomMargin;
+                    childView.setLayoutParams(params);
+                }
+            }
+        }
     }
 }

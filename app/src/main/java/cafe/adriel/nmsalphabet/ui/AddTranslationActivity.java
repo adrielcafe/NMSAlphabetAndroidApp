@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -21,6 +22,8 @@ import cafe.adriel.nmsalphabet.util.ThemeUtil;
 
 public class AddTranslationActivity extends BaseActivity {
 
+    @BindView(R.id.content_layout)
+    FrameLayout contentLayout;
     @BindView(R.id.races)
     MaterialSpinner racesView;
     @BindView(R.id.alien_word)
@@ -73,8 +76,9 @@ public class AddTranslationActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        adjustMarginAndPadding();
         initFab();
-        racesView.setBackgroundResource(R.drawable.home_control);
+        racesView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
         racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(this));
@@ -84,12 +88,17 @@ public class AddTranslationActivity extends BaseActivity {
 
             }
         });
+
         alienWordView.post(new Runnable() {
             @Override
             public void run() {
                 racesView.setHeight(alienWordView.getHeight());
             }
         });
+        alienWordView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        englishTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        portugueseTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        germanTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
     }
 
     private void initFab(){

@@ -101,4 +101,14 @@
         app:SpinKit_Color="@android:color/white"
         style="@style/SpinKitView.Large.Pulse" />
 
+    <TextView
+        android:id="@+id/app_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:padding="10dp"
+        android:textColor="@color/gray_light"
+        android:textSize="12sp"/>
+
 </RelativeLayout>

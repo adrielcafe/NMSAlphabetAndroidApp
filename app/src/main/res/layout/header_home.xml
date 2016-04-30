@@ -10,12 +10,17 @@
     android:elevation="8dp"
     android:visibility="gone">
 
-    <RelativeLayout
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/races"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginBottom="10dp"
-        android:padding="10dp"
-        android:background="@drawable/home_control">
+        android:layout_marginBottom="10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/search_icon"
@@ -58,11 +63,5 @@
             android:visibility="invisible"/>
 
     </RelativeLayout>
-
-    <com.jaredrummler.materialspinner.MaterialSpinner
-        android:id="@+id/races"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/home_control"/>
 
 </LinearLayout>
