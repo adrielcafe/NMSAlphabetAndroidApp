@@ -2,5 +2,6 @@
 <resources>
 
     <string name="parse_app_id" translatable="false">20A2FAB7ED2645B4D3B25DCC372AB208AF62DDB5251D72733924045CE7F3781D</string>
+    <string name="facebook_app_id" translatable="false">987056394665556</string>
 
 </resources>

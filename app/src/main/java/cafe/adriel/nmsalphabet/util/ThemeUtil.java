@@ -131,9 +131,9 @@ public class ThemeUtil {
     }
 
     public static Spanned getThemeCircles(Context context, String theme){
-        String primaryDarkColor = Util.toHex(getPrimaryDarkColor(context, theme));
-        String primaryColor = Util.toHex(getPrimaryColor(context, theme));
-        String accentColor = Util.toHex(getAccentColor(context, theme));
+        String primaryDarkColor = Util.toHexColor(getPrimaryDarkColor(context, theme));
+        String primaryColor = Util.toHexColor(getPrimaryColor(context, theme));
+        String accentColor = Util.toHexColor(getAccentColor(context, theme));
         String html = String.format(
                 "<font color='%s'>●</font>" +
                 "<font color='%s'>●</font>" +

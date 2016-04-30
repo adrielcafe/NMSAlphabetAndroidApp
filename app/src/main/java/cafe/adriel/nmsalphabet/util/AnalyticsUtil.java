@@ -10,35 +10,35 @@ import cafe.adriel.nmsalphabet.model.AlienWord;
 
 public class AnalyticsUtil {
 
-    public static void eventSignUp(String network){
+    public static void signUpEvent(String network){
         Answers.getInstance().logSignUp(new SignUpEvent()
                 .putMethod(network)
                 .putSuccess(true));
     }
 
-    public static void eventSignIn(String network){
+    public static void signInEvent(String network){
         Answers.getInstance().logLogin(new LoginEvent()
                 .putMethod(network)
                 .putSuccess(true));
     }
 
-    public static void eventWordView(AlienWord word){
+    public static void wordViewEvent(AlienWord word){
         Answers.getInstance().logContentView(new ContentViewEvent()
                 .putContentName(word.getClassName())
                 .putContentType("Word")
                 .putContentId(word.getObjectId()));
     }
 
-    public static void eventSearch(String word){
+    public static void searchEvent(String word){
         Answers.getInstance().logSearch(new SearchEvent()
                 .putQuery(word));
     }
 
-    public static void eventTranslate(String word){
+    public static void translateEvent(String word){
         // TODO
     }
 
-    public static void eventAddTranslation(String word){
+    public static void addTranslationEvent(String word){
         // TODO
     }
 
