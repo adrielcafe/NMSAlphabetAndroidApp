@@ -41,7 +41,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/google_signin"
+            android:id="@+id/facebook_signin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
