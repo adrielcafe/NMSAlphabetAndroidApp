@@ -6,9 +6,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -59,11 +60,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         tintManager.setTintColor(ThemeUtil.getPrimaryColor(this));
     }
 
-    protected void addPaddingBottomIfNeeded(){
-        View contentLayout = findViewById(R.id.content_layout);
-        if(contentLayout != null && Build.VERSION.SDK_INT >= 23){
-            contentLayout.setPaddingRelative(contentLayout.getPaddingStart(), contentLayout.getPaddingTop(),
-                    contentLayout.getPaddingEnd(), Util.getNavigationBarHeight(this));
+    protected void adjustMarginAndPadding(){
+        FrameLayout contentLayout = (FrameLayout) findViewById(R.id.content_layout);
+        if(contentLayout != null){
+            if(Build.VERSION.SDK_INT >= 23) {
+                contentLayout.setPaddingRelative(0, contentLayout.getPaddingTop(), 0, Util.getNavigationBarHeight(this));
+            } else if(Build.VERSION.SDK_INT == 18){
+                contentLayout.setPaddingRelative(0, 0, 0, 0);
+                if(this instanceof AddTranslationActivity){
+                    LinearLayout childView = (LinearLayout) findViewById(R.id.form_layout);
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) childView.getLayoutParams();
+                    params.topMargin = 0;
+                    childView.setLayoutParams(params);
+                } else if(this instanceof SettingsActivity){
+                    LinearLayout childView = (LinearLayout) contentLayout.getChildAt(0);
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) childView.getLayoutParams();
+                    params.topMargin = params.bottomMargin;
+                    childView.setLayoutParams(params);
+                }
+            }
         }
     }
 }

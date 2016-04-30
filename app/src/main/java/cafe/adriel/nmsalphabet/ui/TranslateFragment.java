@@ -61,7 +61,7 @@ public class TranslateFragment extends BaseFragment {
     @Override
     protected void init(){
         initFab();
-        racesView.setBackgroundResource(R.drawable.home_control);
+        racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
         racesView.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
@@ -74,6 +74,7 @@ public class TranslateFragment extends BaseFragment {
             }
         });
 
+        phraseLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
         phraseView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

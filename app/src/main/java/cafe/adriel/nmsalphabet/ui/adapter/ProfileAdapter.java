@@ -43,6 +43,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, int position) {
         String word = wordList.get(position);
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
+        holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
         holder.alienWordTitleView.setText(word);
         holder.alienWordView.setText(word);
         holder.alienRaceTitleView.setText("Korvax");
