@@ -1,6 +1,8 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
+import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.view.ViewPagerFadeTransformer;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -111,9 +115,32 @@ public class MainActivity extends BaseActivity {
         fabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AddTranslationActivity.class));
+                if(App.isSignedIn()) {
+                    startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
+                } else {
+                    showSignInDialog();
+                }
             }
         });
+    }
+
+    private void showSignInDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.new_translation)
+                .setMessage(R.string.signin_to_add_translations)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Util.getSettings(MainActivity.this).edit()
+                                .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
+                                .commit();
+                        dialog.dismiss();
+                        finish();
+                        startActivity(new Intent(MainActivity.this, SplashActivity.class));
+                    }
+                })
+                .show();
     }
 
     private class TabPagerAdapter extends FragmentPagerAdapter {

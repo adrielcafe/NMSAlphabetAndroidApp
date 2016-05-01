@@ -17,15 +17,21 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.SubscriberExceptionEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.model.User;
+import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
+
+    private static List<AlienRace> races;
     private static User user;
 
     @Override
@@ -86,6 +92,10 @@ public class App extends Application {
         user = null;
     }
 
+    public static boolean isSignedIn(){
+        return getUser() != null;
+    }
+
     public static User getUser(){
         if(user == null){
             user = (User) ParseUser.getCurrentUser();
@@ -93,8 +103,28 @@ public class App extends Application {
         return user;
     }
 
-    public static boolean isSignedIn(){
-        return getUser() != null;
+    public static List<AlienRace> getRaces(){
+        return races;
     }
 
+    public static List<String> getRacesName(){
+        List<String> racesName = new ArrayList<>();
+        for(AlienRace race : races){
+            racesName.add(race.getName());
+        }
+        return racesName;
+    }
+
+    public static AlienRace getRace(String name){
+        for(AlienRace race : races){
+            if(race.getName().toUpperCase().equals(name.toUpperCase())){
+                return race;
+            }
+        }
+        return null;
+    }
+
+    public static void loadRacesWordsAndTranslations(){
+        races = DbUtil.getRaces();
+    }
 }

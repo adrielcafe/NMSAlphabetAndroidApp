@@ -25,6 +25,7 @@ import com.parse.ParseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
@@ -165,7 +166,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void afterSignIn(){
-        // TODO load and CACHE races, words and translations
+        App.loadRacesWordsAndTranslations();
         Util.getSettings(this).edit().putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, true).commit();
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
