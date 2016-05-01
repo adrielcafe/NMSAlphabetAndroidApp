@@ -15,15 +15,18 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.model.AlienRace;
+import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
     private Context context;
-    private List<String> wordList;
+    private List<AlienWord> wordList;
 
-    public ProfileAdapter(Context context, List<String> wordList) {
+    public ProfileAdapter(Context context, List<AlienWord> wordList) {
         this.context = context;
         this.wordList = wordList;
     }
@@ -41,13 +44,14 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String word = wordList.get(position);
+        AlienWord word = wordList.get(position);
+        AlienRace race = App.getRaceById(word.getRace().getObjectId());
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
         holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
-        holder.alienWordTitleView.setText(word);
-        holder.alienWordView.setText(word);
-        holder.alienRaceTitleView.setText("Korvax");
-        holder.alienRaceView.setText("Korvax's Word");
+        holder.alienWordTitleView.setText(word.getWord());
+        holder.alienWordView.setText(word.getWord());
+        holder.alienRaceTitleView.setText(race.getName());
+        holder.alienRaceView.setText(race.getName() + "'s Word");
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

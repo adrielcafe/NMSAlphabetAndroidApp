@@ -41,16 +41,16 @@ public class AlienWordTranslation extends ParseObject implements Serializable {
         put("race", race);
     }
 
-    public ParseRelation getTranslators() {
-        return getRelation("translators");
+    public ParseRelation getUsers() {
+        return getRelation("users");
     }
 
-    public void addTranslator(User user){
-        getTranslators().add(user);
+    public void addUser(User user){
+        getUsers().add(user);
     }
 
-    public void removeTranslator(User user){
-        getTranslators().remove(user);
+    public void removeUser(User user){
+        getUsers().remove(user);
     }
 
 }

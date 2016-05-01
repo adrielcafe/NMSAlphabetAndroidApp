@@ -182,15 +182,16 @@ public class TranslationEditorActivity extends BaseActivity {
                     String deTranslationStr = deTranslationView.getText().toString().toUpperCase();
 
                     try {
-                        alienRace = App.getRace(alienRaceStr);
+                        alienRace = App.getRaceByName(alienRaceStr);
 
                         alienWord = DbUtil.getWord(alienRace, alienWordStr);
                         if (alienWord == null) {
                             alienWord = new AlienWord();
                             alienWord.setRace(alienRace);
                             alienWord.setWord(alienWordStr);
-                            alienWord.save();
                         }
+                        alienWord.addUser(App.getUser());
+                        alienWord.save();
 
                         if(Util.isNotEmpty(enTranslationStr)){
                             enTranslation = DbUtil.getTranslation(alienRace, alienWord, LanguageUtil.LANGUAGE_EN);
@@ -201,7 +202,7 @@ public class TranslationEditorActivity extends BaseActivity {
                                 enTranslation.setLanguage(LanguageUtil.LANGUAGE_EN);
                                 enTranslation.setTranslation(enTranslationStr);
                             }
-                            enTranslation.addTranslator(App.getUser());
+                            enTranslation.addUser(App.getUser());
                             enTranslation.save();
                         }
 
@@ -214,7 +215,7 @@ public class TranslationEditorActivity extends BaseActivity {
                                 ptTranslation.setLanguage(LanguageUtil.LANGUAGE_PT);
                                 ptTranslation.setTranslation(ptTranslationStr);
                             }
-                            ptTranslation.addTranslator(App.getUser());
+                            ptTranslation.addUser(App.getUser());
                             ptTranslation.save();
                         }
 
@@ -227,7 +228,7 @@ public class TranslationEditorActivity extends BaseActivity {
                                 deTranslation.setLanguage(LanguageUtil.LANGUAGE_DE);
                                 deTranslation.setTranslation(deTranslationStr);
                             }
-                            deTranslation.addTranslator(App.getUser());
+                            deTranslation.addUser(App.getUser());
                             deTranslation.save();
                         }
 

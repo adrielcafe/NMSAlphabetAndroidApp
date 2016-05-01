@@ -13,7 +13,7 @@
             android:dialogTitle="@string/language"
             android:entries="@array/language_entries"
             android:entryValues="@array/language_values"
-            android:defaultValue="@string/english"/>
+            android:defaultValue="en"/>
 
         <cafe.adriel.nmsalphabet.ui.adapter.ThemePreferenceAdapter
             android:key="account_theme"
@@ -21,7 +21,7 @@
             android:dialogTitle="@string/theme"
             android:entries="@array/theme_entries"
             android:entryValues="@array/theme_values"
-            android:defaultValue="Theme1"/>
+            android:defaultValue="theme1"/>
 
     </PreferenceCategory>
 
