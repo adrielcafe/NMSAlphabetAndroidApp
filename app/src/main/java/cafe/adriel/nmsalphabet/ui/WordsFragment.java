@@ -61,6 +61,8 @@ public class WordsFragment extends BaseFragment {
     }
 
     private Type type;
+    private Bookends<HomeAdapter> homeAdapter;
+    private Bookends<ProfileAdapter> profileAdapter;
     private DynamicBox stateBox;
 
     @BindView(R.id.refresh_layout)
@@ -282,7 +284,13 @@ public class WordsFragment extends BaseFragment {
         EndlessRecyclerOnScrollListener infiniteScrollListener = new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
-
+                setLoadingList(true);
+                Util.asyncCall(3000, new Runnable() {
+                    @Override
+                    public void run() {
+                        setLoadingList(false);
+                    }
+                });
             }
         };
         RecyclerItemClickSupport.addTo(wordsView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
@@ -316,19 +324,31 @@ public class WordsFragment extends BaseFragment {
 
         switch (type){
             case HOME:
-                Bookends<HomeAdapter> homeAdapter = new Bookends<>(new HomeAdapter(getContext(), l));
+                homeAdapter = new Bookends<>(new HomeAdapter(getContext(), l));
                 homeAdapter.addHeader(listHeaderHomeLayout);
+                homeAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
+                homeAdapter.setFooterVisibility(false);
                 wordsView.swapAdapter(homeAdapter, true);
                 break;
             case PROFILE:
-                Bookends<ProfileAdapter> profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), l));
+                profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), l));
                 profileAdapter.addHeader(listHeaderProfileLayout);
+                profileAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
+                profileAdapter.setFooterVisibility(false);
                 wordsView.swapAdapter(profileAdapter, true);
                 break;
         }
     }
 
     private void searchWord(String word){
-        Log.e("SEARCH", word+"");
+
+    }
+
+    private void setLoadingList(boolean loading){
+        if(type == Type.PROFILE){
+            profileAdapter.setFooterVisibility(loading);
+        } else {
+            homeAdapter.setFooterVisibility(loading);
+        }
     }
 }
