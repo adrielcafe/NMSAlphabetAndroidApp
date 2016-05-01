@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +27,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
-import com.tuesda.walker.circlerefresh.CircleRefreshLayout;
 import com.tumblr.bookends.Bookends;
 
 import java.util.ArrayList;
@@ -40,10 +41,12 @@ import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
 import cafe.adriel.nmsalphabet.ui.view.EndlessRecyclerOnScrollListener;
-import cafe.adriel.nmsalphabet.ui.view.RefreshLayout;
+import cafe.adriel.nmsalphabet.ui.view.SwipeRefreshLayoutToggleScrollListener;
+import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.SocialUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
@@ -61,17 +64,19 @@ public class WordsFragment extends BaseFragment {
     }
 
     private Type type;
+    private List<AlienWord> words;
     private Bookends<HomeAdapter> homeAdapter;
     private Bookends<ProfileAdapter> profileAdapter;
     private DynamicBox stateBox;
+    private EndlessRecyclerOnScrollListener infiniteScrollListener;
 
     @BindView(R.id.refresh_layout)
-    RefreshLayout refreshLayout;
+    SwipeRefreshLayout refreshLayout;
     @BindView(R.id.words)
     RecyclerView wordsView;
     @BindView(R.id.header_home_layout)
     LinearLayout headerHomeLayout;
-    @BindView(R.id.header_profile)
+    @BindView(R.id.header_profile_layout)
     RelativeLayout headerProfileLayout;
     @BindView(R.id.user_image)
     ImageView userImageView;
@@ -123,25 +128,17 @@ public class WordsFragment extends BaseFragment {
                 wordsView.setAdapter(new HomeAdapter(getContext(), new ArrayList<String>()));
                 break;
             case PROFILE:
-                wordsView.setAdapter(new ProfileAdapter(getContext(), new ArrayList<String>()));
+                wordsView.setAdapter(new ProfileAdapter(getContext(), new ArrayList<AlienWord>()));
                 break;
         }
     }
 
     private void initControls(){
-        refreshLayout.setOnRefreshListener(new CircleRefreshLayout.OnCircleRefreshListener() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void refreshing() {
-                Util.asyncCall(3000, new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.finishRefreshing();
-                    }
-                });
-            }
-            @Override
-            public void completeRefresh() {
-
+            public void onRefresh() {
+                resetList();
+                updateList(0);
             }
         });
         if(type == Type.PROFILE){
@@ -154,7 +151,7 @@ public class WordsFragment extends BaseFragment {
                         headerProfileLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                     initState();
-                    updateList();
+                    updateList(0);
                 }
             });
             settingsView.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +183,7 @@ public class WordsFragment extends BaseFragment {
                         headerHomeLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                     initState();
-                    updateList();
+                    updateList(0);
                 }
             });
 
@@ -276,21 +273,15 @@ public class WordsFragment extends BaseFragment {
         stateBox.addCustomView(emptyState, STATE_EMPTY);
         stateBox.addCustomView(noInternetState, STATE_NO_INTERNET);
         stateBox.addCustomView(requireSignInState, STATE_REQUIRE_SIGN_IN);
-//        stateBox.showCustomView(STATE_LOADING);
+        stateBox.showCustomView(STATE_LOADING);
     }
 
     private void initList(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        EndlessRecyclerOnScrollListener infiniteScrollListener = new EndlessRecyclerOnScrollListener(layoutManager) {
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        infiniteScrollListener = new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
-                setLoadingList(true);
-                Util.asyncCall(3000, new Runnable() {
-                    @Override
-                    public void run() {
-                        setLoadingList(false);
-                    }
-                });
+                updateList(currentPage);
             }
         };
         RecyclerItemClickSupport.addTo(wordsView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
@@ -302,42 +293,64 @@ public class WordsFragment extends BaseFragment {
 
         wordsView.setLayoutManager(layoutManager);
         wordsView.addOnScrollListener(infiniteScrollListener);
-        refreshLayout.setLayoutManager(layoutManager);
+        wordsView.addOnScrollListener(new SwipeRefreshLayoutToggleScrollListener(refreshLayout));
     }
 
-    private void updateList(){
+    private void initAdapter(){
         FoldingCell listHeaderHomeLayout = (FoldingCell) LayoutInflater.from(getContext()).inflate(R.layout.list_header_home, null);
         listHeaderHomeLayout.getChildAt(0).setMinimumHeight(headerHomeLayout.getHeight());
         View listHeaderProfileLayout = LayoutInflater.from(getContext()).inflate(R.layout.list_header_profile, null);
         listHeaderProfileLayout.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
 
-        List<String> l = new ArrayList<>();
-        l.add("Sadipscing");
-        l.add("Consetetur");
-        l.add("Nonumy");
-        l.add("Aliquyam");
-        l.add("Voluptua");
-        l.add("Takimata");
-        l.add("Gubergren");
-        l.add("Rebum");
-        l.add("Est");
-
         switch (type){
             case HOME:
-                homeAdapter = new Bookends<>(new HomeAdapter(getContext(), l));
+                homeAdapter = new Bookends<>(new HomeAdapter(getContext(), new ArrayList<String>()));
                 homeAdapter.addHeader(listHeaderHomeLayout);
                 homeAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
                 homeAdapter.setFooterVisibility(false);
                 wordsView.swapAdapter(homeAdapter, true);
                 break;
             case PROFILE:
-                profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), l));
+                profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), words));
                 profileAdapter.addHeader(listHeaderProfileLayout);
                 profileAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
                 profileAdapter.setFooterVisibility(false);
                 wordsView.swapAdapter(profileAdapter, true);
                 break;
         }
+
+        wordsView.setMinimumHeight(refreshLayout.getHeight());
+    }
+
+    private void updateList(final int page){
+        setLoadingList(true);
+        DbUtil.getWordsByUser(App.getUser(), page, new FindCallback<AlienWord>() {
+            @Override
+            public void done(List<AlienWord> objects, ParseException e) {
+                if(page == 0){
+                    if(Util.isEmpty(objects)){
+                        stateBox.showCustomView(STATE_EMPTY);
+                    } else {
+                        stateBox.hideAll();
+                        words = objects;
+                        initAdapter();
+                    }
+                } else {
+                    stateBox.hideAll();
+                    words.addAll(objects);
+                    switch (type){
+                        case HOME:
+                            homeAdapter.notifyDataSetChanged();
+                            break;
+                        case PROFILE:
+                            profileAdapter.notifyDataSetChanged();
+                            break;
+                    }
+                }
+                setLoadingList(false);
+                refreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void searchWord(String word){
@@ -345,10 +358,34 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(boolean loading){
-        if(type == Type.PROFILE){
-            profileAdapter.setFooterVisibility(loading);
-        } else {
-            homeAdapter.setFooterVisibility(loading);
+        switch (type){
+            case HOME:
+                if(homeAdapter != null) {
+                    homeAdapter.setFooterVisibility(loading);
+                }
+                break;
+            case PROFILE:
+                if(profileAdapter != null) {
+                    profileAdapter.setFooterVisibility(loading);
+                }
+                break;
+        }
+    }
+
+    private void resetList(){
+        words.clear();
+        infiniteScrollListener.reset();
+        switch (type){
+            case HOME:
+                if(homeAdapter != null) {
+                    homeAdapter.notifyDataSetChanged();
+                }
+                break;
+            case PROFILE:
+                if(profileAdapter != null) {
+                    profileAdapter.notifyDataSetChanged();
+                }
+                break;
         }
     }
 }

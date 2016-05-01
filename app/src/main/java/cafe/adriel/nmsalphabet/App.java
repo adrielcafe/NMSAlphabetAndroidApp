@@ -115,7 +115,16 @@ public class App extends Application {
         return racesName;
     }
 
-    public static AlienRace getRace(String name){
+    public static AlienRace getRaceById(String id){
+        for(AlienRace race : races){
+            if(race.getObjectId().equals(id)){
+                return race;
+            }
+        }
+        return null;
+    }
+
+    public static AlienRace getRaceByName(String name){
         for(AlienRace race : races){
             if(race.getName().toUpperCase().equals(name.toUpperCase())){
                 return race;

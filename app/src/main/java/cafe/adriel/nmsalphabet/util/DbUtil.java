@@ -43,7 +43,7 @@ public class DbUtil {
 
     public static void getWordsByUser(User user, int page, FindCallback<AlienWord> callback){
         ParseQuery.getQuery(AlienWord.class)
-                .whereEqualTo("user", user)
+                .whereEqualTo("users", user)
                 .addAscendingOrder("word")
                 .addAscendingOrder("_updated_at")
                 .setLimit(PAGE_SIZE)

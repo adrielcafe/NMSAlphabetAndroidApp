@@ -2,12 +2,13 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/header_profile"
+    android:id="@+id/header_profile_layout"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
     android:gravity="center_vertical"
     android:background="?colorPrimary"
-    android:elevation="8dp">
+    android:elevation="8dp"
+    android:visibility="gone">
 
     <ImageView
         android:id="@+id/user_image"
