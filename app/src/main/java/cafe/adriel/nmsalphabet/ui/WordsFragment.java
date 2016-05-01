@@ -37,12 +37,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
 import cafe.adriel.nmsalphabet.ui.view.EndlessRecyclerOnScrollListener;
 import cafe.adriel.nmsalphabet.ui.view.RefreshLayout;
+import cafe.adriel.nmsalphabet.util.SocialUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import mehdi.sakout.dynamicbox.DynamicBox;
@@ -159,7 +161,11 @@ public class WordsFragment extends BaseFragment {
                     startActivity(new Intent(getContext(), SettingsActivity.class));
                 }
             });
-            Glide.with(getContext()).load(R.drawable.default_user_image).asBitmap().centerCrop()
+            userNameView.setText(App.isSignedIn() ? App.getUser().getName() : getString(R.string.unknown_explorer));
+            Glide.with(getContext())
+                    .load(App.isSignedIn() ? SocialUtil.getUserImageUrl() : R.drawable.default_user_image)
+                    .asBitmap()
+                    .centerCrop()
                     .into(new BitmapImageViewTarget(userImageView) {
                 @Override
                 protected void setResource(Bitmap resource) {

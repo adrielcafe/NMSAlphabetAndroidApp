@@ -58,6 +58,7 @@
     <string name="theme3">Theme 3</string>
     <string name="theme4">Theme 4</string>
     <string name="theme5">Theme 5</string>
+    <string name="unknown_explorer">Unknown Explorer</string>
 
     <string-array name="language_entries">
         <item>@string/english</item>
