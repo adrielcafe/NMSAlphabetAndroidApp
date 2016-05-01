@@ -50,16 +50,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         holder.alienRaceView.setText("Korvax's Word");
     }
 
-    private void addBadge(View view, int count){
-        BadgeView badge = new BadgeView(context, view);
-        badge.setText(count+"");
-        badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-        badge.setBadgeBackgroundColor(ThemeUtil.getAccentColor(context));
-        badge.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-        badge.setTextSize(11);
-        badge.show();
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.card_layout)
         FoldingCell cardLayout;

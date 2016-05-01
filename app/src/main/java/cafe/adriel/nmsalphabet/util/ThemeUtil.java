@@ -146,6 +146,7 @@ public class ThemeUtil {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setColor(ThemeUtil.getPrimaryDarkColor(context));
+        shape.setAlpha(254);
         shape.setCornerRadius(250);
         return shape;
     }
@@ -154,6 +155,7 @@ public class ThemeUtil {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setColor(ThemeUtil.getAccentColor(context));
+        shape.setAlpha(254);
         shape.setCornerRadii(new float [] {0, 0, 250, 250, 250, 250, 0, 0});
         return shape;
     }
