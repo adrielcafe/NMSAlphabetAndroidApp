@@ -31,7 +31,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@android:color/white"
         android:textAllCaps="true"
-        android:text="John Doe"
         app:font="custom1"/>
 
     <Button
