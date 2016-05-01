@@ -57,5 +57,7 @@
     <string name="theme5">Tema 5</string>
     <string name="quote">\"Somos uma impossibilidade em um universo impossível\"</string>
     <string name="send_feedback_with">Entrar em contato com</string>
+    <string name="translate_at_least_in_one_language">Traduza em pelo menos um idioma</string>
+    <string name="type_alien_word">Digite a palavra alienígena</string>
 
 </resources>

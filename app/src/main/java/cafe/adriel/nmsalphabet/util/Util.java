@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
@@ -53,6 +54,13 @@ public class Util {
 
     public static void asyncCall(int delay, Runnable runnable){
         ASYNC_HANDLER.postDelayed(runnable, delay);
+    }
+
+    public static AlertDialog showLoadingDialog(Context context){
+        return new AlertDialog.Builder(context)
+                .setView(R.layout.dialog_loading)
+                .setCancelable(false)
+                .show();
     }
 
     public static void shareText(Activity activity, String text){

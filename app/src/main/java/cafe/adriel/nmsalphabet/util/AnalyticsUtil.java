@@ -34,6 +34,10 @@ public class AnalyticsUtil {
                 .putQuery(word));
     }
 
+    public static void useOcrEvent(String word){
+        // TODO
+    }
+
     public static void translateEvent(String word){
         // TODO
     }
