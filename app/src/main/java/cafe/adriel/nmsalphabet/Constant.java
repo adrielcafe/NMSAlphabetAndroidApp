@@ -13,6 +13,9 @@ public class Constant {
     public static final List<String> FACEBOOK_PERMISSIONS   = Arrays.asList("public_profile");
     public static final String FACEBOOK_USER_IMAGE_URL      = "https://graph.facebook.com/%s/picture?type=small";
 
+    public static final String GENDER_MALE      = "male";
+    public static final String GENDER_FEMALE    = "female";
+
     public static final String EXTRA_TYPE   = "type";
 
     public static final String SETTINGS_ACCOUNT_STATUS      = "account_status";

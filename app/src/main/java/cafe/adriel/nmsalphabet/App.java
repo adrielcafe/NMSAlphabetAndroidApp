@@ -103,6 +103,10 @@ public class App extends Application {
         return user;
     }
 
+    public static void loadRacesWordsAndTranslations(){
+        races = DbUtil.getRaces();
+    }
+
     public static List<AlienRace> getRaces(){
         return races;
     }
@@ -131,9 +135,5 @@ public class App extends Application {
             }
         }
         return null;
-    }
-
-    public static void loadRacesWordsAndTranslations(){
-        races = DbUtil.getRaces();
     }
 }
