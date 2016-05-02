@@ -86,7 +86,8 @@ public class MainActivity extends BaseActivity {
         ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_home), tabColor, getString(R.string.home)));
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_translation), tabColor, getString(R.string.translate)));
-        models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_profile), tabColor, getString(R.string.profile)));
+        models.add(new NavigationTabBar.Model(getResources().getDrawable(
+                App.getUser().getGender().equals(Constant.GENDER_FEMALE) ? R.drawable.tab_profile_female : R.drawable.tab_profile_male), tabColor, getString(R.string.profile)));
         tabView.setModels(models);
         tabView.setViewPager(pagerView);
         tabView.setOnTabBarSelectedIndexListener(new NavigationTabBar.OnTabBarSelectedIndexListener() {

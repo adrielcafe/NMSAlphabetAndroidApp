@@ -20,14 +20,16 @@ public class SocialUtil {
 
     public static void updateFacebookProfile(){
         Bundle params = new Bundle();
-        params.putString("fields", "name, gender, locale");
+        params.putString("fields", "name, gender");
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 try {
                     String name = object.getString("name");
-                    App.getUser().setFacebookUserId(AccessToken.getCurrentAccessToken().getUserId());
+                    String gender = object.getString("gender");
                     App.getUser().setName(name);
+                    App.getUser().setGernder(gender);
+                    App.getUser().setFacebookUserId(AccessToken.getCurrentAccessToken().getUserId());
                     App.getUser().saveEventually();
                 } catch (Exception e) {
                     Crashlytics.logException(e);
