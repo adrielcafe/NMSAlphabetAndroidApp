@@ -172,6 +172,7 @@ public class TranslationEditorActivity extends BaseActivity {
     private void saveTranslation(){
         if(isValid() && Util.isConnected(this)){
             final AlertDialog dialog = Util.showLoadingDialog(this);
+            Util.hideSoftKeyboard(this);
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -203,7 +204,7 @@ public class TranslationEditorActivity extends BaseActivity {
                                 enTranslation.setTranslation(enTranslationStr);
                             }
                             enTranslation.addUser(App.getUser());
-                            enTranslation.save();
+                            enTranslation.saveInBackground();
                         }
 
                         if(Util.isNotEmpty(ptTranslationStr)){
@@ -216,7 +217,7 @@ public class TranslationEditorActivity extends BaseActivity {
                                 ptTranslation.setTranslation(ptTranslationStr);
                             }
                             ptTranslation.addUser(App.getUser());
-                            ptTranslation.save();
+                            ptTranslation.saveInBackground();
                         }
 
                         if(Util.isNotEmpty(deTranslationStr)){
@@ -229,12 +230,11 @@ public class TranslationEditorActivity extends BaseActivity {
                                 deTranslation.setTranslation(deTranslationStr);
                             }
                             deTranslation.addUser(App.getUser());
-                            deTranslation.save();
+                            deTranslation.saveInBackground();
                         }
 
                         dialog.dismiss();
                         finish();
-
                     } catch (Exception e){
                         e.printStackTrace();
                         dialog.dismiss();

@@ -62,7 +62,7 @@
                     android:layout_marginBottom="0dp"
                     android:gravity="start|center_vertical"
                     android:fontFamily="sans-serif"
-                    android:text="@string/possible_translations"
+                    android:text="@string/best_translations"
                     style="@style/AlienWordTranslationTextView"/>
 
             </LinearLayout>

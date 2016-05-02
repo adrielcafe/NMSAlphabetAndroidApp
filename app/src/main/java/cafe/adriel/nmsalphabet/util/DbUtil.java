@@ -28,6 +28,8 @@ public class DbUtil {
         ParseQuery.getQuery(AlienWord.class)
                 .addAscendingOrder("word")
                 .addAscendingOrder("_updated_at")
+                .setLimit(PAGE_SIZE)
+                .setSkip(PAGE_SIZE * page)
                 .findInBackground(callback);
     }
 
@@ -55,6 +57,7 @@ public class DbUtil {
         try {
             return ParseQuery.getQuery(AlienWord.class)
                     .whereEqualTo("race", race)
+                    .whereEqualTo("word", race)
                     .getFirst();
         } catch (Exception e){
             e.printStackTrace();

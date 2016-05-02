@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -67,8 +68,8 @@ public class WordsFragment extends BaseFragment {
     private List<AlienWord> words;
     private Bookends<HomeAdapter> homeAdapter;
     private Bookends<ProfileAdapter> profileAdapter;
-    private DynamicBox stateBox;
     private EndlessRecyclerOnScrollListener infiniteScrollListener;
+    private DynamicBox stateBox;
 
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
@@ -120,134 +121,131 @@ public class WordsFragment extends BaseFragment {
 
     @Override
     protected void init(){
-        initControls();
-        initList();
-
-        switch (type){
-            case HOME:
-                wordsView.setAdapter(new HomeAdapter(getContext(), new ArrayList<String>()));
-                break;
-            case PROFILE:
-                wordsView.setAdapter(new ProfileAdapter(getContext(), new ArrayList<AlienWord>()));
-                break;
-        }
-    }
-
-    private void initControls(){
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                resetList();
-                updateList(0);
+                refreshWords();
             }
         });
-        if(type == Type.PROFILE){
-            headerHomeLayout.setVisibility(View.GONE);
-            headerProfileLayout.setVisibility(View.VISIBLE);
-            headerProfileLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    if (headerProfileLayout != null) {
-                        headerProfileLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                    initState();
-                    updateList(0);
-                }
-            });
-            settingsView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(getContext(), SettingsActivity.class));
-                }
-            });
-            userNameView.setText(App.isSignedIn() ? App.getUser().getName() : getString(R.string.unknown_explorer));
-            Glide.with(getContext())
-                    .load(App.isSignedIn() ? SocialUtil.getUserImageUrl() : R.drawable.default_user_image)
-                    .asBitmap()
-                    .centerCrop()
-                    .into(new BitmapImageViewTarget(userImageView) {
-                @Override
-                protected void setResource(Bitmap resource) {
-                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-                    circularBitmapDrawable.setCircular(true);
-                    userImageView.setImageDrawable(circularBitmapDrawable);
-                }
-            });
-        } else {
-            headerProfileLayout.setVisibility(View.GONE);
-            headerHomeLayout.setVisibility(View.VISIBLE);
-            headerHomeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    if (headerHomeLayout != null) {
-                        headerHomeLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                    initState();
-                    updateList(0);
-                }
-            });
+        switch (type){
+            case HOME:
+                initHomeControls();
+                break;
+            case PROFILE:
+                initProfileControls();
+                break;
+        }
+        initList();
+    }
 
-            racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
-            racesView.setTextColor(Color.WHITE);
-            racesView.setArrowColor(Color.WHITE);
-            racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));
-            racesView.setItems(getString(R.string.all_alien_races), "Korvax");
-            racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-                @Override
-                public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-
+    private void initHomeControls(){
+        headerProfileLayout.setVisibility(View.GONE);
+        headerHomeLayout.setVisibility(View.VISIBLE);
+        headerHomeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (headerHomeLayout != null) {
+                    headerHomeLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
-            });
+                updateRefreshLayoutMarginTop();
+                initState();
+                updateWords(0);
+            }
+        });
 
-            searchLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
-            searchView.setOnKeyListener(new View.OnKeyListener() {
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                        if (searchView.getText().length() > 0) {
-                            searchWord(searchView.getText().toString());
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });
-            searchView.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                    searchClearView.setVisibility(s.length() == 0 ? View.INVISIBLE : View.VISIBLE);
-                }
+        racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        racesView.setTextColor(Color.WHITE);
+        racesView.setArrowColor(Color.WHITE);
+        racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));
+        racesView.setItems(getString(R.string.all_alien_races), "Korvax");
+        racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                // TODO
+            }
+        });
 
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-            });
-            searchView.post(new Runnable() {
-                @Override
-                public void run() {
-                    racesView.setHeight(searchClearView.getHeight());
-                }
-            });
-            searchIconView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        searchLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        searchView.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     if (searchView.getText().length() > 0) {
                         searchWord(searchView.getText().toString());
+                        return true;
                     }
                 }
-            });
-            searchClearView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    searchView.setText("");
+                return false;
+            }
+        });
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                searchClearView.setVisibility(s.length() == 0 ? View.INVISIBLE : View.VISIBLE);
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+        });
+        searchView.post(new Runnable() {
+            @Override
+            public void run() {
+                racesView.setHeight(searchClearView.getHeight());
+            }
+        });
+        searchIconView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchView.getText().length() > 0) {
+                    searchWord(searchView.getText().toString());
                 }
-            });
-        }
+            }
+        });
+        searchClearView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setText("");
+            }
+        });
+    }
+
+    private void initProfileControls(){
+        headerHomeLayout.setVisibility(View.GONE);
+        headerProfileLayout.setVisibility(View.VISIBLE);
+        headerProfileLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (headerProfileLayout != null) {
+                    headerProfileLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                updateRefreshLayoutMarginTop();
+                initState();
+                updateWords(0);
+            }
+        });
+        settingsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), SettingsActivity.class));
+            }
+        });
+        userNameView.setText(App.isSignedIn() ? App.getUser().getName() : getString(R.string.unknown_explorer));
+        Glide.with(getContext())
+                .load(App.isSignedIn() ? SocialUtil.getUserImageUrl() : R.drawable.default_user_image)
+                .asBitmap()
+                .centerCrop()
+                .into(new BitmapImageViewTarget(userImageView) {
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        userImageView.setImageDrawable(circularBitmapDrawable);
+                    }
+                });
     }
 
     private void initState(){
@@ -256,32 +254,45 @@ public class WordsFragment extends BaseFragment {
         View noInternetState = LayoutInflater.from(getContext()).inflate(R.layout.state_no_internet, null, false);
         View requireSignInState = LayoutInflater.from(getContext()).inflate(R.layout.state_require_sign_in, null, false);
 
-        if(type == Type.PROFILE){
-            loadingState.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
-            emptyState.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
-            noInternetState.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
-            requireSignInState.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
-        } else {
-            loadingState.setPadding(0, headerHomeLayout.getHeight(), 0, 0);
-            emptyState.setPadding(0, headerHomeLayout.getHeight(), 0, 0);
-            noInternetState.setPadding(0, headerHomeLayout.getHeight(), 0, 0);
-            requireSignInState.setPadding(0, headerHomeLayout.getHeight(), 0, 0);
-        }
+        View.OnClickListener refreshListener = new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 refreshWords();
+             }
+        };
+        View.OnClickListener signInListener = new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 Util.getSettings(getContext()).edit()
+                         .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
+                         .commit();
+                 getActivity().finish();
+                 startActivity(new Intent(getContext(), SplashActivity.class));
+             }
+        };
+
+        emptyState.findViewById(R.id.refresh).setOnClickListener(refreshListener);
+        noInternetState.findViewById(R.id.refresh).setOnClickListener(refreshListener);
+        requireSignInState.findViewById(R.id.sign_in).setOnClickListener(signInListener);
 
         stateBox = new DynamicBox(getContext(), wordsView);
         stateBox.addCustomView(loadingState, STATE_LOADING);
         stateBox.addCustomView(emptyState, STATE_EMPTY);
         stateBox.addCustomView(noInternetState, STATE_NO_INTERNET);
         stateBox.addCustomView(requireSignInState, STATE_REQUIRE_SIGN_IN);
-        stateBox.showCustomView(STATE_LOADING);
+        if(type == Type.PROFILE && !App.isSignedIn()){
+            stateBox.showCustomView(STATE_REQUIRE_SIGN_IN);
+        } else {
+            stateBox.showCustomView(STATE_LOADING);
+        }
     }
 
     private void initList(){
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         infiniteScrollListener = new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
-                updateList(currentPage);
+                updateWords(currentPage);
             }
         };
         RecyclerItemClickSupport.addTo(wordsView).setOnItemClickListener(new RecyclerItemClickSupport.OnItemClickListener() {
@@ -294,87 +305,105 @@ public class WordsFragment extends BaseFragment {
         wordsView.setLayoutManager(layoutManager);
         wordsView.addOnScrollListener(infiniteScrollListener);
         wordsView.addOnScrollListener(new SwipeRefreshLayoutToggleScrollListener(refreshLayout));
-    }
-
-    private void initAdapter(){
-        FoldingCell listHeaderHomeLayout = (FoldingCell) LayoutInflater.from(getContext()).inflate(R.layout.list_header_home, null);
-        listHeaderHomeLayout.getChildAt(0).setMinimumHeight(headerHomeLayout.getHeight());
-        View listHeaderProfileLayout = LayoutInflater.from(getContext()).inflate(R.layout.list_header_profile, null);
-        listHeaderProfileLayout.setPadding(0, headerProfileLayout.getHeight(), 0, 0);
 
         switch (type){
             case HOME:
-                homeAdapter = new Bookends<>(new HomeAdapter(getContext(), new ArrayList<String>()));
-                homeAdapter.addHeader(listHeaderHomeLayout);
-                homeAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
-                homeAdapter.setFooterVisibility(false);
+                wordsView.setAdapter(new HomeAdapter(getContext(), new ArrayList<AlienWord>()));
+                break;
+            case PROFILE:
+                wordsView.setAdapter(new ProfileAdapter(getContext(), new ArrayList<AlienWord>()));
+                break;
+        }
+    }
+
+    private void initAdapter(){
+        switch (type){
+            case HOME:
+                homeAdapter = new Bookends<>(new HomeAdapter(getContext(), words));
+//                homeAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
+//                homeAdapter.setFooterVisibility(false);
                 wordsView.swapAdapter(homeAdapter, true);
                 break;
             case PROFILE:
                 profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), words));
-                profileAdapter.addHeader(listHeaderProfileLayout);
-                profileAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
-                profileAdapter.setFooterVisibility(false);
+//                profileAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
+//                profileAdapter.setFooterVisibility(false);
                 wordsView.swapAdapter(profileAdapter, true);
                 break;
         }
-
         wordsView.setMinimumHeight(refreshLayout.getHeight());
     }
 
-    private void updateList(final int page){
+    private void updateWords(final int page){
+        if(type == Type.PROFILE && !App.isSignedIn()) {
+            stateBox.showCustomView(STATE_REQUIRE_SIGN_IN);
+            return;
+        }
         setLoadingList(true);
-        DbUtil.getWordsByUser(App.getUser(), page, new FindCallback<AlienWord>() {
-            @Override
-            public void done(List<AlienWord> objects, ParseException e) {
-                if(page == 0){
-                    if(Util.isEmpty(objects)){
-                        stateBox.showCustomView(STATE_EMPTY);
-                    } else {
-                        stateBox.hideAll();
-                        words = objects;
-                        initAdapter();
+        switch (type) {
+            case HOME:
+                DbUtil.getWords(page, new FindCallback<AlienWord>() {
+                    @Override
+                    public void done(List<AlienWord> objects, ParseException e) {
+                        afterUpdateWords(page, objects, e);
                     }
-                } else {
-                    stateBox.hideAll();
-                    words.addAll(objects);
-                    switch (type){
-                        case HOME:
-                            homeAdapter.notifyDataSetChanged();
-                            break;
-                        case PROFILE:
-                            profileAdapter.notifyDataSetChanged();
-                            break;
+                });
+                break;
+            case PROFILE:
+                DbUtil.getWordsByUser(App.getUser(), page, new FindCallback<AlienWord>() {
+                    @Override
+                    public void done(List<AlienWord> objects, ParseException e) {
+                        afterUpdateWords(page, objects, e);
                     }
-                }
-                setLoadingList(false);
-                refreshLayout.setRefreshing(false);
+                });
+                break;
+        }
+    }
+
+    private void afterUpdateWords(int page, List<AlienWord> newWords, ParseException e){
+        if(page == 0){
+            if(Util.isEmpty(newWords)){
+                stateBox.showCustomView(STATE_EMPTY);
+            } else {
+                words = newWords;
+                initAdapter();
+                stateBox.hideAll();
             }
-        });
+        } else {
+            words.addAll(newWords);
+            switch (type){
+                case HOME:
+                    homeAdapter.notifyDataSetChanged();
+                    break;
+                case PROFILE:
+                    profileAdapter.notifyDataSetChanged();
+                    break;
+            }
+            stateBox.hideAll();
+        }
+        if(e != null){
+            e.printStackTrace();
+        }
+        setLoadingList(false);
+        refreshLayout.setRefreshing(false);
     }
 
     private void searchWord(String word){
 
     }
 
-    private void setLoadingList(boolean loading){
-        switch (type){
-            case HOME:
-                if(homeAdapter != null) {
-                    homeAdapter.setFooterVisibility(loading);
-                }
-                break;
-            case PROFILE:
-                if(profileAdapter != null) {
-                    profileAdapter.setFooterVisibility(loading);
-                }
-                break;
-        }
+    private void refreshWords(){
+        resetWords();
+        updateWords(0);
     }
 
-    private void resetList(){
-        words.clear();
-        infiniteScrollListener.reset();
+    private void resetWords(){
+        if(words != null) {
+            words.clear();
+        }
+        if(infiniteScrollListener != null) {
+            infiniteScrollListener.reset();
+        }
         switch (type){
             case HOME:
                 if(homeAdapter != null) {
@@ -387,5 +416,33 @@ public class WordsFragment extends BaseFragment {
                 }
                 break;
         }
+    }
+
+    private void setLoadingList(boolean loading){
+//        switch (type){
+//            case HOME:
+//                if(homeAdapter != null) {
+//                    homeAdapter.setFooterVisibility(loading);
+//                }
+//                break;
+//            case PROFILE:
+//                if(profileAdapter != null) {
+//                    profileAdapter.setFooterVisibility(loading);
+//                }
+//                break;
+//        }
+    }
+
+    private void updateRefreshLayoutMarginTop(){
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) refreshLayout.getLayoutParams();
+        switch (type){
+            case HOME:
+                params.topMargin = headerHomeLayout.getHeight();
+                break;
+            case PROFILE:
+                params.topMargin = headerProfileLayout.getHeight();
+                break;
+        }
+        refreshLayout.setLayoutParams(params);
     }
 }
