@@ -16,7 +16,6 @@ import com.easyandroidanimations.library.Animation;
 import com.easyandroidanimations.library.AnimationListener;
 import com.easyandroidanimations.library.FadeInAnimation;
 import com.easyandroidanimations.library.FadeOutAnimation;
-import com.facebook.AccessToken;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -109,22 +108,7 @@ public class SplashActivity extends BaseActivity {
         if(Util.isConnected(this)) {
             setLoading(true);
             if(hasSignedInWithFacebook()){
-                ParseFacebookUtils.logInInBackground(AccessToken.getCurrentAccessToken(), new LogInCallback() {
-                    @Override
-                    public void done(ParseUser user, ParseException e) {
-                        if (user == null) {
-                            setLoading(false);
-                        } else {
-                            AnalyticsUtil.signInEvent("Facebook");
-                            AsyncTask.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    afterSignIn();
-                                }
-                            });
-                        }
-                    }
-                });
+                afterSignIn();
             } else {
                 ParseFacebookUtils.logInWithReadPermissionsInBackground(this, Constant.FACEBOOK_PERMISSIONS, new LogInCallback() {
                     @Override
@@ -166,7 +150,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void afterSignIn(){
-        App.loadRacesWordsAndTranslations();
+        App.loadAndCache();
         Util.getSettings(this).edit().putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, true).commit();
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
