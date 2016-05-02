@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingTop="?actionBarSize"
     android:background="?colorPrimary"
-    tools:context=".ui.AddTranslationActivity">
+    tools:context=".ui.TranslationEditorActivity">
 
     <ScrollView
         android:layout_width="match_parent"

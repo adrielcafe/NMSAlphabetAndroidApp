@@ -1,7 +1,6 @@
 package cafe.adriel.nmsalphabet.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,21 +8,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ramotion.foldingcell.FoldingCell;
-import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.model.AlienRace;
+import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
     private Context context;
-    private List<String> wordList;
+    private List<AlienWord> wordList;
 
-    public ProfileAdapter(Context context, List<String> wordList) {
+    public ProfileAdapter(Context context, List<AlienWord> wordList) {
         this.context = context;
         this.wordList = wordList;
     }
@@ -41,23 +42,16 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String word = wordList.get(position);
+        AlienWord word = wordList.get(position);
+        AlienRace race = App.getRaceById(word.getRace().getObjectId());
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
         holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
-        holder.alienWordTitleView.setText(word);
-        holder.alienWordView.setText(word);
-        holder.alienRaceTitleView.setText("Korvax");
-        holder.alienRaceView.setText("Korvax's Word");
-    }
-
-    private void addBadge(View view, int count){
-        BadgeView badge = new BadgeView(context, view);
-        badge.setText(count+"");
-        badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-        badge.setBadgeBackgroundColor(ThemeUtil.getAccentColor(context));
-        badge.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-        badge.setTextSize(11);
-        badge.show();
+        holder.alienWordTitleView.setText(word.getWord());
+        holder.alienWordView.setText(word.getWord());
+        if(race != null) {
+            holder.alienRaceTitleView.setText(race.getName());
+            holder.alienRaceView.setText(race.getName());
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

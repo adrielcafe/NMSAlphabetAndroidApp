@@ -24,7 +24,7 @@
                 android:singleLine="true"
                 android:textColor="@color/gray_dark"
                 android:textSize="100sp"
-                android:text="{gmi-archive}"/>
+                android:text="{gmi-comment-outline}"/>
 
             <TextView
                 android:layout_width="wrap_content"

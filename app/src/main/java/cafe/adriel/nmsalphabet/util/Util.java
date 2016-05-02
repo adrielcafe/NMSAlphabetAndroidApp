@@ -3,22 +3,30 @@ package cafe.adriel.nmsalphabet.util;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
+import android.util.Base64;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
+import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 
 public class Util {
@@ -32,15 +40,23 @@ public class Util {
 
     private static ConnectivityManager connectivityManager;
 
-    public static boolean isEmpty(final CharSequence cs) {
+    public static boolean isEmpty(CharSequence cs) {
         return cs == null || cs.length() == 0;
     }
 
-    public static boolean isNotEmpty(final CharSequence cs) {
+    public static boolean isNotEmpty(CharSequence cs) {
         return !isEmpty(cs);
     }
 
-    public static String toHex(int color){
+    public static boolean isEmpty(List list) {
+        return list == null || list.isEmpty();
+    }
+
+    public static boolean isNotEmpty(List list) {
+        return !isEmpty(list);
+    }
+
+    public static String toHexColor(int color){
         return "#" + Integer.toHexString(color).replaceFirst("ff", "").toUpperCase();
     }
 
@@ -48,10 +64,17 @@ public class Util {
         ASYNC_HANDLER.postDelayed(runnable, delay);
     }
 
+    public static AlertDialog showLoadingDialog(Context context){
+        return new AlertDialog.Builder(context)
+                .setView(R.layout.dialog_loading)
+                .setCancelable(false)
+                .show();
+    }
+
     public static void shareText(Activity activity, String text){
         ShareCompat.IntentBuilder.from(activity)
-                .setText(text)
                 .setType("text/plain")
+                .setText(text)
                 .startChooser();
     }
 
@@ -80,6 +103,10 @@ public class Util {
         }
     }
 
+    public static SharedPreferences getSettings(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
     public static String getAppVersionName(Context context) {
         try {
             return "v" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
@@ -98,14 +125,35 @@ public class Util {
         }
     }
 
-    public static boolean isConnected(Context context, CoordinatorLayout coordinatorLayout){
+    public static String getPackageName(Context context){
+        return context.getPackageName();
+    }
+
+    public static String getGooglePlayUrl(Context context){
+        return Constant.GOOGLE_PLAY_URL + getPackageName(context);
+    }
+
+    public static void printAppKeyHash(Context context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(getPackageName(context), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.e("KEY_HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isConnected(Context context){
         if(connectivityManager == null) {
             connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         }
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         boolean isConnected = (info != null && info.isConnected() && isConnectionFast(info.getType(), info.getSubtype()));
-        if(!isConnected && coordinatorLayout != null){
-            Snackbar.make(coordinatorLayout, R.string.connect_internet, Snackbar.LENGTH_SHORT).show();
+        if(!isConnected){
+            Toast.makeText(context, R.string.connect_internet, Toast.LENGTH_SHORT).show();
         }
         return isConnected;
     }

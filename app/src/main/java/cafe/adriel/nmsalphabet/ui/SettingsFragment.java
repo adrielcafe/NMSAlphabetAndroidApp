@@ -3,6 +3,7 @@ package cafe.adriel.nmsalphabet.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -102,9 +103,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         aboutShare.setOnPreferenceClickListener(this);
         aboutRate.setOnPreferenceClickListener(this);
 
-        if(App.isLoggedIn){
-            // TODO use dynamic username
-            accountStatus.setTitle(getString(R.string.connected_as) + " Adriel Café");
+        if(App.isSignedIn()){
+            accountStatus.setTitle(getString(R.string.connected_as) + " " + App.getUser().getName());
             accountStatus.setSummary(R.string.signout);
         } else {
             accountStatus.setTitle(R.string.signin);
@@ -156,13 +156,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void changeStatus() {
         Activity activity = getActivity();
         if(activity != null) {
-            if(App.isLoggedIn) {
-                App.signOut(activity);
-                startActivity(new Intent(activity, SplashActivity.class));
-            } else {
-                startActivity(new Intent(activity, SplashActivity.class));
-            }
+            App.signOut(activity);
+            startActivity(new Intent(activity, SplashActivity.class));
             activity.finish();
+            if(MainActivity.getInstance() != null){
+                MainActivity.getInstance().finish();
+            }
         }
     }
 
@@ -178,22 +177,20 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Util.restartActivity(getActivity());
     }
 
-    // TODO missing user name and ID
     private void sendFeedback() {
-//        Intent i = new Intent(Intent.ACTION_SEND);
-//        i.putExtra(Intent.EXTRA_EMAIL, new String[] { Constant.CONTACT_EMAIL} );
-//        i.putExtra(Intent.EXTRA_SUBJECT, String.format("Feedback from %s [ID: %s]", App.getUser().getName(), App.getUser().getObjectId()));
-//        i.putExtra(Intent.EXTRA_TEXT, "");
-//        i.setType("message/rfc822");
-//        startActivity(Intent.createChooser(i, getString(R.string.feedback)));
+        String subject = String.format("Feedback from %s [ID: %s]", App.getUser().getName(), App.getUser().getObjectId());
+        Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
+        i.putExtra(Intent.EXTRA_SUBJECT, subject);
+        getActivity().startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
     }
 
     private void shareApp() {
-        Util.shareText(getActivity(), getString(R.string.share_msg) + "\n" + Constant.GOOGLE_PLAY_URL);
+        Util.shareText(getActivity(), getString(R.string.share_msg) + "\n" + Util.getGooglePlayUrl(getActivity()));
     }
 
     private void rateApp() {
-        Intent i = new Intent(Intent.ACTION_VIEW, Constant.MARKET_URI);
+        Uri marketUri = Uri.parse(Constant.MARKET_URI + Util.getPackageName(getActivity()));
+        Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
         startActivity(i);
     }
 
