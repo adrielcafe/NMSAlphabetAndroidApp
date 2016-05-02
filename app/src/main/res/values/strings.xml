@@ -17,10 +17,9 @@
     <string name="signin_to_add_translations">Sign in to add translations</string>
     <string name="not_now">Not Now</string>
     <string name="new_translation">New Translation</string>
-    <string name="possible_translation">Possible Translation</string>
-    <string name="possible_translations">Possible Translations</string>
+    <string name="best_translation">Best Translation</string>
+    <string name="best_translations">Best Translations</string>
     <string name="my_translations">My Translations</string>
-    <string name="my_contributions">My Contributions</string>
     <string name="new_translation_with_icon">{gmi-plus-circle} New Translation</string>
     <string name="report_translation_with_icon">{gmi-flag} Report</string>
     <string name="delete_translation_with_icon">{gmi-delete} Delete</string>
@@ -40,7 +39,6 @@
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_summary">Send suggestions or ask questions</string>
-    <string name="send_feedback_with">Send feedback with</string>
     <string name="share">Share</string>
     <string name="share_summary">Share this app with your friends</string>
     <string name="share_msg">Hey explorer, take a look at NMS Alphabet: an app for translate alien words of No Man\'s Sky!</string>

@@ -1,7 +1,6 @@
 package cafe.adriel.nmsalphabet.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ramotion.foldingcell.FoldingCell;
-import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;
 
@@ -50,8 +48,10 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
         holder.alienWordTitleView.setText(word.getWord());
         holder.alienWordView.setText(word.getWord());
-        holder.alienRaceTitleView.setText(race.getName());
-        holder.alienRaceView.setText(race.getName() + "'s Word");
+        if(race != null) {
+            holder.alienRaceTitleView.setText(race.getName());
+            holder.alienRaceView.setText(race.getName());
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
