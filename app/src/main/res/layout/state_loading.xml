@@ -21,8 +21,8 @@
             <com.github.ybq.android.spinkit.SpinKitView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:SpinKit_Color="@color/gray_dark"
-                style="@style/SpinKitView.Large.Pulse" />
+                app:SpinKit_Color="@android:color/black"
+                app:SpinKit_Style="Pulse" />
 
         </LinearLayout>
 

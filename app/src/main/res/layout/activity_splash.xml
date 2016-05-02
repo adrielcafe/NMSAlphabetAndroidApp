@@ -41,7 +41,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/google_signin"
+            android:id="@+id/facebook_signin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -99,7 +99,7 @@
         android:layout_alignParentBottom="true"
         android:visibility="gone"
         app:SpinKit_Color="@android:color/white"
-        style="@style/SpinKitView.Large.Pulse" />
+        app:SpinKit_Style="Pulse" />
 
     <TextView
         android:id="@+id/app_version"

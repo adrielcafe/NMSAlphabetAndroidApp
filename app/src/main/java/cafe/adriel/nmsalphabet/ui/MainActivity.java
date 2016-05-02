@@ -1,6 +1,8 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
+import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.view.ViewPagerFadeTransformer;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -82,7 +86,8 @@ public class MainActivity extends BaseActivity {
         ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_home), tabColor, getString(R.string.home)));
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_translation), tabColor, getString(R.string.translate)));
-        models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_profile), tabColor, getString(R.string.profile)));
+        models.add(new NavigationTabBar.Model(getResources().getDrawable(
+                App.getUser().getGender().equals(Constant.GENDER_FEMALE) ? R.drawable.tab_profile_female : R.drawable.tab_profile_male), tabColor, getString(R.string.profile)));
         tabView.setModels(models);
         tabView.setViewPager(pagerView);
         tabView.setOnTabBarSelectedIndexListener(new NavigationTabBar.OnTabBarSelectedIndexListener() {
@@ -111,9 +116,32 @@ public class MainActivity extends BaseActivity {
         fabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AddTranslationActivity.class));
+                if(App.isSignedIn()) {
+                    startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
+                } else {
+                    showSignInDialog();
+                }
             }
         });
+    }
+
+    private void showSignInDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.new_translation)
+                .setMessage(R.string.signin_to_add_translations)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Util.getSettings(MainActivity.this).edit()
+                                .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
+                                .commit();
+                        dialog.dismiss();
+                        finish();
+                        startActivity(new Intent(MainActivity.this, SplashActivity.class));
+                    }
+                })
+                .show();
     }
 
     private class TabPagerAdapter extends FragmentPagerAdapter {

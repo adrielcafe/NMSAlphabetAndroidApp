@@ -25,14 +25,6 @@
             android:theme="@style/AppTheme1.NoActionBar.Transparent"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".ui.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme1.NoActionBar"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="cat.ereza.customactivityoncrash.RESTART" />
@@ -40,7 +32,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.AddTranslationActivity"
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme1.NoActionBar"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".ui.TranslationEditorActivity"
             android:label="@string/new_translation"
             android:theme="@style/AppTheme1"
             android:launchMode="singleTop"
@@ -62,8 +61,15 @@
                 <action android:name="cat.ereza.customactivityoncrash.ERROR" />
             </intent-filter>
         </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name="com.facebook.FacebookActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
 
         <meta-data android:name="io.fabric.ApiKey" android:value="ddc31cab4f4e58777548048f200abae359a82d7b"/>
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
     </application>
 
 </manifest>

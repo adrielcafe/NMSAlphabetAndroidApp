@@ -9,9 +9,9 @@ import android.text.Spanned;
 
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.ui.AddTranslationActivity;
 import cafe.adriel.nmsalphabet.ui.MainActivity;
 import cafe.adriel.nmsalphabet.ui.SettingsActivity;
+import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
 
 public class ThemeUtil {
     public static final String THEME_1 = "theme1";
@@ -39,35 +39,35 @@ public class ThemeUtil {
             case THEME_2:
                 if(context instanceof MainActivity){
                     context.setTheme(R.style.AppTheme2_NoActionBar);
-                } else if(context instanceof AddTranslationActivity || context instanceof SettingsActivity){
+                } else if(context instanceof TranslationEditorActivity || context instanceof SettingsActivity){
                     context.setTheme(R.style.AppTheme2);
                 }
                 break;
             case THEME_3:
                 if(context instanceof MainActivity){
                     context.setTheme(R.style.AppTheme3_NoActionBar);
-                } else if(context instanceof AddTranslationActivity || context instanceof SettingsActivity){
+                } else if(context instanceof TranslationEditorActivity || context instanceof SettingsActivity){
                     context.setTheme(R.style.AppTheme3);
                 }
                 break;
             case THEME_4:
                 if(context instanceof MainActivity){
                     context.setTheme(R.style.AppTheme4_NoActionBar);
-                } else if(context instanceof AddTranslationActivity || context instanceof SettingsActivity){
+                } else if(context instanceof TranslationEditorActivity || context instanceof SettingsActivity){
                     context.setTheme(R.style.AppTheme4);
                 }
                 break;
             case THEME_5:
                 if(context instanceof MainActivity){
                     context.setTheme(R.style.AppTheme5_NoActionBar);
-                } else if(context instanceof AddTranslationActivity || context instanceof SettingsActivity){
+                } else if(context instanceof TranslationEditorActivity || context instanceof SettingsActivity){
                     context.setTheme(R.style.AppTheme5);
                 }
                 break;
             default:
                 if(context instanceof MainActivity){
                     context.setTheme(R.style.AppTheme1_NoActionBar);
-                } else if(context instanceof AddTranslationActivity || context instanceof SettingsActivity){
+                } else if(context instanceof TranslationEditorActivity || context instanceof SettingsActivity){
                     context.setTheme(R.style.AppTheme1);
                 }
         }
@@ -131,9 +131,9 @@ public class ThemeUtil {
     }
 
     public static Spanned getThemeCircles(Context context, String theme){
-        String primaryDarkColor = Util.toHex(getPrimaryDarkColor(context, theme));
-        String primaryColor = Util.toHex(getPrimaryColor(context, theme));
-        String accentColor = Util.toHex(getAccentColor(context, theme));
+        String primaryDarkColor = Util.toHexColor(getPrimaryDarkColor(context, theme));
+        String primaryColor = Util.toHexColor(getPrimaryColor(context, theme));
+        String accentColor = Util.toHexColor(getAccentColor(context, theme));
         String html = String.format(
                 "<font color='%s'>●</font>" +
                 "<font color='%s'>●</font>" +
@@ -146,6 +146,7 @@ public class ThemeUtil {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setColor(ThemeUtil.getPrimaryDarkColor(context));
+        shape.setAlpha(254);
         shape.setCornerRadius(250);
         return shape;
     }
@@ -154,6 +155,7 @@ public class ThemeUtil {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
         shape.setColor(ThemeUtil.getAccentColor(context));
+        shape.setAlpha(254);
         shape.setCornerRadii(new float [] {0, 0, 250, 250, 250, 250, 0, 0});
         return shape;
     }

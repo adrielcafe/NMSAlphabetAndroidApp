@@ -67,7 +67,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 contentLayout.setPaddingRelative(0, contentLayout.getPaddingTop(), 0, Util.getNavigationBarHeight(this));
             } else if(Build.VERSION.SDK_INT == 18){
                 contentLayout.setPaddingRelative(0, 0, 0, 0);
-                if(this instanceof AddTranslationActivity){
+                if(this instanceof TranslationEditorActivity){
                     LinearLayout childView = (LinearLayout) findViewById(R.id.form_layout);
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) childView.getLayoutParams();
                     params.topMargin = 0;

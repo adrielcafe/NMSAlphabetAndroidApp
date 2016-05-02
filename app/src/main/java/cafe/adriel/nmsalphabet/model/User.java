@@ -1,8 +1,13 @@
 package cafe.adriel.nmsalphabet.model;
 
+import android.util.Log;
+
 import com.parse.ParseUser;
 
 import java.io.Serializable;
+
+import cafe.adriel.nmsalphabet.Constant;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class User extends ParseUser implements Serializable {
 
@@ -14,12 +19,13 @@ public class User extends ParseUser implements Serializable {
         put("name", name);
     }
 
-    public String getSlugName() {
-        return getString("slugName");
+    public String getGender(){
+        String gender = getString("gender");
+        return Util.isEmpty(gender) ? Constant.GENDER_MALE : gender;
     }
 
-    public void setSlugName(String slugName){
-        put("slugName", slugName);
+    public void setGernder(String gender){
+        put("gender", gender);
     }
 
     public String getFacebookUserId() {
@@ -28,11 +34,6 @@ public class User extends ParseUser implements Serializable {
 
     public void setFacebookUserId(String facebookUserId){
         put("facebookUserId", facebookUserId);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return (o != null && o instanceof ParseUser) && getObjectId().equals(((User) o).getObjectId());
     }
 
 }

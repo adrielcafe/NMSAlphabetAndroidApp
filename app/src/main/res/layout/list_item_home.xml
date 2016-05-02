@@ -7,11 +7,12 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="20dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_white"
         android:elevation="2dp"
+        android:orientation="vertical"
         android:visibility="gone">
 
         <RelativeLayout
@@ -29,20 +30,16 @@
 
         <TextView
             android:id="@+id/tag"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="90dp"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:background="@drawable/word_tag"
             style="@style/AlienRaceTextView"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
             android:minHeight="200dp"
-            android:padding="20dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -62,7 +59,7 @@
                     android:layout_marginBottom="0dp"
                     android:gravity="start|center_vertical"
                     android:fontFamily="sans-serif"
-                    android:text="@string/possible_translations"
+                    android:text="@string/best_translations"
                     style="@style/AlienWordTranslationTextView"/>
 
             </LinearLayout>
@@ -133,7 +130,7 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -147,7 +144,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="5dp"
             android:textColor="@android:color/white"
-            style="@style/AlienRaceTextView"/>
+            style="@style/AlienRaceTitleTextView"/>
 
         <TextView
             android:id="@+id/alien_word_title"
