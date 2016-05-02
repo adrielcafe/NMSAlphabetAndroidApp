@@ -57,7 +57,7 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.parse:parse-android:1.13.0'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
-    compile 'com.facebook.android:facebook-android-sdk:4.10.1@aar'
+    compile 'com.facebook.android:facebook-android-sdk:4.11.0@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true; }
 
     compile 'com.mikepenz:iconics-core:2.5.11@aar'

@@ -320,14 +320,14 @@ public class WordsFragment extends BaseFragment {
         switch (type){
             case HOME:
                 homeAdapter = new Bookends<>(new HomeAdapter(getContext(), words));
-//                homeAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
-//                homeAdapter.setFooterVisibility(false);
+                homeAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
+                homeAdapter.setFooterVisibility(false);
                 wordsView.swapAdapter(homeAdapter, true);
                 break;
             case PROFILE:
                 profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), words));
-//                profileAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
-//                profileAdapter.setFooterVisibility(false);
+                profileAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
+                profileAdapter.setFooterVisibility(false);
                 wordsView.swapAdapter(profileAdapter, true);
                 break;
         }
@@ -419,18 +419,18 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(boolean loading){
-//        switch (type){
-//            case HOME:
-//                if(homeAdapter != null) {
-//                    homeAdapter.setFooterVisibility(loading);
-//                }
-//                break;
-//            case PROFILE:
-//                if(profileAdapter != null) {
-//                    profileAdapter.setFooterVisibility(loading);
-//                }
-//                break;
-//        }
+        switch (type){
+            case HOME:
+                if(homeAdapter != null) {
+                    homeAdapter.setFooterVisibility(loading);
+                }
+                break;
+            case PROFILE:
+                if(profileAdapter != null) {
+                    profileAdapter.setFooterVisibility(loading);
+                }
+                break;
+        }
     }
 
     private void updateRefreshLayoutMarginTop(){
