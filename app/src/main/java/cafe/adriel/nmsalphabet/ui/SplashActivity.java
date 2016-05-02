@@ -72,25 +72,29 @@ public class SplashActivity extends BaseActivity {
         facebookSignInLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setLoading(true);
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        facebookSignIn();
-                    }
-                });
+                if(Util.isConnected(SplashActivity.this)) {
+                    setLoading(true);
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            facebookSignIn();
+                        }
+                    });
+                }
             }
         });
         anonymousSignInLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setLoading(true);
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        anonymousSignIn();
-                    }
-                });
+                if(Util.isConnected(SplashActivity.this)) {
+                    setLoading(true);
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            anonymousSignIn();
+                        }
+                    });
+                }
             }
         });
         appVersionView.setText(Util.getAppVersionName(this));
