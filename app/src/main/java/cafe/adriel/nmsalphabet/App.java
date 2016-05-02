@@ -103,7 +103,8 @@ public class App extends Application {
         return user;
     }
 
-    public static void loadRacesWordsAndTranslations(){
+    public static void loadAndCache(){
+        getUser();
         races = DbUtil.getRaces();
     }
 
