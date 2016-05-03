@@ -21,6 +21,19 @@
             android:background="?colorAccent">
 
             <TextView
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:padding="10dp"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textColor="@android:color/white"
+                android:text="{gmi-share}"
+                android:background="?selectableItemBackground"
+                android:clickable="true"/>
+
+            <TextView
                 android:id="@+id/alien_word"
                 android:textColor="@android:color/white"
                 app:font="custom1"
