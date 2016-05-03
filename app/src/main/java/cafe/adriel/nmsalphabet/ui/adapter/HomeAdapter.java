@@ -49,12 +49,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public HomeAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_home, parent, false);
-        language = LanguageUtil.getCurrentLanguage(context);
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        if(language == null){
+            language = LanguageUtil.getCurrentLanguage(context);
+        }
         final AlienWord word = wordList.get(position);
         final AlienRace race = App.getRaceById(word.getRace().getObjectId());
         loadFlag(holder);
