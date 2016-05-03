@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
@@ -96,7 +96,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         List<AlienWordTranslation> wordTranslationsList;
 
         @BindView(R.id.title_layout)
-        FrameLayout titleLayout;
+        RelativeLayout titleLayout;
         @BindView(R.id.card_layout)
         FoldingCell cardLayout;
         @BindView(R.id.alien_word_title)
