@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
@@ -56,6 +57,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final AlienWord word = wordList.get(position);
         final AlienRace race = App.getRaceById(word.getRace().getObjectId());
+        loadFlag(holder);
         holder.wordTranslationsList = null;
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
         holder.cardLayout.fold(true);
@@ -75,6 +77,22 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 }
             }
         });
+    }
+
+    private void loadFlag(ViewHolder holder){
+        int flagResId;
+        switch (language){
+            case LanguageUtil.LANGUAGE_PT:
+                flagResId = R.drawable.flag_brazil;
+                break;
+            case LanguageUtil.LANGUAGE_DE:
+                flagResId = R.drawable.flag_germany;
+                break;
+            default:
+                flagResId = R.drawable.flag_uk;
+                break;
+        }
+        Glide.with(context).load(flagResId).into(holder.countryFlagView);
     }
 
     private void loadTranslations(AlienRace race, AlienWord word, final ViewHolder holder){
