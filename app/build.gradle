@@ -48,14 +48,15 @@ dependencies {
     compile 'com.android.support:support-v13:23.3.0'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
-    compile 'com.android.support:cardview-v7:23.3.0@aar'
+    compile 'com.android.support:cardview-v7:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
 
     apt     'com.jakewharton:butterknife-compiler:8.0.1'
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.parse:parse-android:1.13.0'
+    compile 'com.parse:parse-android:1.13.0@aar'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
     compile 'com.facebook.android:facebook-android-sdk:4.11.0@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true; }
@@ -76,7 +77,6 @@ dependencies {
     compile 'io.github.kobakei:ratethisapp:1.0.3@aar'
     compile 'com.github.medyo:dynamicbox:1.2@aar'
 
-//    https://developers.google.com/admob/android/banner#banner_size
 //    compile 'com.github.iammert:MaterialIntroView:1.5@aar'
 
 }
