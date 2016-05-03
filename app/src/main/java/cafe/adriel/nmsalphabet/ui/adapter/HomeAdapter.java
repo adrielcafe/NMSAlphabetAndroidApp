@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 import com.readystatesoftware.viewbadger.BadgeView;
 
@@ -20,12 +23,17 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
+import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.util.DbUtil;
+import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     private Context context;
     private List<AlienWord> wordList;
+    private String language;
 
     public HomeAdapter(Context context, List<AlienWord> wordList) {
         this.context = context;
@@ -40,14 +48,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public HomeAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_home, parent, false);
+        language = LanguageUtil.getCurrentLanguage(context);
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        AlienWord word = wordList.get(position);
-        AlienRace race = App.getRaceById(word.getRace().getObjectId());
+        final AlienWord word = wordList.get(position);
+        final AlienRace race = App.getRaceById(word.getRace().getObjectId());
+        holder.wordTranslationsList = null;
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
+        holder.cardLayout.fold(true);
         holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
         holder.alienWordTitleView.setText(word.getWord());
         holder.alienWordView.setText(word.getWord());
@@ -55,12 +66,46 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             holder.alienRaceTitleView.setText(race.getName());
             holder.alienRaceView.setText(race.getName());
         }
+        holder.titleLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.cardLayout.unfold(false);
+                if(holder.wordTranslationsList == null){
+                    loadTranslations(race, word, holder);
+                }
+            }
+        });
+    }
 
-        addBadge(holder.translation1View, 12345);
-        addBadge(holder.translation2View, 1234);
-        addBadge(holder.translation3View, 123);
-        addBadge(holder.translation4View, 12);
-        addBadge(holder.translation5View, 1);
+    private void loadTranslations(AlienRace race, AlienWord word, final ViewHolder holder){
+        DbUtil.getTranslations(race, word, language, new FindCallback<AlienWordTranslation>() {
+            @Override
+            public void done(List<AlienWordTranslation> objects, ParseException e) {
+                holder.wordTranslationsList = objects;
+                if(Util.isNotEmpty(holder.wordTranslationsList)){
+                    if(holder.wordTranslationsList.size() >= 1){
+                        holder.translation1View.setText(holder.wordTranslationsList.get(0).getTranslation());
+                        addBadge(holder.translation1View, holder.wordTranslationsList.get(0).getUsersCount());
+                    }
+                    if(holder.wordTranslationsList.size() >= 2){
+                        holder.translation2View.setText(holder.wordTranslationsList.get(1).getTranslation());
+                        addBadge(holder.translation2View, holder.wordTranslationsList.get(1).getUsersCount());
+                    }
+                    if(holder.wordTranslationsList.size() >= 3){
+                        holder.translation3View.setText(holder.wordTranslationsList.get(2).getTranslation());
+                        addBadge(holder.translation3View, holder.wordTranslationsList.get(2).getUsersCount());
+                    }
+                    if(holder.wordTranslationsList.size() >= 4){
+                        holder.translation4View.setText(holder.wordTranslationsList.get(3).getTranslation());
+                        addBadge(holder.translation4View, holder.wordTranslationsList.get(3).getUsersCount());
+                    }
+                    if(holder.wordTranslationsList.size() >= 5){
+                        holder.translation5View.setText(holder.wordTranslationsList.get(4).getTranslation());
+                        addBadge(holder.translation5View, holder.wordTranslationsList.get(4).getUsersCount());
+                    }
+                }
+            }
+        });
     }
 
     private void addBadge(View view, int count){
@@ -74,6 +119,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        List<AlienWordTranslation> wordTranslationsList;
+
+        @BindView(R.id.title_layout)
+        RelativeLayout titleLayout;
         @BindView(R.id.card_layout)
         FoldingCell cardLayout;
         @BindView(R.id.alien_word_title)

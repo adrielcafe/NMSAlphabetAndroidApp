@@ -87,31 +87,26 @@
 
             <TextView
                 android:id="@+id/translation_1"
-                android:text="Lorem"
                 app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
             <TextView
                 android:id="@+id/translation_2"
-                android:text="Ipsum"
                 app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
             <TextView
                 android:id="@+id/translation_3"
-                android:text="Dolor"
                 app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
             <TextView
                 android:id="@+id/translation_4"
-                android:text="Sit"
                 app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
             <TextView
                 android:id="@+id/translation_5"
-                android:text="Amet"
                 app:font="custom1"
                 style="@style/AlienWordTranslationTextView"/>
 
@@ -146,6 +141,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@color/bg_white"
