@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Constant {
-    public static final String CONTACT_EMAIL    		= "me@adriel.cafe";
-    public static final String GOOGLE_PLAY_URL     		= "https://play.google.com/store/apps/details?id=";
-    public static final String MARKET_URI          		= "market://details?id=";
+    public static final String CONTACT_EMAIL    = "me@adriel.cafe";
+    public static final String GOOGLE_PLAY_URL  = "https://play.google.com/store/apps/details?id=";
+    public static final String MARKET_URI       = "market://details?id=";
 
     public static final String PARSE_SERVER_URL = "https://nmsalphabet.herokuapp.com/api/";
 
