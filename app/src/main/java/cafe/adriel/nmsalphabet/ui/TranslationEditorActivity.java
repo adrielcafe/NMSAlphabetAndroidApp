@@ -169,8 +169,8 @@ public class TranslationEditorActivity extends BaseActivity {
         });
     }
 
-    private void saveTranslation(){
-        if(isValid() && Util.isConnected(this)){
+    private void saveTranslation() {
+        if (isValid() && Util.isConnected(this)) {
             final AlertDialog dialog = Util.showLoadingDialog(this);
             Util.hideSoftKeyboard(this);
             AsyncTask.execute(new Runnable() {
@@ -194,54 +194,39 @@ public class TranslationEditorActivity extends BaseActivity {
                         alienWord.addUser(App.getUser());
                         alienWord.save();
 
-                        if(Util.isNotEmpty(enTranslationStr)){
-                            enTranslation = DbUtil.getTranslation(alienRace, alienWord, LanguageUtil.LANGUAGE_EN);
-                            if(enTranslation == null){
-                                enTranslation = new AlienWordTranslation();
-                                enTranslation.setRace(alienRace);
-                                enTranslation.setWord(alienWord);
-                                enTranslation.setLanguage(LanguageUtil.LANGUAGE_EN);
-                                enTranslation.setTranslation(enTranslationStr);
-                            }
-                            enTranslation.addUser(App.getUser());
-                            enTranslation.saveInBackground();
+                        if (Util.isNotEmpty(enTranslationStr)) {
+                            addTranslation(enTranslationStr, alienRace, alienWord, LanguageUtil.LANGUAGE_EN);
                         }
-
-                        if(Util.isNotEmpty(ptTranslationStr)){
-                            ptTranslation = DbUtil.getTranslation(alienRace, alienWord, LanguageUtil.LANGUAGE_PT);
-                            if(ptTranslation == null){
-                                ptTranslation = new AlienWordTranslation();
-                                ptTranslation.setRace(alienRace);
-                                ptTranslation.setWord(alienWord);
-                                ptTranslation.setLanguage(LanguageUtil.LANGUAGE_PT);
-                                ptTranslation.setTranslation(ptTranslationStr);
-                            }
-                            ptTranslation.addUser(App.getUser());
-                            ptTranslation.saveInBackground();
+                        if (Util.isNotEmpty(ptTranslationStr)) {
+                            addTranslation(ptTranslationStr, alienRace, alienWord, LanguageUtil.LANGUAGE_PT);
                         }
-
-                        if(Util.isNotEmpty(deTranslationStr)){
-                            deTranslation = DbUtil.getTranslation(alienRace, alienWord, LanguageUtil.LANGUAGE_DE);
-                            if(deTranslation == null){
-                                deTranslation = new AlienWordTranslation();
-                                deTranslation.setRace(alienRace);
-                                deTranslation.setWord(alienWord);
-                                deTranslation.setLanguage(LanguageUtil.LANGUAGE_DE);
-                                deTranslation.setTranslation(deTranslationStr);
-                            }
-                            deTranslation.addUser(App.getUser());
-                            deTranslation.saveInBackground();
+                        if (Util.isNotEmpty(deTranslationStr)) {
+                            addTranslation(deTranslationStr, alienRace, alienWord, LanguageUtil.LANGUAGE_DE);
                         }
 
                         dialog.dismiss();
                         finish();
-                    } catch (Exception e){
+                    } catch (Exception e) {
+                        Toast.makeText(TranslationEditorActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                         dialog.dismiss();
                     }
                 }
             });
         }
+    }
+
+    private void addTranslation(String translationStr, AlienRace race, AlienWord word, String language){
+        AlienWordTranslation translation = DbUtil.getTranslation(race, word, language);
+        if (translation == null) {
+            translation = new AlienWordTranslation();
+            translation.setRace(race);
+            translation.setWord(word);
+            translation.setLanguage(language);
+            translation.setTranslation(translationStr);
+        }
+        translation.addUser(App.getUser());
+        translation.saveInBackground();
     }
 
     private boolean isValid(){
