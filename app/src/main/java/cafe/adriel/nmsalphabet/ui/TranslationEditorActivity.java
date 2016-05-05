@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,9 +39,6 @@ public class TranslationEditorActivity extends BaseActivity {
 
     private AlienRace alienRace;
     private AlienWord alienWord;
-    private AlienWordTranslation enTranslation;
-    private AlienWordTranslation ptTranslation;
-    private AlienWordTranslation deTranslation;
 
     private InputFilter alienWordFilter = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
@@ -192,7 +190,11 @@ public class TranslationEditorActivity extends BaseActivity {
                             alienWord.setWord(alienWordStr);
                         }
                         alienWord.addUser(App.getUser());
-                        alienWord.save();
+                        try {
+                            alienWord.save();
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
 
                         if (Util.isNotEmpty(enTranslationStr)) {
                             addTranslation(enTranslationStr, alienRace, alienWord, LanguageUtil.LANGUAGE_EN);
@@ -206,10 +208,15 @@ public class TranslationEditorActivity extends BaseActivity {
 
                         dialog.dismiss();
                         finish();
-                    } catch (Exception e) {
-                        Toast.makeText(TranslationEditorActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (final Exception e) {
                         e.printStackTrace();
                         dialog.dismiss();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(TranslationEditorActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
             });
