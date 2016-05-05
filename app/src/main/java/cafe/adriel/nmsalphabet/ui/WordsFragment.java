@@ -34,7 +34,6 @@ import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -305,26 +304,17 @@ public class WordsFragment extends BaseFragment {
         wordsView.setLayoutManager(layoutManager);
         wordsView.addOnScrollListener(infiniteScrollListener);
         wordsView.addOnScrollListener(new SwipeRefreshLayoutToggleScrollListener(refreshLayout));
-
-        switch (type){
-            case HOME:
-                wordsView.setAdapter(new HomeAdapter(getContext(), new ArrayList<AlienWord>()));
-                break;
-            case PROFILE:
-                wordsView.setAdapter(new ProfileAdapter(getContext(), new ArrayList<AlienWord>()));
-                break;
-        }
     }
 
     private void initAdapter(){
         switch (type){
             case HOME:
                 homeAdapter = new HomeAdapter(getContext(), words);
-                wordsView.swapAdapter(homeAdapter, true);
+                wordsView.setAdapter(homeAdapter);
                 break;
             case PROFILE:
                 profileAdapter = new ProfileAdapter(getContext(), words);
-                wordsView.swapAdapter(profileAdapter, true);
+                wordsView.setAdapter(profileAdapter);
                 break;
         }
         wordsView.setMinimumHeight(refreshLayout.getHeight());
