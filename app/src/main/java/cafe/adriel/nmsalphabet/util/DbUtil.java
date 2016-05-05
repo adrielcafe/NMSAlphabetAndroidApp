@@ -86,9 +86,10 @@ public class DbUtil {
                 .findInBackground(callback);
     }
 
-    public static AlienWordTranslation getTranslation(AlienRace race, AlienWord word, String language){
+    public static AlienWordTranslation getTranslation(String translation, String language, AlienWord word, AlienRace race){
         try {
             return ParseQuery.getQuery(AlienWordTranslation.class)
+                    .whereEqualTo("translation", translation)
                     .whereEqualTo("race", race)
                     .whereEqualTo("word", word)
                     .whereEqualTo("language", language)

@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -188,22 +187,19 @@ public class TranslationEditorActivity extends BaseActivity {
                             alienWord = new AlienWord();
                             alienWord.setRace(alienRace);
                             alienWord.setWord(alienWordStr);
+                            alienWord.save();
                         }
                         alienWord.addUser(App.getUser());
-                        try {
-                            alienWord.save();
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
+                        alienWord.saveEventually();
 
                         if (Util.isNotEmpty(enTranslationStr)) {
-                            addTranslation(enTranslationStr, alienRace, alienWord, LanguageUtil.LANGUAGE_EN);
+                            addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, alienWord, alienRace);
                         }
                         if (Util.isNotEmpty(ptTranslationStr)) {
-                            addTranslation(ptTranslationStr, alienRace, alienWord, LanguageUtil.LANGUAGE_PT);
+                            addTranslation(ptTranslationStr, LanguageUtil.LANGUAGE_PT, alienWord, alienRace);
                         }
                         if (Util.isNotEmpty(deTranslationStr)) {
-                            addTranslation(deTranslationStr, alienRace, alienWord, LanguageUtil.LANGUAGE_DE);
+                            addTranslation(deTranslationStr, LanguageUtil.LANGUAGE_DE, alienWord, alienRace);
                         }
 
                         dialog.dismiss();
@@ -223,17 +219,22 @@ public class TranslationEditorActivity extends BaseActivity {
         }
     }
 
-    private void addTranslation(String translationStr, AlienRace race, AlienWord word, String language){
-        AlienWordTranslation translation = DbUtil.getTranslation(race, word, language);
-        if (translation == null) {
-            translation = new AlienWordTranslation();
-            translation.setRace(race);
-            translation.setWord(word);
-            translation.setLanguage(language);
-            translation.setTranslation(translationStr);
+    private void addTranslation(String translationStr,  String language, AlienWord word, AlienRace race){
+        try {
+            AlienWordTranslation translation = DbUtil.getTranslation(translationStr, language, word, race);
+            if (translation == null) {
+                translation = new AlienWordTranslation();
+                translation.setTranslation(translationStr);
+                translation.setLanguage(language);
+                translation.setWord(word);
+                translation.setRace(race);
+                translation.save();
+            }
+            translation.addUser(App.getUser());
+            translation.saveEventually();
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        translation.addUser(App.getUser());
-        translation.saveInBackground();
     }
 
     private boolean isValid(){
