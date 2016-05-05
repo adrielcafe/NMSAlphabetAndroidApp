@@ -27,12 +27,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
-import com.tumblr.bookends.Bookends;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +66,8 @@ public class WordsFragment extends BaseFragment {
 
     private Type type;
     private List<AlienWord> words;
-    private Bookends<HomeAdapter> homeAdapter;
-    private Bookends<ProfileAdapter> profileAdapter;
+    private HomeAdapter homeAdapter;
+    private ProfileAdapter profileAdapter;
     private EndlessRecyclerOnScrollListener infiniteScrollListener;
     private DynamicBox stateBox;
 
@@ -95,6 +95,8 @@ public class WordsFragment extends BaseFragment {
     TextView searchClearView;
     @BindView(R.id.races)
     MaterialSpinner racesView;
+    @BindView(R.id.loading)
+    SpinKitView loadingView;
 
     public static WordsFragment newInstance(Type type) {
         Bundle args = new Bundle();
@@ -319,15 +321,11 @@ public class WordsFragment extends BaseFragment {
     private void initAdapter(){
         switch (type){
             case HOME:
-                homeAdapter = new Bookends<>(new HomeAdapter(getContext(), words));
-                homeAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
-                homeAdapter.setFooterVisibility(false);
+                homeAdapter = new HomeAdapter(getContext(), words);
                 wordsView.swapAdapter(homeAdapter, true);
                 break;
             case PROFILE:
-                profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), words));
-                profileAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
-                profileAdapter.setFooterVisibility(false);
+                profileAdapter = new ProfileAdapter(getContext(), words);
                 wordsView.swapAdapter(profileAdapter, true);
                 break;
         }
@@ -419,18 +417,7 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(boolean loading){
-        switch (type){
-            case HOME:
-                if(homeAdapter != null) {
-                    homeAdapter.setFooterVisibility(loading);
-                }
-                break;
-            case PROFILE:
-                if(profileAdapter != null) {
-                    profileAdapter.setFooterVisibility(loading);
-                }
-                break;
-        }
+        loadingView.setVisibility(loading ? View.VISIBLE : View.GONE);
     }
 
     private void updateRefreshLayoutMarginTop(){
