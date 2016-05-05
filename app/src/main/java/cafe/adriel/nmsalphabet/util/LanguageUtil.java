@@ -18,8 +18,7 @@ public class LanguageUtil {
     public static final String LANGUAGE_DE = "de";
 
     public static String getCurrentLanguage(Context context){
-        String language = PreferenceManager.getDefaultSharedPreferences(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LANGUAGE_EN);
-        return language;
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LANGUAGE_EN);
     }
 
     public static void updateLanguage(Context context){
