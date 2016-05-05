@@ -22,7 +22,7 @@ public class User extends ParseUser implements Serializable {
         return Util.isEmpty(gender) ? Constant.GENDER_MALE : gender;
     }
 
-    public void setGernder(String gender){
+    public void setGender(String gender){
         put("gender", gender);
     }
 

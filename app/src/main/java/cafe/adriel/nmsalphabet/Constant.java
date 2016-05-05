@@ -1,6 +1,6 @@
 package cafe.adriel.nmsalphabet;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Constant {
@@ -10,7 +10,7 @@ public class Constant {
 
     public static final String PARSE_SERVER_URL = "https://nmsalphabet.herokuapp.com/api/";
 
-    public static final List<String> FACEBOOK_PERMISSIONS   = Arrays.asList("public_profile");
+    public static final List<String> FACEBOOK_PERMISSIONS   = Collections.singletonList("public_profile");
     public static final String FACEBOOK_USER_IMAGE_URL      = "https://graph.facebook.com/%s/picture?type=small";
 
     public static final String GENDER_MALE      = "male";
