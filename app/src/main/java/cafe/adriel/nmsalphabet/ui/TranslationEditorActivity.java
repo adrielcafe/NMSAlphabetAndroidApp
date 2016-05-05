@@ -190,7 +190,7 @@ public class TranslationEditorActivity extends BaseActivity {
                             alienWord.save();
                         }
                         alienWord.addUser(App.getUser());
-                        alienWord.saveEventually();
+                        alienWord.saveInBackground();
 
                         if (Util.isNotEmpty(enTranslationStr)) {
                             addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, alienWord, alienRace);
@@ -220,20 +220,28 @@ public class TranslationEditorActivity extends BaseActivity {
     }
 
     private void addTranslation(String translationStr,  String language, AlienWord word, AlienRace race){
-        try {
-            AlienWordTranslation translation = DbUtil.getTranslation(translationStr, language, word, race);
-            if (translation == null) {
+        AlienWordTranslation userTranslation = DbUtil.getUserTranslation(App.getUser(), language, word, race);
+        if(userTranslation != null && !userTranslation.getTranslation().equals(translationStr)) {
+            userTranslation.removeUser(App.getUser());
+            userTranslation.saveInBackground();
+        }
+
+        AlienWordTranslation translation = DbUtil.getTranslation(translationStr, language, word, race);
+        if (translation == null) {
+            try {
                 translation = new AlienWordTranslation();
                 translation.setTranslation(translationStr);
                 translation.setLanguage(language);
                 translation.setWord(word);
                 translation.setRace(race);
                 translation.save();
+            } catch (Exception e){
+                e.printStackTrace();
             }
+        }
+        if(translation != null) {
             translation.addUser(App.getUser());
-            translation.saveEventually();
-        } catch (Exception e){
-            e.printStackTrace();
+            translation.saveInBackground();
         }
     }
 
