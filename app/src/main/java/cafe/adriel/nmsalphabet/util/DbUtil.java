@@ -77,15 +77,6 @@ public class DbUtil {
                 .findInBackground(callback);
     }
 
-    public static void getUserTranslations(AlienRace race, AlienWord word, User user, FindCallback<AlienWordTranslation> callback){
-        ParseQuery.getQuery(AlienWordTranslation.class)
-                .whereEqualTo("race", race)
-                .whereEqualTo("word", word)
-                .whereEqualTo("users", user)
-                .orderByAscending("word")
-                .findInBackground(callback);
-    }
-
     public static AlienWordTranslation getTranslation(String translation, String language, AlienWord word, AlienRace race){
         try {
             return ParseQuery.getQuery(AlienWordTranslation.class)
@@ -93,6 +84,31 @@ public class DbUtil {
                     .whereEqualTo("race", race)
                     .whereEqualTo("word", word)
                     .whereEqualTo("language", language)
+                    .getFirst();
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void getUserTranslations(AlienRace race, AlienWord word, User user, FindCallback<AlienWordTranslation> callback){
+        ParseQuery.getQuery(AlienWordTranslation.class)
+                .whereEqualTo("race", race)
+                .whereEqualTo("word", word)
+                .whereEqualTo("users", user)
+                .addAscendingOrder("word")
+                .addDescendingOrder("_created_at")
+                .findInBackground(callback);
+    }
+
+    public static AlienWordTranslation getUserTranslation(User user, String language, AlienWord word, AlienRace race){
+        try {
+            return ParseQuery.getQuery(AlienWordTranslation.class)
+                    .whereEqualTo("users", user)
+                    .whereEqualTo("race", race)
+                    .whereEqualTo("word", word)
+                    .whereEqualTo("language", language)
+                    .orderByDescending("_created_at")
                     .getFirst();
         } catch (Exception e){
             e.printStackTrace();

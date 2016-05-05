@@ -284,8 +284,6 @@ public class WordsFragment extends BaseFragment {
         stateBox.addCustomView(requireSignInState, STATE_REQUIRE_SIGN_IN);
         if(type == Type.PROFILE && !App.isSignedIn()){
             stateBox.showCustomView(STATE_REQUIRE_SIGN_IN);
-        } else {
-            stateBox.showCustomView(STATE_LOADING);
         }
     }
 
@@ -417,7 +415,9 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(boolean loading){
-        loadingView.setVisibility(loading ? View.VISIBLE : View.GONE);
+        if(loadingView != null) {
+            loadingView.setVisibility(loading ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void updateRefreshLayoutMarginTop(){

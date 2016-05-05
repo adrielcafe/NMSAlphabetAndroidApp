@@ -50,11 +50,15 @@ public class AlienWordTranslation extends ParseObject implements Serializable {
     }
 
     public void addUser(User user){
-        getUsers().add(user);
+        if(getUsers() != null) {
+            getUsers().add(user);
+        }
     }
 
     public void removeUser(User user){
-        getUsers().remove(user);
+        if(getUsers() != null) {
+            getUsers().remove(user);
+        }
     }
 
 }
