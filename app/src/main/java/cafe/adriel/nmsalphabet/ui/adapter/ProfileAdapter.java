@@ -5,8 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 
 import java.util.List;
@@ -17,7 +20,11 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
+import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.util.DbUtil;
+import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
@@ -42,9 +49,11 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        AlienWord word = wordList.get(position);
-        AlienRace race = App.getRaceById(word.getRace().getObjectId());
+        final AlienWord word = wordList.get(position);
+        final AlienRace race = App.getRaceById(word.getRace().getObjectId());
+        holder.wordTranslationsList = null;
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
+        holder.cardLayout.fold(true);
         holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
         holder.alienWordTitleView.setText(word.getWord());
         holder.alienWordView.setText(word.getWord());
@@ -52,9 +61,42 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             holder.alienRaceTitleView.setText(race.getName());
             holder.alienRaceView.setText(race.getName());
         }
+        holder.titleLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.cardLayout.toggle(false);
+                if(holder.wordTranslationsList == null){
+                    loadTranslations(race, word, holder);
+                }
+            }
+        });
+    }
+
+    private void loadTranslations(AlienRace race, AlienWord word, final ViewHolder holder){
+        DbUtil.getUserTranslations(race, word, App.getUser(), new FindCallback<AlienWordTranslation>() {
+            @Override
+            public void done(List<AlienWordTranslation> objects, ParseException e) {
+                holder.wordTranslationsList = objects;
+                if(Util.isNotEmpty(holder.wordTranslationsList)){
+                    for(AlienWordTranslation translation : holder.wordTranslationsList){
+                        if(translation.getLanguage().equals(LanguageUtil.LANGUAGE_EN) && holder.englishTranslationView.getText().toString().isEmpty()){
+                            holder.englishTranslationView.setText(translation.getTranslation());
+                        } else if(translation.getLanguage().equals(LanguageUtil.LANGUAGE_PT) && holder.portugueseTranslationView.getText().toString().isEmpty()){
+                            holder.portugueseTranslationView.setText(translation.getTranslation());
+                        } else if(translation.getLanguage().equals(LanguageUtil.LANGUAGE_DE) && holder.germanTranslationView.getText().toString().isEmpty()){
+                            holder.germanTranslationView.setText(translation.getTranslation());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        List<AlienWordTranslation> wordTranslationsList;
+
+        @BindView(R.id.title_layout)
+        RelativeLayout titleLayout;
         @BindView(R.id.card_layout)
         FoldingCell cardLayout;
         @BindView(R.id.alien_word_title)

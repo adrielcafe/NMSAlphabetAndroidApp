@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="25dp"
+    android:background="@color/bg_galaxy">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@color/gray_light"
+            android:text="@string/app_name"
+            app:font="custom1"/>
+
+        <TextView
+            android:id="@+id/app_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/app_name"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textColor="@color/gray_light"
+            app:font="custom1"/>
+
+        <ImageView
+            android:id="@+id/galaxy"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="30dp"
+            android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:textColor="@color/gray_light"
+            android:textStyle="italic"
+            android:text="@string/quote"
+            app:font="custom1"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

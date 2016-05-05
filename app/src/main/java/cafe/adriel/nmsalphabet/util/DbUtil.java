@@ -11,7 +11,8 @@ import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.model.User;
 
 public class DbUtil {
-    public static int PAGE_SIZE = 10;
+    public static int PAGE_SIZE_WORD = 50;
+    public static int PAGE_SIZE_TRANSLATION = 5;
 
     public static List<AlienRace> getRaces(){
         try {
@@ -28,8 +29,8 @@ public class DbUtil {
         ParseQuery.getQuery(AlienWord.class)
                 .addAscendingOrder("word")
                 .addAscendingOrder("_updated_at")
-                .setLimit(PAGE_SIZE)
-                .setSkip(PAGE_SIZE * page)
+                .setLimit(PAGE_SIZE_WORD)
+                .setSkip(PAGE_SIZE_WORD * page)
                 .findInBackground(callback);
     }
 
@@ -38,8 +39,8 @@ public class DbUtil {
                 .whereEqualTo("race", race)
                 .addAscendingOrder("word")
                 .addAscendingOrder("_updated_at")
-                .setLimit(PAGE_SIZE)
-                .setSkip(PAGE_SIZE * page)
+                .setLimit(PAGE_SIZE_WORD)
+                .setSkip(PAGE_SIZE_WORD * page)
                 .findInBackground(callback);
     }
 
@@ -48,8 +49,8 @@ public class DbUtil {
                 .whereEqualTo("users", user)
                 .addAscendingOrder("word")
                 .addAscendingOrder("_updated_at")
-                .setLimit(PAGE_SIZE)
-                .setSkip(PAGE_SIZE * page)
+                .setLimit(PAGE_SIZE_WORD)
+                .setSkip(PAGE_SIZE_WORD * page)
                 .findInBackground(callback);
     }
 
@@ -57,7 +58,7 @@ public class DbUtil {
         try {
             return ParseQuery.getQuery(AlienWord.class)
                     .whereEqualTo("race", race)
-                    .whereEqualTo("word", race)
+                    .whereEqualTo("word", word)
                     .getFirst();
         } catch (Exception e){
             e.printStackTrace();
@@ -65,20 +66,30 @@ public class DbUtil {
         }
     }
 
-    public static void getTranslations(AlienRace race, AlienWord word, String language, int page, FindCallback<AlienWord> callback){
-        ParseQuery.getQuery(AlienWord.class)
+    public static void getTranslations(AlienRace race, AlienWord word, String language, FindCallback<AlienWordTranslation> callback){
+        ParseQuery.getQuery(AlienWordTranslation.class)
                 .whereEqualTo("race", race)
                 .whereEqualTo("word", word)
                 .whereEqualTo("language", language)
-                .orderByDescending("_updated_at")
-                .setLimit(PAGE_SIZE)
-                .setSkip(PAGE_SIZE * page)
+                .addDescendingOrder("usersCount")
+                .addDescendingOrder("word")
+                .setLimit(PAGE_SIZE_TRANSLATION)
                 .findInBackground(callback);
     }
 
-    public static AlienWordTranslation getTranslation(AlienRace race, AlienWord word, String language){
+    public static void getUserTranslations(AlienRace race, AlienWord word, User user, FindCallback<AlienWordTranslation> callback){
+        ParseQuery.getQuery(AlienWordTranslation.class)
+                .whereEqualTo("race", race)
+                .whereEqualTo("word", word)
+                .whereEqualTo("users", user)
+                .orderByAscending("word")
+                .findInBackground(callback);
+    }
+
+    public static AlienWordTranslation getTranslation(String translation, String language, AlienWord word, AlienRace race){
         try {
             return ParseQuery.getQuery(AlienWordTranslation.class)
+                    .whereEqualTo("translation", translation)
                     .whereEqualTo("race", race)
                     .whereEqualTo("word", word)
                     .whereEqualTo("language", language)

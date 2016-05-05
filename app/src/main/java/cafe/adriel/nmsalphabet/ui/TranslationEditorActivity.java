@@ -38,9 +38,6 @@ public class TranslationEditorActivity extends BaseActivity {
 
     private AlienRace alienRace;
     private AlienWord alienWord;
-    private AlienWordTranslation enTranslation;
-    private AlienWordTranslation ptTranslation;
-    private AlienWordTranslation deTranslation;
 
     private InputFilter alienWordFilter = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
@@ -169,8 +166,8 @@ public class TranslationEditorActivity extends BaseActivity {
         });
     }
 
-    private void saveTranslation(){
-        if(isValid() && Util.isConnected(this)){
+    private void saveTranslation() {
+        if (isValid() && Util.isConnected(this)) {
             final AlertDialog dialog = Util.showLoadingDialog(this);
             Util.hideSoftKeyboard(this);
             AsyncTask.execute(new Runnable() {
@@ -190,57 +187,53 @@ public class TranslationEditorActivity extends BaseActivity {
                             alienWord = new AlienWord();
                             alienWord.setRace(alienRace);
                             alienWord.setWord(alienWordStr);
+                            alienWord.save();
                         }
                         alienWord.addUser(App.getUser());
-                        alienWord.save();
+                        alienWord.saveEventually();
 
-                        if(Util.isNotEmpty(enTranslationStr)){
-                            enTranslation = DbUtil.getTranslation(alienRace, alienWord, LanguageUtil.LANGUAGE_EN);
-                            if(enTranslation == null){
-                                enTranslation = new AlienWordTranslation();
-                                enTranslation.setRace(alienRace);
-                                enTranslation.setWord(alienWord);
-                                enTranslation.setLanguage(LanguageUtil.LANGUAGE_EN);
-                                enTranslation.setTranslation(enTranslationStr);
-                            }
-                            enTranslation.addUser(App.getUser());
-                            enTranslation.saveInBackground();
+                        if (Util.isNotEmpty(enTranslationStr)) {
+                            addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, alienWord, alienRace);
                         }
-
-                        if(Util.isNotEmpty(ptTranslationStr)){
-                            ptTranslation = DbUtil.getTranslation(alienRace, alienWord, LanguageUtil.LANGUAGE_PT);
-                            if(ptTranslation == null){
-                                ptTranslation = new AlienWordTranslation();
-                                ptTranslation.setRace(alienRace);
-                                ptTranslation.setWord(alienWord);
-                                ptTranslation.setLanguage(LanguageUtil.LANGUAGE_PT);
-                                ptTranslation.setTranslation(ptTranslationStr);
-                            }
-                            ptTranslation.addUser(App.getUser());
-                            ptTranslation.saveInBackground();
+                        if (Util.isNotEmpty(ptTranslationStr)) {
+                            addTranslation(ptTranslationStr, LanguageUtil.LANGUAGE_PT, alienWord, alienRace);
                         }
-
-                        if(Util.isNotEmpty(deTranslationStr)){
-                            deTranslation = DbUtil.getTranslation(alienRace, alienWord, LanguageUtil.LANGUAGE_DE);
-                            if(deTranslation == null){
-                                deTranslation = new AlienWordTranslation();
-                                deTranslation.setRace(alienRace);
-                                deTranslation.setWord(alienWord);
-                                deTranslation.setLanguage(LanguageUtil.LANGUAGE_DE);
-                                deTranslation.setTranslation(deTranslationStr);
-                            }
-                            deTranslation.addUser(App.getUser());
-                            deTranslation.saveInBackground();
+                        if (Util.isNotEmpty(deTranslationStr)) {
+                            addTranslation(deTranslationStr, LanguageUtil.LANGUAGE_DE, alienWord, alienRace);
                         }
 
                         dialog.dismiss();
                         finish();
-                    } catch (Exception e){
+                    } catch (final Exception e) {
                         e.printStackTrace();
                         dialog.dismiss();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(TranslationEditorActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
             });
+        }
+    }
+
+    private void addTranslation(String translationStr,  String language, AlienWord word, AlienRace race){
+        try {
+            AlienWordTranslation translation = DbUtil.getTranslation(translationStr, language, word, race);
+            if (translation == null) {
+                translation = new AlienWordTranslation();
+                translation.setTranslation(translationStr);
+                translation.setLanguage(language);
+                translation.setWord(word);
+                translation.setRace(race);
+                translation.save();
+            }
+            translation.addUser(App.getUser());
+            translation.saveEventually();
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 

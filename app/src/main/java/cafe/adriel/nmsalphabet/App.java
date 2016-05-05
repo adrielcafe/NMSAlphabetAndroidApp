@@ -60,11 +60,13 @@ public class App extends Application {
     }
 
     private void initFabric(){
-        Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics(), new Answers())
-                .debuggable(true)
-                .build();
-        Fabric.with(fabric);
+        if(Util.isConnected(this)) {
+            Fabric fabric = new Fabric.Builder(this)
+                    .kits(new Crashlytics(), new Answers())
+                    .debuggable(true)
+                    .build();
+            Fabric.with(fabric);
+        }
     }
 
     private void initParse(){
@@ -103,7 +105,8 @@ public class App extends Application {
         return user;
     }
 
-    public static void loadRacesWordsAndTranslations(){
+    public static void loadAndCache(){
+        getUser();
         races = DbUtil.getRaces();
     }
 

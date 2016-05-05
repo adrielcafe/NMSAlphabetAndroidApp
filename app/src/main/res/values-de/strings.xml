@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="quote">\"Wir sind eine Unmöglichkeit, in einer unmöglichen Welt\"</string>
+    <string name="connect_internet">Internetverbindung herstellen</string>
+    <string name="nothing_found">Nichts gefunden</string>
+    <string name="home">Start</string>
+    <string name="translate">Übersetzen</string>
+    <string name="profile">Profil</string>
+    <string name="settings">Einstellungen</string>
+    <string name="search_word">Wort suchen</string>
+    <string name="all_alien_races">Alle außerirdischen Rassen</string>
+    <string name="select_alien_race">Wähle eine außerirdische Rasse</string>
+    <string name="translate_at_least_in_one_language">Bitte übersetze in mindestens eine Sprache</string>
+    <string name="signout">Ausloggen</string>
+    <string name="signin">Einloggen</string>
+    <string name="signin_facebook">Via Facebook einloggen</string>
+    <string name="signin_to_add_translations">Bitte logge dich ein um Übersetzungen hinzuzufügen</string>
+    <string name="not_now">Nicht jetzt</string>
+    <string name="new_translation">Neue Übersetzung</string>
+    <string name="best_translation">Passendste Übersetzung</string>
+    <string name="best_translations">Passendste Übersetzungen</string>
+    <string name="my_translations">Meine Übersetungen</string>
+    <string name="new_translation_with_icon">{gmi-plus-circle} Neue Übersetzung</string>
+    <string name="report_translation_with_icon">{gmi-flag} Melden</string>
+    <string name="delete_translation_with_icon">{gmi-delete} Löschen</string>
+    <string name="edit_translation_with_icon">{gmi-edit} Bearbeiten</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="save">Speichern</string>
+    <string name="alien_word">Außerirdisches Wort</string>
+    <string name="english_translation">Englische Übersetzung</string>
+    <string name="portuguese_translation">Portugisische Übersetzung</string>
+    <string name="german_translation">Deutsche Übersetzung</string>
+    <string name="account">Account</string>
+    <string name="language">Sprache</string>
+    <string name="theme">Design</string>
+    <string name="english">Englisch</string>
+    <string name="portuguese">Portugisisch</string>
+    <string name="german">Deutsch</string>
+    <string name="about">Über die App</string>
+    <string name="feedback">Feedback</string>
+    <string name="feedback_summary">Reiche Anregungen oder Fragen ein</string>
+    <string name="share">Teilen</string>
+    <string name="share_summary">Teile diese App mit deinen Freunden</string>
+    <string name="share_msg">Hallo Entdecker, wirf einen Blick auf "NMS Alphabet": Eine App um außerirdische Wörter aus No Man\'s Sky zu übersetzen!</string>
+    <string name="rate">Bewerten</string>
+    <string name="rate_summary">Du magst diese App? Dann geb ihr 5 Sterne auf Google Play!</string>
+    <string name="version">Version</string>
+    <string name="connected_as">Verbunden als</string>
+    <string name="type_alien_phrase">Gib einen außerirdischen Satz ein</string>
+    <string name="type_alien_word">Gib das außerirdische Wort ein</string>
+    <string name="restart_app">App neustarten</string>
+    <string name="refresh">Aktualisieren</string>
+    <string name="crash_msg">Sieht so aus als ob hier ein Schwarzes Loch vorbeigekommen ist und die App zum Absturz gebracht hat</string>
+    <string name="theme1">Design 1</string>
+    <string name="theme2">Design 2</string>
+    <string name="theme3">Design 3</string>
+    <string name="theme4">Design 4</string>
+    <string name="theme5">Design 5</string>
+    <string name="unknown_explorer">Unbekannter Entdecker</string>
+
+</resources>

@@ -1,7 +1,5 @@
 package cafe.adriel.nmsalphabet.model;
 
-import android.util.Log;
-
 import com.parse.ParseUser;
 
 import java.io.Serializable;
