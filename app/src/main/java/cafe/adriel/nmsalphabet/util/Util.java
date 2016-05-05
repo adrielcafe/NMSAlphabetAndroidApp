@@ -115,6 +115,16 @@ public class Util {
         }
     }
 
+    public static int getStatusBarHeight(Context context){
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
+        }
+    }
+
     public static int getNavigationBarHeight(Context context){
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
@@ -146,14 +156,19 @@ public class Util {
         }
     }
 
-    public static boolean isConnected(Context context){
+    public static boolean isConnected(final Context context){
         if(connectivityManager == null) {
             connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         }
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         boolean isConnected = (info != null && info.isConnected() && isConnectionFast(info.getType(), info.getSubtype()));
-        if(!isConnected){
-            Toast.makeText(context, R.string.connect_internet, Toast.LENGTH_SHORT).show();
+        if(!isConnected && context instanceof Activity){
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, R.string.connect_internet, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         return isConnected;
     }

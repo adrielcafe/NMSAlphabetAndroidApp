@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
@@ -144,7 +143,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             versionLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    showQuote();
+                    showGalaxy();
                     return true;
                 }
             });
@@ -194,8 +193,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         startActivity(i);
     }
 
-    private void showQuote(){
-        Toast.makeText(getActivity(), R.string.quote, Toast.LENGTH_SHORT).show();
+    private void showGalaxy(){
+        startActivity(new Intent(getContext(), VersionActivity.class));
     }
 
     private String getLanguageEntry(String value){

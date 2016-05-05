@@ -41,8 +41,8 @@ public class AlienWordTranslation extends ParseObject implements Serializable {
         put("race", race);
     }
 
-    public String getUsersCount(){
-        return getString("usersCount");
+    public int getUsersCount(){
+        return getInt("usersCount");
     }
 
     public ParseRelation getUsers() {

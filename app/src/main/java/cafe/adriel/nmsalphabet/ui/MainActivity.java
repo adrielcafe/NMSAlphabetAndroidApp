@@ -82,12 +82,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initTabs(){
+        String userGender = App.isSignedIn() ? App.getUser().getGender() : Constant.GENDER_MALE;
         int tabColor = ThemeUtil.getPrimaryDarkColor(this);
         ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_home), tabColor, getString(R.string.home)));
         models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_translation), tabColor, getString(R.string.translate)));
-        models.add(new NavigationTabBar.Model(getResources().getDrawable(
-                App.getUser().getGender().equals(Constant.GENDER_FEMALE) ? R.drawable.tab_profile_female : R.drawable.tab_profile_male), tabColor, getString(R.string.profile)));
+        models.add(new NavigationTabBar.Model(getResources().getDrawable(userGender.equals(Constant.GENDER_FEMALE) ? R.drawable.tab_profile_female : R.drawable.tab_profile_male), tabColor, getString(R.string.profile)));
         tabView.setModels(models);
         tabView.setViewPager(pagerView);
         tabView.setOnTabBarSelectedIndexListener(new NavigationTabBar.OnTabBarSelectedIndexListener() {
