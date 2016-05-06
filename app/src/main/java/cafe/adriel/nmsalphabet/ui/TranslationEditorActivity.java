@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -119,7 +121,7 @@ public class TranslationEditorActivity extends BaseActivity {
     }
 
     private void initForm(){
-        List<String> races = App.getRacesName();
+        List<String> races = DbUtil.getRacesName();
         races.add(0, getString(R.string.select_alien_race));
 
         alienRacesView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
@@ -180,7 +182,7 @@ public class TranslationEditorActivity extends BaseActivity {
                     String deTranslationStr = deTranslationView.getText().toString().toUpperCase();
 
                     try {
-                        alienRace = App.getRaceByName(alienRaceStr);
+                        alienRace = DbUtil.getRaceByName(alienRaceStr);
 
                         alienWord = DbUtil.getWord(alienRace, alienWordStr);
                         if (alienWord == null) {
@@ -189,8 +191,6 @@ public class TranslationEditorActivity extends BaseActivity {
                             alienWord.setWord(alienWordStr);
                             alienWord.save();
                         }
-                        alienWord.addUser(App.getUser());
-                        alienWord.saveInBackground();
 
                         if (Util.isNotEmpty(enTranslationStr)) {
                             addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, alienWord, alienRace);
@@ -219,13 +219,8 @@ public class TranslationEditorActivity extends BaseActivity {
         }
     }
 
-    private void addTranslation(String translationStr,  String language, AlienWord word, AlienRace race){
-        AlienWordTranslation userTranslation = DbUtil.getUserTranslation(App.getUser(), language, word, race);
-        if(userTranslation != null && !userTranslation.getTranslation().equals(translationStr)) {
-            userTranslation.removeUser(App.getUser());
-            userTranslation.saveInBackground();
-        }
-
+    private void addTranslation(final String translationStr, final String language, final AlienWord word, final AlienRace race){
+        final AlienWordTranslation currentTranslation = DbUtil.getUserTranslation(App.getUser(), language, word, race);
         AlienWordTranslation translation = DbUtil.getTranslation(translationStr, language, word, race);
         if (translation == null) {
             try {
@@ -241,7 +236,15 @@ public class TranslationEditorActivity extends BaseActivity {
         }
         if(translation != null) {
             translation.addUser(App.getUser());
-            translation.saveInBackground();
+            translation.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(currentTranslation != null && !currentTranslation.getTranslation().equals(translationStr)) {
+                        currentTranslation.removeUser(App.getUser());
+                        currentTranslation.saveInBackground();
+                    }
+                }
+            });
         }
     }
 
