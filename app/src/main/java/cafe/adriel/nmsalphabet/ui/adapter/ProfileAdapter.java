@@ -50,7 +50,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final AlienWord word = wordList.get(position);
-        final AlienRace race = App.getRaceById(word.getRace().getObjectId());
+        final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
         holder.wordTranslationsList = null;
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
         holder.cardLayout.fold(true);

@@ -42,7 +42,8 @@ public class AlienWordTranslation extends ParseObject implements Serializable {
     }
 
     public int getUsersCount(){
-        return getInt("usersCount");
+        int count = getInt("usersCount");
+        return count < 0 ? 0 : count;
     }
 
     public ParseRelation getUsers() {

@@ -20,7 +20,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
@@ -58,7 +57,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             language = LanguageUtil.getCurrentLanguage(context);
         }
         final AlienWord word = wordList.get(position);
-        final AlienRace race = App.getRaceById(word.getRace().getObjectId());
+        final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
         loadFlag(holder);
         holder.wordTranslationsList = null;
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
