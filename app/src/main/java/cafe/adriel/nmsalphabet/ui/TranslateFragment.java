@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -25,6 +26,7 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 
 public class TranslateFragment extends BaseFragment {
@@ -60,7 +62,12 @@ public class TranslateFragment extends BaseFragment {
 
     @Override
     protected void init(){
+        initControls();
         initFab();
+        initFlag();
+    }
+
+    private void initControls(){
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
         racesView.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
         racesView.setTextColor(Color.WHITE);
@@ -128,6 +135,22 @@ public class TranslateFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private void initFlag(){
+        int flagResId;
+        switch (LanguageUtil.getCurrentLanguage(getContext())){
+            case LanguageUtil.LANGUAGE_PT:
+                flagResId = R.drawable.flag_brazil;
+                break;
+            case LanguageUtil.LANGUAGE_DE:
+                flagResId = R.drawable.flag_germany;
+                break;
+            default:
+                flagResId = R.drawable.flag_uk;
+                break;
+        }
+        Glide.with(getContext()).load(flagResId).into(countryFlagView);
     }
 
     private void translatePhrase(String phrase){
