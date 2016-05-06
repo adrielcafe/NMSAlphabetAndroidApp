@@ -177,7 +177,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void sendFeedback() {
-        String subject = String.format("Feedback from %s [ID: %s]", App.getUser().getName(), App.getUser().getObjectId());
+        String subject;
+        if(App.isSignedIn()) {
+            subject = String.format("%s - Feedback from %s [ID: %s]", getString(R.string.app_name), App.getUser().getName(), App.getUser().getObjectId());
+        } else {
+            subject = getString(R.string.app_name) + " - Feedback";
+        }
         Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
         i.putExtra(Intent.EXTRA_SUBJECT, subject);
         getActivity().startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
