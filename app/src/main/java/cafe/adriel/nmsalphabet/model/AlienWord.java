@@ -2,6 +2,7 @@ package cafe.adriel.nmsalphabet.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseRelation;
 
 import java.io.Serializable;
 
@@ -24,4 +25,15 @@ public class AlienWord extends ParseObject implements Serializable {
         put("race", race);
     }
 
+    public ParseRelation<User> getUsers() {
+        return getRelation("users");
+    }
+
+    public void addUser(User user){
+        getUsers().add(user);
+    }
+
+    public void removeUser(User user){
+        getUsers().remove(user);
+    }
 }

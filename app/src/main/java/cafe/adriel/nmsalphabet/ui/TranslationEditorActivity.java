@@ -191,6 +191,8 @@ public class TranslationEditorActivity extends BaseActivity {
                             alienWord.setWord(alienWordStr);
                             alienWord.save();
                         }
+                        alienWord.addUser(App.getUser());
+                        alienWord.saveInBackground();
 
                         if (Util.isNotEmpty(enTranslationStr)) {
                             addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, alienWord, alienRace);
