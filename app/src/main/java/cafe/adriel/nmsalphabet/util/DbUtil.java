@@ -126,7 +126,7 @@ public class DbUtil {
                 .whereEqualTo("word", word)
                 .whereEqualTo("language", language)
                 .addDescendingOrder("usersCount")
-                .addDescendingOrder("word")
+                .addAscendingOrder("word")
                 .setLimit(PAGE_SIZE_TRANSLATION)
                 .findInBackground(callback);
     }

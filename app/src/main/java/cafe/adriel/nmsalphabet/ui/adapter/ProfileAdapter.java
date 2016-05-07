@@ -84,7 +84,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 if(!wordTranslations.containsKey(word.getObjectId())){
                     loadTranslations(holder, race, word);
                 }
-                holder.cardLayout.toggle(false);
+                holder.cardLayout.unfold(false);
             }
         });
     }

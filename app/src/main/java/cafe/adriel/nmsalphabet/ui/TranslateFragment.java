@@ -31,7 +31,6 @@ import cafe.adriel.nmsalphabet.util.ThemeUtil;
 
 public class TranslateFragment extends BaseFragment {
 
-
     @BindView(R.id.phrase_layout)
     RelativeLayout phraseLayout;
     @BindView(R.id.phrase)
