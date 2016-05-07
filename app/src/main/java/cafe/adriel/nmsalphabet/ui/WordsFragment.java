@@ -400,7 +400,16 @@ public class WordsFragment extends BaseFragment {
 
     private void setLoadingList(boolean loading){
         if(loadingView != null) {
-            loadingView.setVisibility(loading ? View.VISIBLE : View.GONE);
+            if(loading) {
+                loadingView.setVisibility(View.VISIBLE);
+            } else {
+                Util.asyncCall(500, new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingView.setVisibility(View.GONE);
+                    }
+                });
+            }
         }
     }
 
