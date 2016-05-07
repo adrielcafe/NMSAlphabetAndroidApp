@@ -27,4 +27,8 @@ public class Constant {
     public static final String SETTINGS_ABOUT_VERSION	    = "about_version";
     public static final String SETTINGS_HAS_SIGNED_IN	    = "hasSignedIn";
 
+    public static final String STATE_LOADING           = "loading";
+    public static final String STATE_EMPTY             = "empty";
+    public static final String STATE_NO_INTERNET       = "noInternet";
+    public static final String STATE_REQUIRE_SIGN_IN   = "requireSignIn";
 }

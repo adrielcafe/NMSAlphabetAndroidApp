@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,10 +17,13 @@ import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 import com.readystatesoftware.viewbadger.BadgeView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
@@ -28,21 +32,24 @@ import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
+import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     private Context context;
-    private List<AlienWord> wordList;
     private String language;
+    private List<AlienWord> words;
+    private Map<String, DynamicBox> viewStates;
+    private Map<String, List<AlienWordTranslation>> wordTranslations;
 
-    public HomeAdapter(Context context, List<AlienWord> wordList) {
+    public HomeAdapter(Context context, List<AlienWord> words) {
         this.context = context;
-        this.wordList = wordList;
+        this.words = words;
     }
 
     @Override
     public int getItemCount() {
-        return wordList.size();
+        return words.size();
     }
 
     @Override
@@ -53,13 +60,24 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        final AlienWord word = words.get(position);
+        final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
+
         if(language == null){
             language = LanguageUtil.getCurrentLanguage(context);
         }
-        final AlienWord word = wordList.get(position);
-        final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
-        loadFlag(holder);
-        holder.wordTranslationsList = null;
+        if(wordTranslations == null){
+            wordTranslations = new HashMap<>();
+        }
+        if(viewStates == null){
+            viewStates = new HashMap<>();
+        }
+        if(!viewStates.containsKey(word.getObjectId())) {
+            viewStates.put(word.getObjectId(), createViewState(holder));
+        }
+
+        initFlag(holder);
+
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
         holder.cardLayout.fold(true);
         holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
@@ -72,15 +90,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         holder.titleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.cardLayout.unfold(false);
-                if(holder.wordTranslationsList == null){
-                    loadTranslations(race, word, holder);
+                if(!wordTranslations.containsKey(word.getObjectId())){
+                    loadTranslations(holder, race, word);
                 }
+                holder.cardLayout.unfold(false);
             }
         });
     }
 
-    private void loadFlag(ViewHolder holder){
+    private void initFlag(ViewHolder holder){
         int flagResId;
         switch (language){
             case LanguageUtil.LANGUAGE_PT:
@@ -96,35 +114,74 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         Glide.with(context).load(flagResId).into(holder.countryFlagView);
     }
 
-    private void loadTranslations(AlienRace race, AlienWord word, final ViewHolder holder){
-        DbUtil.getTranslations(race, word, language, new FindCallback<AlienWordTranslation>() {
-            @Override
-            public void done(List<AlienWordTranslation> objects, ParseException e) {
-                holder.wordTranslationsList = objects;
-                if(Util.isNotEmpty(holder.wordTranslationsList)){
-                    if(holder.wordTranslationsList.size() >= 1){
-                        holder.translation1View.setText(holder.wordTranslationsList.get(0).getTranslation());
-                        addBadge(holder.translation1View, holder.wordTranslationsList.get(0).getUsersCount());
-                    }
-                    if(holder.wordTranslationsList.size() >= 2){
-                        holder.translation2View.setText(holder.wordTranslationsList.get(1).getTranslation());
-                        addBadge(holder.translation2View, holder.wordTranslationsList.get(1).getUsersCount());
-                    }
-                    if(holder.wordTranslationsList.size() >= 3){
-                        holder.translation3View.setText(holder.wordTranslationsList.get(2).getTranslation());
-                        addBadge(holder.translation3View, holder.wordTranslationsList.get(2).getUsersCount());
-                    }
-                    if(holder.wordTranslationsList.size() >= 4){
-                        holder.translation4View.setText(holder.wordTranslationsList.get(3).getTranslation());
-                        addBadge(holder.translation4View, holder.wordTranslationsList.get(3).getUsersCount());
-                    }
-                    if(holder.wordTranslationsList.size() >= 5){
-                        holder.translation5View.setText(holder.wordTranslationsList.get(4).getTranslation());
-                        addBadge(holder.translation5View, holder.wordTranslationsList.get(4).getUsersCount());
+    private DynamicBox createViewState(ViewHolder holder){
+        View loadingState = LayoutInflater.from(context).inflate(R.layout.state_translations_loading, null, false);
+        View emptyState = LayoutInflater.from(context).inflate(R.layout.state_translations_empty, null, false);
+        View noInternetState = LayoutInflater.from(context).inflate(R.layout.state_translations_no_internet, null, false);
+
+        DynamicBox viewState = new DynamicBox(context, holder.translationsLayout);
+        viewState.addCustomView(loadingState, Constant.STATE_LOADING);
+        viewState.addCustomView(emptyState, Constant.STATE_EMPTY);
+        viewState.addCustomView(noInternetState, Constant.STATE_NO_INTERNET);
+        return viewState;
+    }
+
+    private DynamicBox getViewState(AlienWord word){
+        if(viewStates.containsKey(word.getObjectId())){
+            return viewStates.get(word.getObjectId());
+        } else {
+            return null;
+        }
+    }
+
+    private void setViewState(AlienWord word, String state){
+        DynamicBox viewState = getViewState(word);
+        if(viewState != null){
+            if(Util.isEmpty(state)){
+                viewState.hideAll();
+            } else {
+                viewState.showCustomView(state);
+            }
+        }
+    }
+
+    private void loadTranslations(final ViewHolder holder, AlienRace race, final AlienWord word){
+        if(Util.isConnected(context)) {
+            setViewState(word, Constant.STATE_LOADING);
+            DbUtil.getTranslations(race, word, language, new FindCallback<AlienWordTranslation>() {
+                @Override
+                public void done(List<AlienWordTranslation> translations, ParseException e) {
+                    if (Util.isNotEmpty(translations)) {
+                        wordTranslations.put(word.getObjectId(), translations);
+                        if (translations.size() >= 1) {
+                            holder.translation1View.setText(translations.get(0).getTranslation());
+                            addBadge(holder.translation1View, translations.get(0).getUsersCount());
+                        }
+                        if (translations.size() >= 2) {
+                            holder.translation2View.setText(translations.get(1).getTranslation());
+                            addBadge(holder.translation2View, translations.get(1).getUsersCount());
+                        }
+                        if (translations.size() >= 3) {
+                            holder.translation3View.setText(translations.get(2).getTranslation());
+                            addBadge(holder.translation3View, translations.get(2).getUsersCount());
+                        }
+                        if (translations.size() >= 4) {
+                            holder.translation4View.setText(translations.get(3).getTranslation());
+                            addBadge(holder.translation4View, translations.get(3).getUsersCount());
+                        }
+                        if (translations.size() >= 5) {
+                            holder.translation5View.setText(translations.get(4).getTranslation());
+                            addBadge(holder.translation5View, translations.get(4).getUsersCount());
+                        }
+                        setViewState(word, null);
+                    } else {
+                        setViewState(word, Constant.STATE_EMPTY);
                     }
                 }
-            }
-        });
+            });
+        } else {
+            setViewState(word, Constant.STATE_NO_INTERNET);
+        }
     }
 
     private void addBadge(View view, int count){
@@ -138,8 +195,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        List<AlienWordTranslation> wordTranslationsList;
-
         @BindView(R.id.title_layout)
         RelativeLayout titleLayout;
         @BindView(R.id.card_layout)
@@ -154,6 +209,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         TextView alienRaceView;
         @BindView(R.id.country_flag)
         ImageView countryFlagView;
+        @BindView(R.id.translations_layout)
+        LinearLayout translationsLayout;
         @BindView(R.id.translation_1)
         TextView translation1View;
         @BindView(R.id.translation_2)

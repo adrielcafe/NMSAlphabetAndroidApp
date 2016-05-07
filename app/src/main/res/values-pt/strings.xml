@@ -58,5 +58,6 @@
     <string name="translate_at_least_in_one_language">Traduza em pelo menos um idioma</string>
     <string name="type_alien_word">Digite a palavra alienígena</string>
     <string name="unknown_explorer">Explorador Desconhecido</string>
+    <string name="no_translation_found">Nenhuma tradução encontrada</string>
 
 </resources>
