@@ -13,9 +13,14 @@ android {
         versionName "0.1"
     }
     productFlavors {
+        dev {
+            applicationId "cafe.adriel.nmsalphabet.dev"
+            minSdkVersion 23
+            resValue "string", "app_name", "NMS αβ Dev"
+        }
         free {
             applicationId "cafe.adriel.nmsalphabet.free"
-            minSdkVersion 23
+            minSdkVersion 18
             resValue "string", "app_name", "NMS αβ Free"
         }
         pro {
@@ -38,7 +43,7 @@ android {
         preDexLibraries false
         incremental true
         jumboMode true
-        javaMaxHeapSize "4g"
+        javaMaxHeapSize "6g"
     }
 }
 
@@ -69,7 +74,7 @@ dependencies {
     compile 'com.github.ybq:Android-SpinKit:1.0.3@aar'
     compile 'com.github.2359media:EasyAndroidAnimations:0.8@aar'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4@aar'
-    compile 'com.github.devlight.navigationtabbar:library:1.1.5@aar'
+    compile 'com.github.devlight.navigationtabbar:library:1.1.6@aar'
     compile 'com.github.adrielcafe:Material-Spinner:0e80675c4f@aar'
     compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1@aar'
     compile 'com.ramotion.foldingcell:folding-cell:1.0.0@aar'
