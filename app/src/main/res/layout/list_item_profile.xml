@@ -114,13 +114,13 @@
                 <TextView
                     android:id="@+id/delete_translation"
                     android:layout_alignParentStart="true"
-                    android:text="@string/delete_translation_with_icon"
+                    android:text="@string/delete_with_icon"
                     style="@style/AlienWordControlTextView"/>
 
                 <TextView
                     android:id="@+id/edit_translation"
                     android:layout_alignParentEnd="true"
-                    android:text="@string/edit_translation_with_icon"
+                    android:text="@string/edit_with_icon"
                     style="@style/AlienWordControlTextView"/>
 
             </RelativeLayout>
