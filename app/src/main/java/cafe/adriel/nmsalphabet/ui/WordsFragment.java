@@ -34,6 +34,9 @@ import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,6 +44,7 @@ import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
@@ -114,6 +118,26 @@ public class WordsFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, rootView);
         init();
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(sticky = true)
+    public void onEvent(TranslationUpdatedEvent event) {
+        if (type != null && type == Type.PROFILE) {
+            EventBus.getDefault().removeStickyEvent(TranslationUpdatedEvent.class);
+            profileAdapter.updateWordAndTranslations(event.word, event.translations);
+        }
     }
 
     @Override
@@ -301,17 +325,19 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void initAdapter(){
-        switch (type){
-            case HOME:
-                homeAdapter = new HomeAdapter(getContext(), words);
-                wordsView.setAdapter(homeAdapter);
-                break;
-            case PROFILE:
-                profileAdapter = new ProfileAdapter(getContext(), words);
-                wordsView.setAdapter(profileAdapter);
-                break;
+        if(wordsView != null) {
+            switch (type) {
+                case HOME:
+                    homeAdapter = new HomeAdapter(getContext(), words);
+                    wordsView.setAdapter(homeAdapter);
+                    break;
+                case PROFILE:
+                    profileAdapter = new ProfileAdapter(getContext(), words);
+                    wordsView.setAdapter(profileAdapter);
+                    break;
+            }
+            wordsView.setMinimumHeight(refreshLayout.getHeight());
         }
-        wordsView.setMinimumHeight(refreshLayout.getHeight());
     }
 
     private void updateWords(final int page){

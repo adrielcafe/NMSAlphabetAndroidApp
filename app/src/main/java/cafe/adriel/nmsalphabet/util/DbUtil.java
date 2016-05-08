@@ -70,6 +70,16 @@ public class DbUtil {
         return null;
     }
 
+    public static int getRacePosition(String id){
+        loadCachedRaces();
+        for(int i = 0; i < races.size(); i++){
+            if(races.get(i).getObjectId().equals(id)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public static List<String> getRacesName(){
         loadCachedRaces();
         List<String> racesName = new ArrayList<>();
@@ -125,6 +135,7 @@ public class DbUtil {
                 .whereEqualTo("race", race)
                 .whereEqualTo("word", word)
                 .whereEqualTo("language", language)
+                .whereGreaterThan("usersCount", 0)
                 .addDescendingOrder("usersCount")
                 .addAscendingOrder("word")
                 .setLimit(PAGE_SIZE_TRANSLATION)
@@ -138,6 +149,7 @@ public class DbUtil {
                     .whereEqualTo("race", race)
                     .whereEqualTo("word", word)
                     .whereEqualTo("language", language)
+                    .whereGreaterThan("usersCount", 0)
                     .getFirst();
         } catch (Exception e){
             e.printStackTrace();
@@ -145,11 +157,11 @@ public class DbUtil {
         }
     }
 
-    public static void getUserTranslations(AlienRace race, AlienWord word, User user, FindCallback<AlienWordTranslation> callback){
+    public static void getUserTranslations(User user, AlienRace race, AlienWord word, FindCallback<AlienWordTranslation> callback){
         ParseQuery.getQuery(AlienWordTranslation.class)
+                .whereEqualTo("users", user)
                 .whereEqualTo("race", race)
                 .whereEqualTo("word", word)
-                .whereEqualTo("users", user)
                 .addAscendingOrder("word")
                 .addDescendingOrder("_created_at")
                 .findInBackground(callback);

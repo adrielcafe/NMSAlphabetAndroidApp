@@ -1,6 +1,9 @@
 package cafe.adriel.nmsalphabet.ui.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +14,12 @@ import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.ramotion.foldingcell.FoldingCell;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +29,11 @@ import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.EditTranslationEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -61,6 +70,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
         if(wordTranslations == null){
             wordTranslations = new HashMap<>();
+        } else if(wordTranslations.containsKey(word.getObjectId())){
+            setTranslations(holder, word);
         }
         if(viewStates == null){
             viewStates = new HashMap<>();
@@ -85,6 +96,18 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                     loadTranslations(holder, race, word);
                 }
                 holder.cardLayout.unfold(false);
+            }
+        });
+        holder.removeTranslationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeTranslation(word);
+            }
+        });
+        holder.editTranslationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTranslation(word);
             }
         });
     }
@@ -123,20 +146,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     private void loadTranslations(final ViewHolder holder, AlienRace race, final AlienWord word){
         if(Util.isConnected(context)) {
             setViewState(word, Constant.STATE_LOADING);
-            DbUtil.getUserTranslations(race, word, App.getUser(), new FindCallback<AlienWordTranslation>() {
+            DbUtil.getUserTranslations(App.getUser(), race, word, new FindCallback<AlienWordTranslation>() {
                 @Override
                 public void done(List<AlienWordTranslation> translations, ParseException e) {
                     if (Util.isNotEmpty(translations)) {
                         wordTranslations.put(word.getObjectId(), translations);
-                        for (AlienWordTranslation translation : translations) {
-                            if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_EN) && holder.englishTranslationView.getText().toString().isEmpty()) {
-                                holder.englishTranslationView.setText(translation.getTranslation());
-                            } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_PT) && holder.portugueseTranslationView.getText().toString().isEmpty()) {
-                                holder.portugueseTranslationView.setText(translation.getTranslation());
-                            } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_DE) && holder.germanTranslationView.getText().toString().isEmpty()) {
-                                holder.germanTranslationView.setText(translation.getTranslation());
-                            }
-                        }
+                        setTranslations(holder, word);
                         setViewState(word, null);
                     } else {
                         setViewState(word, Constant.STATE_EMPTY);
@@ -146,6 +161,89 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         } else {
             setViewState(word, Constant.STATE_NO_INTERNET);
         }
+    }
+
+    private void setTranslations(ViewHolder holder, AlienWord word){
+        if(wordTranslations.containsKey(word.getObjectId())) {
+            List<AlienWordTranslation> translations = wordTranslations.get(word.getObjectId());
+            for (AlienWordTranslation translation : translations) {
+                if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_EN) && holder.englishTranslationView.getText().toString().isEmpty()) {
+                    holder.englishTranslationView.setText(translation.getTranslation());
+                } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_PT) && holder.portugueseTranslationView.getText().toString().isEmpty()) {
+                    holder.portugueseTranslationView.setText(translation.getTranslation());
+                } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_DE) && holder.germanTranslationView.getText().toString().isEmpty()) {
+                    holder.germanTranslationView.setText(translation.getTranslation());
+                }
+            }
+        }
+    }
+
+    private void editTranslation(AlienWord word){
+        EventBus.getDefault().postSticky(new EditTranslationEvent(word, wordTranslations.get(word.getObjectId())));
+        context.startActivity(new Intent(context, TranslationEditorActivity.class));
+    }
+
+    private void removeTranslation(final AlienWord word){
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.delete_translation)
+                .setMessage(R.string.translation_will_be_deleted_permanently)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteTranslation(word);
+                    }
+                })
+                .show();
+    }
+
+    private void deleteTranslation(final AlienWord word){
+        final AlertDialog dialog = Util.showLoadingDialog(context);
+        word.removeUser(App.getUser());
+        word.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e == null){
+                    for(AlienWordTranslation translation : wordTranslations.get(word.getObjectId())){
+                        translation.removeUser(App.getUser());
+                        translation.saveInBackground();
+                    }
+                    removeWord(word);
+                }
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void removeWord(AlienWord word) {
+        int position = getWordPosition(word);
+        if(position >= 0){
+            words.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeRemoved(position, words.size());
+        }
+    }
+
+    public void updateWordAndTranslations(AlienWord word, List<AlienWordTranslation> translations) {
+        int position = getWordPosition(word);
+        if(position >= 0) {
+            if(translations == null){
+                translations = new ArrayList<>();
+            }
+            wordTranslations.put(word.getObjectId(), translations);
+            words.set(position, word);
+            notifyItemChanged(position);
+            notifyItemRangeChanged(position, words.size());
+        }
+    }
+
+    public int getWordPosition(AlienWord word){
+        for(int i = 0; i < words.size(); i++){
+            if(words.get(i).getObjectId().equals(word.getObjectId())){
+                return i;
+            }
+        }
+        return -1;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
