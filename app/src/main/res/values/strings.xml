@@ -3,6 +3,7 @@
     <string name="quote">\"We are an impossibility in an impossible universe\"</string>
     <string name="connect_internet">Connect to the Internet</string>
     <string name="nothing_found">Nothing Found</string>
+    <string name="no_translation_found">No translation found</string>
     <string name="home">Home</string>
     <string name="translate">Translate</string>
     <string name="profile">Profile</string>
@@ -21,9 +22,13 @@
     <string name="best_translations">Best Translations</string>
     <string name="my_translations">My Translations</string>
     <string name="new_translation_with_icon">{gmi-plus-circle} New Translation</string>
-    <string name="report_translation_with_icon">{gmi-flag} Report</string>
-    <string name="delete_translation_with_icon">{gmi-delete} Delete</string>
-    <string name="edit_translation_with_icon">{gmi-edit} Edit</string>
+    <string name="report_with_icon">{gmi-flag} Report</string>
+    <string name="delete_with_icon">{gmi-delete} Delete</string>
+    <string name="edit_with_icon">{gmi-edit} Edit</string>
+    <string name="delete">Delete</string>
+    <string name="delete_translation">Delete Translation</string>
+    <string name="translation_will_be_deleted_permanently">This translation will be deleted permanently.\nAre you sure?</string>
+    <string name="edit_translation">Edit Translation</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="alien_word">Alien Word</string>

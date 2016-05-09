@@ -20,12 +20,18 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.EditTranslationEvent;
+import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
@@ -38,6 +44,9 @@ public class TranslationEditorActivity extends BaseActivity {
 
     private AlienRace alienRace;
     private AlienWord alienWord;
+    private AlienWordTranslation enTranslation;
+    private AlienWordTranslation ptTranslation;
+    private AlienWordTranslation deTranslation;
 
     private InputFilter alienWordFilter = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
@@ -74,7 +83,7 @@ public class TranslationEditorActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_translation);
+        setContentView(R.layout.activity_translation_editor);
         ButterKnife.bind(this);
         getSupportActionBar().setElevation(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -84,6 +93,18 @@ public class TranslationEditorActivity extends BaseActivity {
                 .sizeDp(16));
         setTitle(R.string.new_translation);
         init();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -111,6 +132,27 @@ public class TranslationEditorActivity extends BaseActivity {
         return true;
     }
 
+    @Subscribe(sticky = true)
+    public void onEvent(EditTranslationEvent event) {
+        EventBus.getDefault().removeStickyEvent(EditTranslationEvent.class);
+        if (event.word != null) {
+            alienWord = event.word;
+            alienRace = DbUtil.getRaceById(alienWord.getRace().getObjectId());
+
+            for (AlienWordTranslation translation : event.translations) {
+                if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_EN)) {
+                    enTranslation = translation;
+                } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_PT)) {
+                    ptTranslation = translation;
+                } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_DE)) {
+                    deTranslation = translation;
+                }
+            }
+
+            editMode();
+        }
+    }
+
     @Override
     protected void init() {
         adjustMarginAndPadding();
@@ -119,7 +161,7 @@ public class TranslationEditorActivity extends BaseActivity {
     }
 
     private void initForm(){
-        List<String> races = App.getRacesName();
+        List<String> races = DbUtil.getRacesName();
         races.add(0, getString(R.string.select_alien_race));
 
         alienRacesView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
@@ -166,6 +208,26 @@ public class TranslationEditorActivity extends BaseActivity {
         });
     }
 
+    private void editMode(){
+        setTitle(R.string.edit_translation);
+
+        // TODO Disable spinner
+//        alienRacesView.setEnabled(false);
+        alienWordView.setEnabled(false);
+
+        alienRacesView.setSelectedIndex(DbUtil.getRacePosition(alienRace.getObjectId()) + 1);
+        alienWordView.setText(alienWord.getWord());
+        if(enTranslation != null && Util.isNotEmpty(enTranslation.getTranslation())) {
+            enTranslationView.setText(enTranslation.getTranslation());
+        }
+        if(ptTranslation != null && Util.isNotEmpty(ptTranslation.getTranslation())) {
+            ptTranslationView.setText(ptTranslation.getTranslation());
+        }
+        if(deTranslation != null && Util.isNotEmpty(deTranslation.getTranslation())) {
+            deTranslationView.setText(deTranslation.getTranslation());
+        }
+    }
+
     private void saveTranslation() {
         if (isValid() && Util.isConnected(this)) {
             final AlertDialog dialog = Util.showLoadingDialog(this);
@@ -173,6 +235,7 @@ public class TranslationEditorActivity extends BaseActivity {
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
+                    List<AlienWordTranslation> translations = new ArrayList<>();
                     String alienRaceStr = alienRacesView.getText().toString().toUpperCase();
                     String alienWordStr = alienWordView.getText().toString().toUpperCase();
                     String enTranslationStr = enTranslationView.getText().toString().toUpperCase();
@@ -180,27 +243,34 @@ public class TranslationEditorActivity extends BaseActivity {
                     String deTranslationStr = deTranslationView.getText().toString().toUpperCase();
 
                     try {
-                        alienRace = App.getRaceByName(alienRaceStr);
+                        alienRace = DbUtil.getRaceByName(alienRaceStr);
 
-                        alienWord = DbUtil.getWord(alienRace, alienWordStr);
-                        if (alienWord == null) {
-                            alienWord = new AlienWord();
-                            alienWord.setRace(alienRace);
-                            alienWord.setWord(alienWordStr);
-                            alienWord.save();
+                        if(alienWord == null) {
+                            alienWord = DbUtil.getWord(alienRace, alienWordStr);
+                            if (alienWord == null) {
+                                alienWord = new AlienWord();
+                                alienWord.setRace(alienRace);
+                                alienWord.setWord(alienWordStr);
+                                alienWord.save();
+                            }
                         }
                         alienWord.addUser(App.getUser());
-                        alienWord.saveEventually();
+                        alienWord.save();
 
                         if (Util.isNotEmpty(enTranslationStr)) {
-                            addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, alienWord, alienRace);
+                            AlienWordTranslation translation = addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, alienWord, alienRace);
+                            translations.add(translation);
                         }
                         if (Util.isNotEmpty(ptTranslationStr)) {
-                            addTranslation(ptTranslationStr, LanguageUtil.LANGUAGE_PT, alienWord, alienRace);
+                            AlienWordTranslation translation = addTranslation(ptTranslationStr, LanguageUtil.LANGUAGE_PT, alienWord, alienRace);
+                            translations.add(translation);
                         }
                         if (Util.isNotEmpty(deTranslationStr)) {
-                            addTranslation(deTranslationStr, LanguageUtil.LANGUAGE_DE, alienWord, alienRace);
+                            AlienWordTranslation translation = addTranslation(deTranslationStr, LanguageUtil.LANGUAGE_DE, alienWord, alienRace);
+                            translations.add(translation);
                         }
+
+                        EventBus.getDefault().postSticky(new TranslationUpdatedEvent(alienWord, translations));
 
                         dialog.dismiss();
                         finish();
@@ -219,22 +289,38 @@ public class TranslationEditorActivity extends BaseActivity {
         }
     }
 
-    private void addTranslation(String translationStr,  String language, AlienWord word, AlienRace race){
-        try {
-            AlienWordTranslation translation = DbUtil.getTranslation(translationStr, language, word, race);
-            if (translation == null) {
+    private AlienWordTranslation addTranslation(final String translationStr, final String language, final AlienWord word, final AlienRace race){
+        final AlienWordTranslation currentTranslation = DbUtil.getUserTranslation(App.getUser(), language, word, race);
+        AlienWordTranslation translation = DbUtil.getTranslation(translationStr, language, word, race);
+        if (translation == null) {
+            try {
                 translation = new AlienWordTranslation();
                 translation.setTranslation(translationStr);
                 translation.setLanguage(language);
                 translation.setWord(word);
                 translation.setRace(race);
                 translation.save();
+            } catch (Exception e){
+                e.printStackTrace();
             }
-            translation.addUser(App.getUser());
-            translation.saveEventually();
-        } catch (Exception e){
-            e.printStackTrace();
         }
+        if(translation != null) {
+            try {
+                translation.addUser(App.getUser());
+                translation.save();
+                if (currentTranslation != null && !currentTranslation.getTranslation().equals(translationStr)) {
+                    try {
+                        currentTranslation.removeUser(App.getUser());
+                        currentTranslation.save();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return translation;
     }
 
     private boolean isValid(){

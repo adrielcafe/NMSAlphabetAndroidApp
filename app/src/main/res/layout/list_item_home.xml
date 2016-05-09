@@ -85,30 +85,38 @@
                 android:layout_gravity="center"
                 android:background="@color/gray_light"/>
 
-            <TextView
-                android:id="@+id/translation_1"
-                app:font="custom1"
-                style="@style/AlienWordTranslationTextView"/>
+            <LinearLayout
+                android:id="@+id/translations_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/translation_2"
-                app:font="custom1"
-                style="@style/AlienWordTranslationTextView"/>
+                <TextView
+                    android:id="@+id/translation_1"
+                    app:font="custom1"
+                    style="@style/AlienWordTranslationTextView"/>
 
-            <TextView
-                android:id="@+id/translation_3"
-                app:font="custom1"
-                style="@style/AlienWordTranslationTextView"/>
+                <TextView
+                    android:id="@+id/translation_2"
+                    app:font="custom1"
+                    style="@style/AlienWordTranslationTextView"/>
 
-            <TextView
-                android:id="@+id/translation_4"
-                app:font="custom1"
-                style="@style/AlienWordTranslationTextView"/>
+                <TextView
+                    android:id="@+id/translation_3"
+                    app:font="custom1"
+                    style="@style/AlienWordTranslationTextView"/>
 
-            <TextView
-                android:id="@+id/translation_5"
-                app:font="custom1"
-                style="@style/AlienWordTranslationTextView"/>
+                <TextView
+                    android:id="@+id/translation_4"
+                    app:font="custom1"
+                    style="@style/AlienWordTranslationTextView"/>
+
+                <TextView
+                    android:id="@+id/translation_5"
+                    app:font="custom1"
+                    style="@style/AlienWordTranslationTextView"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -131,7 +139,7 @@
                 <TextView
                     android:id="@+id/report_translation"
                     android:layout_alignParentEnd="true"
-                    android:text="@string/report_translation_with_icon"
+                    android:text="@string/report_with_icon"
                     style="@style/AlienWordControlTextView"/>
 
             </RelativeLayout>
