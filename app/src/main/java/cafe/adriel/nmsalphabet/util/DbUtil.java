@@ -135,7 +135,6 @@ public class DbUtil {
                 .whereEqualTo("race", race)
                 .whereEqualTo("word", word)
                 .whereEqualTo("language", language)
-                .whereGreaterThan("usersCount", 0)
                 .addDescendingOrder("usersCount")
                 .addAscendingOrder("word")
                 .setLimit(PAGE_SIZE_TRANSLATION)
@@ -149,7 +148,6 @@ public class DbUtil {
                     .whereEqualTo("race", race)
                     .whereEqualTo("word", word)
                     .whereEqualTo("language", language)
-                    .whereGreaterThan("usersCount", 0)
                     .getFirst();
         } catch (Exception e){
             e.printStackTrace();

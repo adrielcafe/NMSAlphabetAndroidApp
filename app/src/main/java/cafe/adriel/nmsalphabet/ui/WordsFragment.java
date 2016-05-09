@@ -45,6 +45,7 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
+import cafe.adriel.nmsalphabet.event.UpdateStateEvent;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
@@ -137,6 +138,22 @@ public class WordsFragment extends BaseFragment {
         if (type != null && type == Type.PROFILE) {
             EventBus.getDefault().removeStickyEvent(TranslationUpdatedEvent.class);
             profileAdapter.updateWordAndTranslations(event.word, event.translations);
+        }
+    }
+
+    @Subscribe(sticky = true)
+    public void onEvent(UpdateStateEvent event) {
+        if (viewState != null && type != null && type == Type.PROFILE) {
+            EventBus.getDefault().removeStickyEvent(UpdateStateEvent.class);
+            if(!App.isSignedIn()){
+                viewState.showCustomView(Constant.STATE_REQUIRE_SIGN_IN);
+            } else if(Util.isEmpty(words)){
+                viewState.showCustomView(Constant.STATE_EMPTY);
+            } else if(!Util.isConnected(getContext())){
+                viewState.showCustomView(Constant.STATE_NO_INTERNET);
+            } else {
+                viewState.hideAll();
+            }
         }
     }
 
