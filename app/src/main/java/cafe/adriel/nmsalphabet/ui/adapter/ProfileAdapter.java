@@ -30,6 +30,7 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.EditTranslationEvent;
+import cafe.adriel.nmsalphabet.event.UpdateStateEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
@@ -221,6 +222,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             words.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeRemoved(position, words.size());
+            if(Util.isEmpty(words)){
+                EventBus.getDefault().postSticky(new UpdateStateEvent());
+            }
         }
     }
 
