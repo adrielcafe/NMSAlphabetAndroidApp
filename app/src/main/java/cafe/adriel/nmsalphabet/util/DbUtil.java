@@ -89,9 +89,15 @@ public class DbUtil {
         return racesName;
     }
 
-    public static void getWords(int page, FindCallback<AlienWord> callback){
-        ParseQuery.getQuery(AlienWord.class)
-                .addAscendingOrder("word")
+    public static void getWords(String word, AlienRace race, int page, FindCallback<AlienWord> callback){
+        ParseQuery<AlienWord> query = ParseQuery.getQuery(AlienWord.class);
+        if(Util.isNotEmpty(word)){
+            query.whereEqualTo("word", word);
+        }
+        if(race != null){
+            query.whereEqualTo("race", race);
+        }
+        query.addAscendingOrder("word")
                 .addAscendingOrder("_updated_at")
                 .setLimit(PAGE_SIZE_WORD)
                 .setSkip(PAGE_SIZE_WORD * page)
