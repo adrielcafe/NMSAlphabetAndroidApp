@@ -73,8 +73,18 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
 
-        <meta-data android:name="io.fabric.ApiKey" android:value="ddc31cab4f4e58777548048f200abae359a82d7b"/>
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ddc31cab4f4e58777548048f200abae359a82d7b"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="opu6rH8YJpyQew8ohv3k30oAsQD1VC5qKj5hn2Bk" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="dgGqdW3dmnKGZ4TiR7cGWbFhXoqQJz3fkDal51SD" />
 
     </application>
 
