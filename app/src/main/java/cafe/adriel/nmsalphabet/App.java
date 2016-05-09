@@ -70,12 +70,18 @@ public class App extends Application {
         ParseObject.registerSubclass(AlienRace.class);
         ParseObject.registerSubclass(AlienWord.class);
         ParseObject.registerSubclass(AlienWordTranslation.class);
-        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-                .applicationId(getString(R.string.parse_app_id))
-                .server(Constant.PARSE_SERVER_URL)
-                .enableLocalDataStore()
-                .build());
+
+        // TODO Don't use Parse Server until get ready for production
+//        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
+//                .applicationId(getString(R.string.parse_app_id))
+//                .server(Constant.PARSE_SERVER_URL)
+//                .enableLocalDataStore()
+//                .build());
+
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this);
         Parse.setLogLevel(BuildConfig.DEBUG ? Parse.LOG_LEVEL_VERBOSE : Parse.LOG_LEVEL_NONE);
+        ParseUser.enableRevocableSessionInBackground();
     }
 
     private void initFacebook(){

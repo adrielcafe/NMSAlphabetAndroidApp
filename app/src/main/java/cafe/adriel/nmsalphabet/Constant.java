@@ -8,7 +8,8 @@ public class Constant {
     public static final String GOOGLE_PLAY_URL  = "https://play.google.com/store/apps/details?id=";
     public static final String MARKET_URI       = "market://details?id=";
 
-    public static final String PARSE_SERVER_URL = "https://nmsalphabet.herokuapp.com/api/";
+    // TODO Don't use Parse Server until get ready for production
+//    public static final String PARSE_SERVER_URL = "https://nmsalphabet.herokuapp.com/api/";
 
     public static final List<String> FACEBOOK_PERMISSIONS   = Collections.singletonList("public_profile");
     public static final String FACEBOOK_USER_IMAGE_URL      = "https://graph.facebook.com/%s/picture?type=small";

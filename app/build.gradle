@@ -43,7 +43,7 @@ android {
         preDexLibraries false
         incremental true
         jumboMode true
-        javaMaxHeapSize "6g"
+        javaMaxHeapSize "4g"
     }
 }
 
