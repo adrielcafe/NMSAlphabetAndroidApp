@@ -49,8 +49,8 @@
                     android:drawablePadding="5dp"
                     android:drawableStart="@drawable/alien_face"
                     android:background="@android:color/transparent"
-                    android:inputType="textCapCharacters|textCapWords|textCapSentences|textNoSuggestions"
-                    android:imeOptions="actionDone"/>
+                    android:inputType="text|textCapCharacters|textCapWords|textCapSentences|textNoSuggestions"
+                    android:imeOptions="actionSearch"/>
 
                 <TextView
                     android:id="@+id/phrase_clear"
