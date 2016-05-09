@@ -70,26 +70,34 @@
                 android:layout_gravity="center"
                 android:background="@color/gray_light"/>
 
-            <TextView
-                android:id="@+id/english_translation"
-                android:drawableLeft="@drawable/flag_uk"
-                android:drawablePadding="10dp"
-                app:font="custom1"
-                style="@style/AlienWordUserTranslationTextView"/>
+            <LinearLayout
+                android:id="@+id/translations_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/portuguese_translation"
-                android:drawableLeft="@drawable/flag_brazil"
-                android:drawablePadding="10dp"
-                app:font="custom1"
-                style="@style/AlienWordUserTranslationTextView"/>
+                <TextView
+                    android:id="@+id/english_translation"
+                    android:drawableLeft="@drawable/flag_uk"
+                    android:drawablePadding="10dp"
+                    app:font="custom1"
+                    style="@style/AlienWordUserTranslationTextView"/>
 
-            <TextView
-                android:id="@+id/german_translation"
-                android:drawableLeft="@drawable/flag_germany"
-                android:drawablePadding="10dp"
-                app:font="custom1"
-                style="@style/AlienWordUserTranslationTextView"/>
+                <TextView
+                    android:id="@+id/portuguese_translation"
+                    android:drawableLeft="@drawable/flag_brazil"
+                    android:drawablePadding="10dp"
+                    app:font="custom1"
+                    style="@style/AlienWordUserTranslationTextView"/>
+
+                <TextView
+                    android:id="@+id/german_translation"
+                    android:drawableLeft="@drawable/flag_germany"
+                    android:drawablePadding="10dp"
+                    app:font="custom1"
+                    style="@style/AlienWordUserTranslationTextView"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -106,13 +114,13 @@
                 <TextView
                     android:id="@+id/delete_translation"
                     android:layout_alignParentStart="true"
-                    android:text="@string/delete_translation_with_icon"
+                    android:text="@string/delete_with_icon"
                     style="@style/AlienWordControlTextView"/>
 
                 <TextView
                     android:id="@+id/edit_translation"
                     android:layout_alignParentEnd="true"
-                    android:text="@string/edit_translation_with_icon"
+                    android:text="@string/edit_with_icon"
                     style="@style/AlienWordControlTextView"/>
 
             </RelativeLayout>

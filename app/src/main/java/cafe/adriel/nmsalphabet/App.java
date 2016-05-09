@@ -17,9 +17,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.SubscriberExceptionEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
@@ -31,7 +28,6 @@ import io.fabric.sdk.android.Fabric;
 
 public class App extends Application {
 
-    private static List<AlienRace> races;
     private static User user;
 
     @Override
@@ -74,11 +70,18 @@ public class App extends Application {
         ParseObject.registerSubclass(AlienRace.class);
         ParseObject.registerSubclass(AlienWord.class);
         ParseObject.registerSubclass(AlienWordTranslation.class);
-        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-                .applicationId(getString(R.string.parse_app_id))
-                .server(Constant.PARSE_SERVER_URL)
-                .build());
+
+        // TODO Don't use Parse Server until get ready for production
+//        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
+//                .applicationId(getString(R.string.parse_app_id))
+//                .server(Constant.PARSE_SERVER_URL)
+//                .enableLocalDataStore()
+//                .build());
+
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this);
         Parse.setLogLevel(BuildConfig.DEBUG ? Parse.LOG_LEVEL_VERBOSE : Parse.LOG_LEVEL_NONE);
+        ParseUser.enableRevocableSessionInBackground();
     }
 
     private void initFacebook(){
@@ -107,36 +110,7 @@ public class App extends Application {
 
     public static void loadAndCache(){
         getUser();
-        races = DbUtil.getRaces();
+        DbUtil.cacheRaces();
     }
 
-    public static List<AlienRace> getRaces(){
-        return races;
-    }
-
-    public static List<String> getRacesName(){
-        List<String> racesName = new ArrayList<>();
-        for(AlienRace race : races){
-            racesName.add(race.getName());
-        }
-        return racesName;
-    }
-
-    public static AlienRace getRaceById(String id){
-        for(AlienRace race : races){
-            if(race.getObjectId().equals(id)){
-                return race;
-            }
-        }
-        return null;
-    }
-
-    public static AlienRace getRaceByName(String name){
-        for(AlienRace race : races){
-            if(race.getName().toUpperCase().equals(name.toUpperCase())){
-                return race;
-            }
-        }
-        return null;
-    }
 }

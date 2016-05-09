@@ -27,14 +27,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
-import com.tumblr.bookends.Bookends;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,6 +44,8 @@ import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
+import cafe.adriel.nmsalphabet.event.UpdateStateEvent;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
@@ -54,10 +58,6 @@ import cafe.adriel.nmsalphabet.util.Util;
 import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class WordsFragment extends BaseFragment {
-    private static final String STATE_LOADING           = "loading";
-    private static final String STATE_EMPTY             = "empty";
-    private static final String STATE_NO_INTERNET       = "noInternet";
-    private static final String STATE_REQUIRE_SIGN_IN   = "requireSignIn";
 
     public enum Type {
         HOME,
@@ -66,10 +66,10 @@ public class WordsFragment extends BaseFragment {
 
     private Type type;
     private List<AlienWord> words;
-    private Bookends<HomeAdapter> homeAdapter;
-    private Bookends<ProfileAdapter> profileAdapter;
+    private HomeAdapter homeAdapter;
+    private ProfileAdapter profileAdapter;
     private EndlessRecyclerOnScrollListener infiniteScrollListener;
-    private DynamicBox stateBox;
+    private DynamicBox viewState;
 
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
@@ -95,6 +95,8 @@ public class WordsFragment extends BaseFragment {
     TextView searchClearView;
     @BindView(R.id.races)
     MaterialSpinner racesView;
+    @BindView(R.id.loading)
+    SpinKitView loadingView;
 
     public static WordsFragment newInstance(Type type) {
         Bundle args = new Bundle();
@@ -117,6 +119,42 @@ public class WordsFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, rootView);
         init();
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(sticky = true)
+    public void onEvent(TranslationUpdatedEvent event) {
+        if (type != null && type == Type.PROFILE) {
+            EventBus.getDefault().removeStickyEvent(TranslationUpdatedEvent.class);
+            profileAdapter.updateWordAndTranslations(event.word, event.translations);
+        }
+    }
+
+    @Subscribe(sticky = true)
+    public void onEvent(UpdateStateEvent event) {
+        if (viewState != null && type != null && type == Type.PROFILE) {
+            EventBus.getDefault().removeStickyEvent(UpdateStateEvent.class);
+            if(!App.isSignedIn()){
+                viewState.showCustomView(Constant.STATE_REQUIRE_SIGN_IN);
+            } else if(Util.isEmpty(words)){
+                viewState.showCustomView(Constant.STATE_EMPTY);
+            } else if(!Util.isConnected(getContext())){
+                viewState.showCustomView(Constant.STATE_NO_INTERNET);
+            } else {
+                viewState.hideAll();
+            }
+        }
     }
 
     @Override
@@ -249,10 +287,9 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void initState(){
-        View loadingState = LayoutInflater.from(getContext()).inflate(R.layout.state_loading, null, false);
-        View emptyState = LayoutInflater.from(getContext()).inflate(R.layout.state_empty, null, false);
-        View noInternetState = LayoutInflater.from(getContext()).inflate(R.layout.state_no_internet, null, false);
-        View requireSignInState = LayoutInflater.from(getContext()).inflate(R.layout.state_require_sign_in, null, false);
+        View emptyState = LayoutInflater.from(getContext()).inflate(R.layout.state_words_empty, null, false);
+        View noInternetState = LayoutInflater.from(getContext()).inflate(R.layout.state_words_no_internet, null, false);
+        View requireSignInState = LayoutInflater.from(getContext()).inflate(R.layout.state_words_require_sign_in, null, false);
 
         View.OnClickListener refreshListener = new View.OnClickListener() {
              @Override
@@ -275,15 +312,12 @@ public class WordsFragment extends BaseFragment {
         noInternetState.findViewById(R.id.refresh).setOnClickListener(refreshListener);
         requireSignInState.findViewById(R.id.sign_in).setOnClickListener(signInListener);
 
-        stateBox = new DynamicBox(getContext(), wordsView);
-        stateBox.addCustomView(loadingState, STATE_LOADING);
-        stateBox.addCustomView(emptyState, STATE_EMPTY);
-        stateBox.addCustomView(noInternetState, STATE_NO_INTERNET);
-        stateBox.addCustomView(requireSignInState, STATE_REQUIRE_SIGN_IN);
+        viewState = new DynamicBox(getContext(), wordsView);
+        viewState.addCustomView(emptyState, Constant.STATE_EMPTY);
+        viewState.addCustomView(noInternetState, Constant.STATE_NO_INTERNET);
+        viewState.addCustomView(requireSignInState, Constant.STATE_REQUIRE_SIGN_IN);
         if(type == Type.PROFILE && !App.isSignedIn()){
-            stateBox.showCustomView(STATE_REQUIRE_SIGN_IN);
-        } else {
-            stateBox.showCustomView(STATE_LOADING);
+            viewState.showCustomView(Constant.STATE_REQUIRE_SIGN_IN);
         }
     }
 
@@ -305,38 +339,27 @@ public class WordsFragment extends BaseFragment {
         wordsView.setLayoutManager(layoutManager);
         wordsView.addOnScrollListener(infiniteScrollListener);
         wordsView.addOnScrollListener(new SwipeRefreshLayoutToggleScrollListener(refreshLayout));
-
-        switch (type){
-            case HOME:
-                wordsView.setAdapter(new HomeAdapter(getContext(), new ArrayList<AlienWord>()));
-                break;
-            case PROFILE:
-                wordsView.setAdapter(new ProfileAdapter(getContext(), new ArrayList<AlienWord>()));
-                break;
-        }
     }
 
     private void initAdapter(){
-        switch (type){
-            case HOME:
-                homeAdapter = new Bookends<>(new HomeAdapter(getContext(), words));
-                homeAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
-                homeAdapter.setFooterVisibility(false);
-                wordsView.swapAdapter(homeAdapter, true);
-                break;
-            case PROFILE:
-                profileAdapter = new Bookends<>(new ProfileAdapter(getContext(), words));
-                profileAdapter.addFooter(LayoutInflater.from(getContext()).inflate(R.layout.list_footer_words, null));
-                profileAdapter.setFooterVisibility(false);
-                wordsView.swapAdapter(profileAdapter, true);
-                break;
+        if(wordsView != null) {
+            switch (type) {
+                case HOME:
+                    homeAdapter = new HomeAdapter(getContext(), words);
+                    wordsView.setAdapter(homeAdapter);
+                    break;
+                case PROFILE:
+                    profileAdapter = new ProfileAdapter(getContext(), words);
+                    wordsView.setAdapter(profileAdapter);
+                    break;
+            }
+            wordsView.setMinimumHeight(refreshLayout.getHeight());
         }
-        wordsView.setMinimumHeight(refreshLayout.getHeight());
     }
 
     private void updateWords(final int page){
         if(type == Type.PROFILE && !App.isSignedIn()) {
-            stateBox.showCustomView(STATE_REQUIRE_SIGN_IN);
+            viewState.showCustomView(Constant.STATE_REQUIRE_SIGN_IN);
             return;
         }
         setLoadingList(true);
@@ -363,11 +386,11 @@ public class WordsFragment extends BaseFragment {
     private void afterUpdateWords(int page, List<AlienWord> newWords, ParseException e){
         if(page == 0){
             if(Util.isEmpty(newWords)){
-                stateBox.showCustomView(STATE_EMPTY);
+                viewState.showCustomView(Constant.STATE_EMPTY);
             } else {
                 words = newWords;
                 initAdapter();
-                stateBox.hideAll();
+                viewState.hideAll();
             }
         } else {
             words.addAll(newWords);
@@ -379,7 +402,7 @@ public class WordsFragment extends BaseFragment {
                     profileAdapter.notifyDataSetChanged();
                     break;
             }
-            stateBox.hideAll();
+            viewState.hideAll();
         }
         if(e != null){
             e.printStackTrace();
@@ -419,17 +442,17 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(boolean loading){
-        switch (type){
-            case HOME:
-                if(homeAdapter != null) {
-                    homeAdapter.setFooterVisibility(loading);
-                }
-                break;
-            case PROFILE:
-                if(profileAdapter != null) {
-                    profileAdapter.setFooterVisibility(loading);
-                }
-                break;
+        if(loadingView != null) {
+            if(loading) {
+                loadingView.setVisibility(View.VISIBLE);
+            } else {
+                Util.asyncCall(500, new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingView.setVisibility(View.GONE);
+                    }
+                });
+            }
         }
     }
 

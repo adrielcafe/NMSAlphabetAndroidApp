@@ -1,6 +1,6 @@
 package cafe.adriel.nmsalphabet;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Constant {
@@ -8,9 +8,10 @@ public class Constant {
     public static final String GOOGLE_PLAY_URL  = "https://play.google.com/store/apps/details?id=";
     public static final String MARKET_URI       = "market://details?id=";
 
-    public static final String PARSE_SERVER_URL = "https://nmsalphabet.herokuapp.com/api/";
+    // TODO Don't use Parse Server until get ready for production
+//    public static final String PARSE_SERVER_URL = "https://nmsalphabet.herokuapp.com/api/";
 
-    public static final List<String> FACEBOOK_PERMISSIONS   = Arrays.asList("public_profile");
+    public static final List<String> FACEBOOK_PERMISSIONS   = Collections.singletonList("public_profile");
     public static final String FACEBOOK_USER_IMAGE_URL      = "https://graph.facebook.com/%s/picture?type=small";
 
     public static final String GENDER_MALE      = "male";
@@ -27,4 +28,8 @@ public class Constant {
     public static final String SETTINGS_ABOUT_VERSION	    = "about_version";
     public static final String SETTINGS_HAS_SIGNED_IN	    = "hasSignedIn";
 
+    public static final String STATE_LOADING           = "loading";
+    public static final String STATE_EMPTY             = "empty";
+    public static final String STATE_NO_INTERNET       = "noInternet";
+    public static final String STATE_REQUIRE_SIGN_IN   = "requireSignIn";
 }

@@ -28,9 +28,9 @@ public class SocialUtil {
                     String name = object.getString("name");
                     String gender = object.getString("gender");
                     App.getUser().setName(name);
-                    App.getUser().setGernder(gender);
+                    App.getUser().setGender(Util.isEmpty(gender) ? Constant.GENDER_MALE : gender);
                     App.getUser().setFacebookUserId(AccessToken.getCurrentAccessToken().getUserId());
-                    App.getUser().saveEventually();
+                    App.getUser().saveInBackground();
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     e.printStackTrace();

@@ -25,11 +25,7 @@ public class AlienWord extends ParseObject implements Serializable {
         put("race", race);
     }
 
-    public String getUsersCount(){
-        return getString("usersCount");
-    }
-
-    public ParseRelation getUsers() {
+    public ParseRelation<User> getUsers() {
         return getRelation("users");
     }
 
@@ -40,5 +36,4 @@ public class AlienWord extends ParseObject implements Serializable {
     public void removeUser(User user){
         getUsers().remove(user);
     }
-
 }
