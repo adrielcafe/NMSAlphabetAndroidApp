@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class TranslateFragment extends BaseFragment {
 
@@ -81,6 +83,7 @@ public class TranslateFragment extends BaseFragment {
         });
 
         phraseLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        phraseView.setFilters(new InputFilter[] { Util.getWordInputFilter() });
         phraseView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

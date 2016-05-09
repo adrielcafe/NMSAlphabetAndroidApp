@@ -46,7 +46,7 @@
             android:textColorHint="@color/gray"
             android:textColor="@android:color/white"
             android:background="@android:color/transparent"
-            android:inputType="textCapCharacters|textCapWords|textCapSentences|textNoSuggestions"
+            android:inputType="text|textCapCharacters|textCapWords|textCapSentences|textNoSuggestions"
             android:imeOptions="actionSearch"/>
 
         <TextView

@@ -48,23 +48,6 @@ public class TranslationEditorActivity extends BaseActivity {
     private AlienWordTranslation ptTranslation;
     private AlienWordTranslation deTranslation;
 
-    private InputFilter alienWordFilter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            String chr = source+"";
-            return chr.isEmpty() || !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
-        }
-    };
-    private InputFilter alienWordTranslationFilter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            String chr = source+"";
-            if(chr.isEmpty() || chr.equals(" ")){
-                return null;
-            } else {
-                return !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
-            }
-        }
-    };
-
     @BindView(R.id.content_layout)
     FrameLayout contentLayout;
     @BindView(R.id.races)
@@ -188,10 +171,10 @@ public class TranslationEditorActivity extends BaseActivity {
         ptTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
         deTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
 
-        alienWordView.setFilters(new InputFilter[] { alienWordFilter });
-        enTranslationView.setFilters(new InputFilter[] { alienWordTranslationFilter });
-        ptTranslationView.setFilters(new InputFilter[] { alienWordTranslationFilter });
-        deTranslationView.setFilters(new InputFilter[] { alienWordTranslationFilter });
+        alienWordView.setFilters(new InputFilter[] { Util.getWordInputFilter() });
+        enTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
+        ptTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
+        deTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
     }
 
     private void initFab(){

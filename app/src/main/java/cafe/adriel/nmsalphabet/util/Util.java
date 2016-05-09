@@ -17,6 +17,8 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -36,6 +38,23 @@ public class Util {
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    public static InputFilter alienWordFilter = new InputFilter() {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            String chr = source+"";
+            return chr.isEmpty() || !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
+        }
+    };
+    public static InputFilter alienWordTranslationFilter = new InputFilter() {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            String chr = source+"";
+            if(chr.isEmpty() || chr.equals(" ")){
+                return null;
+            } else {
+                return !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
+            }
+        }
     };
 
     private static ConnectivityManager connectivityManager;
@@ -101,6 +120,14 @@ public class Util {
             InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }
+    }
+
+    public static InputFilter getWordInputFilter(){
+        return alienWordFilter;
+    }
+
+    public static InputFilter getTranslationInputFilter(){
+        return alienWordTranslationFilter;
     }
 
     public static SharedPreferences getSettings(Context context){
