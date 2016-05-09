@@ -46,6 +46,7 @@ import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.event.UpdateStateEvent;
+import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
@@ -66,6 +67,7 @@ public class WordsFragment extends BaseFragment {
 
     private Type type;
     private List<AlienWord> words;
+    private AlienRace selectedRace;
     private HomeAdapter homeAdapter;
     private ProfileAdapter profileAdapter;
     private EndlessRecyclerOnScrollListener infiniteScrollListener;
@@ -177,6 +179,9 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void initHomeControls(){
+        List<String> races = DbUtil.getRacesName();
+        races.add(0, getString(R.string.select_alien_race));
+
         headerProfileLayout.setVisibility(View.GONE);
         headerHomeLayout.setVisibility(View.VISIBLE);
         headerHomeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -195,11 +200,12 @@ public class WordsFragment extends BaseFragment {
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
         racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));
-        racesView.setItems(getString(R.string.all_alien_races), "Korvax");
+        racesView.setItems(races);
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                // TODO
+                selectedRace = DbUtil.getRaceByName(item);
+                updateWords(0);
             }
         });
 
@@ -207,10 +213,8 @@ public class WordsFragment extends BaseFragment {
         searchView.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if (searchView.getText().length() > 0) {
-                        searchWord(searchView.getText().toString());
-                        return true;
-                    }
+                    updateWords(0);
+                    return true;
                 }
                 return false;
             }
@@ -238,15 +242,14 @@ public class WordsFragment extends BaseFragment {
         searchIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (searchView.getText().length() > 0) {
-                    searchWord(searchView.getText().toString());
-                }
+                updateWords(0);
             }
         });
         searchClearView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchView.setText("");
+                updateWords(0);
             }
         });
     }
@@ -362,10 +365,12 @@ public class WordsFragment extends BaseFragment {
             viewState.showCustomView(Constant.STATE_REQUIRE_SIGN_IN);
             return;
         }
+        Util.hideSoftKeyboard(getActivity());
         setLoadingList(true);
         switch (type) {
             case HOME:
-                DbUtil.getWords(page, new FindCallback<AlienWord>() {
+                String word = searchView.getText().toString();
+                DbUtil.getWords(word, selectedRace, page, new FindCallback<AlienWord>() {
                     @Override
                     public void done(List<AlienWord> objects, ParseException e) {
                         afterUpdateWords(page, objects, e);
@@ -409,10 +414,6 @@ public class WordsFragment extends BaseFragment {
         }
         setLoadingList(false);
         refreshLayout.setRefreshing(false);
-    }
-
-    private void searchWord(String word){
-
     }
 
     private void refreshWords(){
