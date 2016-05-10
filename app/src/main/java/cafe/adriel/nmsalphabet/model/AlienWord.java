@@ -25,6 +25,11 @@ public class AlienWord extends ParseObject implements Serializable {
         put("race", race);
     }
 
+    public int getUsersCount(){
+        int count = getInt("usersCount");
+        return count < 0 ? 0 : count;
+    }
+
     public ParseRelation<User> getUsers() {
         return getRelation("users");
     }

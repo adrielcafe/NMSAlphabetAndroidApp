@@ -97,16 +97,7 @@ public class DbUtil {
         if(race != null){
             query.whereEqualTo("race", race);
         }
-        query.addAscendingOrder("word")
-                .addAscendingOrder("_updated_at")
-                .setLimit(PAGE_SIZE_WORD)
-                .setSkip(PAGE_SIZE_WORD * page)
-                .findInBackground(callback);
-    }
-
-    public static void getWordsByRace(AlienRace race, int page, FindCallback<AlienWord> callback){
-        ParseQuery.getQuery(AlienWord.class)
-                .whereEqualTo("race", race)
+        query.whereGreaterThan("usersCount", 0)
                 .addAscendingOrder("word")
                 .addAscendingOrder("_updated_at")
                 .setLimit(PAGE_SIZE_WORD)
@@ -117,6 +108,7 @@ public class DbUtil {
     public static void getWordsByUser(User user, int page, FindCallback<AlienWord> callback){
         ParseQuery.getQuery(AlienWord.class)
                 .whereEqualTo("users", user)
+                .whereGreaterThan("usersCount", 0)
                 .addAscendingOrder("word")
                 .addAscendingOrder("_updated_at")
                 .setLimit(PAGE_SIZE_WORD)
@@ -141,6 +133,7 @@ public class DbUtil {
                 .whereEqualTo("race", race)
                 .whereEqualTo("word", word)
                 .whereEqualTo("language", language)
+                .whereGreaterThan("usersCount", 0)
                 .addDescendingOrder("usersCount")
                 .addAscendingOrder("word")
                 .setLimit(PAGE_SIZE_TRANSLATION)
