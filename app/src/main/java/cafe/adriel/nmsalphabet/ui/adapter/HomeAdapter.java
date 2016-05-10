@@ -224,16 +224,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         ImageView countryFlagView;
         @BindView(R.id.translations_layout)
         LinearLayout translationsLayout;
-//        @BindView(R.id.translation_1)
-//        TextView translation1View;
-//        @BindView(R.id.translation_2)
-//        TextView translation2View;
-//        @BindView(R.id.translation_3)
-//        TextView translation3View;
-//        @BindView(R.id.translation_4)
-//        TextView translation4View;
-//        @BindView(R.id.translation_5)
-//        TextView translation5View;
         @BindView(R.id.add_translation)
         TextView addTranslationView;
         @BindView(R.id.see_all_translations)
