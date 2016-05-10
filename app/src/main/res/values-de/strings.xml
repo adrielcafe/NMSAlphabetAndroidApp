@@ -22,7 +22,7 @@
     <string name="best_translations">Passendste Übersetzungen</string>
     <string name="my_translations">Meine Übersetungen</string>
     <string name="new_translation_with_icon">{gmi-plus-circle} Neue Übersetzung</string>
-    <string name="report_with_icon">{gmi-flag} Melden</string>
+    <string name="see_all_translations_with_icon">{gmi-flag} Alle Anzeigen</string>
     <string name="delete_with_icon">{gmi-delete} Löschen</string>
     <string name="edit_with_icon">{gmi-edit} Bearbeiten</string>
     <string name="cancel">Abbrechen</string>
