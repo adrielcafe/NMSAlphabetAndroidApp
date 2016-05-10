@@ -191,8 +191,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             }
         });
 
-        addBadge(likeView, 1);
-        addBadge(dislikeView, 45);
+        addBadge(likeView, translation.getLikesCount());
+        addBadge(dislikeView, translation.getDislikesCount());
 
         holder.translationsLayout.addView(translationLayout);
     }

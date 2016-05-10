@@ -289,10 +289,12 @@ public class TranslationEditorActivity extends BaseActivity {
         if(translation != null) {
             try {
                 translation.addUser(App.getUser());
+                translation.addLike(App.getUser());
                 translation.save();
                 if (currentTranslation != null && !currentTranslation.getTranslation().equals(translationStr)) {
                     try {
                         currentTranslation.removeUser(App.getUser());
+                        currentTranslation.removeLike(App.getUser());
                         currentTranslation.save();
                     } catch (Exception e) {
                         e.printStackTrace();
