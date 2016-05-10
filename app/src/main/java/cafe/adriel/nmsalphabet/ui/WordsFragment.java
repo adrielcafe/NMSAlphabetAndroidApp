@@ -181,7 +181,7 @@ public class WordsFragment extends BaseFragment {
 
     private void initHomeControls(){
         List<String> races = DbUtil.getRacesName();
-        races.add(0, getString(R.string.select_alien_race));
+        races.add(0, getString(R.string.all_alien_races));
 
         headerProfileLayout.setVisibility(View.GONE);
         headerHomeLayout.setVisibility(View.VISIBLE);
