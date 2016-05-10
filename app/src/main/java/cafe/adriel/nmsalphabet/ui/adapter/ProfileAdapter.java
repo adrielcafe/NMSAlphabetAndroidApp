@@ -81,7 +81,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             viewStates.put(word.getObjectId(), createViewState(holder));
         }
 
-        holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
+        holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 0);
         holder.cardLayout.fold(true);
         holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
         holder.alienWordTitleView.setText(word.getWord());

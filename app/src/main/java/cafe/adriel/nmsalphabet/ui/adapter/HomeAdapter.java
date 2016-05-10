@@ -1,6 +1,7 @@
 package cafe.adriel.nmsalphabet.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -78,7 +79,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
         initFlag(holder);
 
-        holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 2);
+        holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 0);
         holder.cardLayout.fold(true);
         holder.alienRaceTitleView.setBackground(ThemeUtil.getWordRaceTitleDrawable(context));
         holder.alienWordTitleView.setText(word.getWord());
@@ -153,25 +154,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 public void done(List<AlienWordTranslation> translations, ParseException e) {
                     if (Util.isNotEmpty(translations)) {
                         wordTranslations.put(word.getObjectId(), translations);
-                        if (translations.size() >= 1) {
-                            holder.translation1View.setText(translations.get(0).getTranslation());
-                            addBadge(holder.translation1View, translations.get(0).getUsersCount());
-                        }
-                        if (translations.size() >= 2) {
-                            holder.translation2View.setText(translations.get(1).getTranslation());
-                            addBadge(holder.translation2View, translations.get(1).getUsersCount());
-                        }
-                        if (translations.size() >= 3) {
-                            holder.translation3View.setText(translations.get(2).getTranslation());
-                            addBadge(holder.translation3View, translations.get(2).getUsersCount());
-                        }
-                        if (translations.size() >= 4) {
-                            holder.translation4View.setText(translations.get(3).getTranslation());
-                            addBadge(holder.translation4View, translations.get(3).getUsersCount());
-                        }
-                        if (translations.size() >= 5) {
-                            holder.translation5View.setText(translations.get(4).getTranslation());
-                            addBadge(holder.translation5View, translations.get(4).getUsersCount());
+                        for(AlienWordTranslation translation : translations){
+                            addTranslation(holder, translation);
+                            addTranslation(holder, translation);
                         }
                         setViewState(word, null);
                     } else {
@@ -182,6 +167,34 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         } else {
             setViewState(word, Constant.STATE_NO_INTERNET);
         }
+    }
+
+    private void addTranslation(ViewHolder holder, AlienWordTranslation translation){
+        RelativeLayout translationLayout = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.list_item_translation, null, false);
+        TextView translationView = (TextView) translationLayout.findViewById(R.id.translation);
+        final TextView likeView = (TextView) translationLayout.findViewById(R.id.like);
+        final TextView dislikeView = (TextView) translationLayout.findViewById(R.id.dislike);
+
+        translationView.setText(translation.getTranslation());
+        likeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                likeView.setTextColor(Color.BLACK);
+                dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+            }
+        });
+        dislikeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dislikeView.setTextColor(Color.BLACK);
+                likeView.setTextColor(context.getResources().getColor(R.color.gray));
+            }
+        });
+
+        addBadge(likeView, 1);
+        addBadge(dislikeView, 45);
+
+        holder.translationsLayout.addView(translationLayout);
     }
 
     private void addBadge(View view, int count){
@@ -211,20 +224,20 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         ImageView countryFlagView;
         @BindView(R.id.translations_layout)
         LinearLayout translationsLayout;
-        @BindView(R.id.translation_1)
-        TextView translation1View;
-        @BindView(R.id.translation_2)
-        TextView translation2View;
-        @BindView(R.id.translation_3)
-        TextView translation3View;
-        @BindView(R.id.translation_4)
-        TextView translation4View;
-        @BindView(R.id.translation_5)
-        TextView translation5View;
+//        @BindView(R.id.translation_1)
+//        TextView translation1View;
+//        @BindView(R.id.translation_2)
+//        TextView translation2View;
+//        @BindView(R.id.translation_3)
+//        TextView translation3View;
+//        @BindView(R.id.translation_4)
+//        TextView translation4View;
+//        @BindView(R.id.translation_5)
+//        TextView translation5View;
         @BindView(R.id.add_translation)
         TextView addTranslationView;
-        @BindView(R.id.report_translation)
-        TextView reportTranslationView;
+        @BindView(R.id.see_all_translations)
+        TextView seeAllTranslationsView;
 
         public ViewHolder(View v) {
             super(v);
