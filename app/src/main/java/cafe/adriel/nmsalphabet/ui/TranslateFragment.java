@@ -141,7 +141,7 @@ public class TranslateFragment extends BaseFragment {
 
     private void initFlag(){
         int flagResId;
-        switch (LanguageUtil.getCurrentLanguage(getContext())){
+        switch (LanguageUtil.getCurrentLanguageCode(getContext())){
             case LanguageUtil.LANGUAGE_PT:
                 flagResId = R.drawable.flag_brazil;
                 break;

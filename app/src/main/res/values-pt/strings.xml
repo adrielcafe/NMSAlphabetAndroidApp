@@ -62,5 +62,6 @@
     <string name="delete_translation">Excluir Tradução</string>
     <string name="edit_translation">Editar Tradução</string>
     <string name="translation_will_be_deleted_permanently">Essa tradução será excluída permanentemente.\nVocê tem certeza?</string>
+    <string name="try_another_language">Tente em outro idioma</string>
 
 </resources>
