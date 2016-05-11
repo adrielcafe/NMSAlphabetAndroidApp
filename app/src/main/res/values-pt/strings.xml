@@ -9,8 +9,8 @@
     <string name="search_word">Procurar Palavra</string>
     <string name="all_alien_races">Todas as Raças Alienígenas</string>
     <string name="best_translations">Melhores Traduções</string>
-    <string name="new_translation_with_icon">{gmi-plus-circle} Nova Tradução</string>
-    <string name="see_all_translations_with_icon">{gmi-flag} Ver Todas</string>
+    <string name="new_translation_with_icon">{gmi-plus} Nova Tradução</string>
+    <string name="see_all_translations_with_icon">{gmi-view-list-alt} Ver Todas</string>
     <string name="not_now">Agora Não</string>
     <string name="signin_facebook">Entrar com Facebook</string>
     <string name="new_translation">Nova Tradução</string>
@@ -63,5 +63,6 @@
     <string name="edit_translation">Editar Tradução</string>
     <string name="translation_will_be_deleted_permanently">Essa tradução será excluída permanentemente.\nVocê tem certeza?</string>
     <string name="try_another_language">Tente em outro idioma</string>
+    <string name="share_with_icon">{gmi-share} Compartilhar</string>
 
 </resources>

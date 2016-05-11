@@ -21,35 +21,6 @@
             android:background="?colorAccent">
 
             <TextView
-                android:id="@+id/add_translation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:textSize="28sp"
-                android:textColor="@android:color/white"
-                android:text="{gmi-plus}"
-                android:background="?selectableItemBackground"
-                android:clickable="true"/>
-
-            <TextView
-                android:id="@+id/share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:padding="10dp"
-                android:textSize="20sp"
-                android:textColor="@android:color/white"
-                android:text="{gmi-share}"
-                android:background="?selectableItemBackground"
-                android:clickable="true"/>
-
-            <TextView
                 android:id="@+id/alien_word"
                 android:textColor="@android:color/white"
                 app:font="custom1"
@@ -70,7 +41,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:layout_gravity="center_vertical"
-                android:gravity="start"
                 style="@style/AlienRaceTextView"/>
 
             <com.jaredrummler.materialspinner.MaterialSpinner
@@ -80,16 +50,16 @@
                 android:layout_weight="0.5"
                 android:layout_gravity="center_vertical"
                 android:singleLine="true"
-                android:drawablePadding="10dp"/>
+                android:drawablePadding="5dp"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="100dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="20dp"
+            android:minHeight="50dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:orientation="vertical">
@@ -101,25 +71,32 @@
                 android:minHeight="100dp"
                 android:orientation="vertical"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_gravity="center"
-                android:background="@color/gray_light"/>
+        </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/gray_light"
+            android:weightSum="0.9">
 
-                <TextView
-                    android:id="@+id/see_all_translations"
-                    android:layout_alignParentEnd="true"
-                    android:text="@string/see_all_translations_with_icon"
-                    style="@style/AlienWordControlTextView"/>
+            <TextView
+                android:id="@+id/new_translation"
+                android:layout_weight="0.3"
+                android:text="@string/new_translation_with_icon"
+                style="@style/AlienWordControlTextView"/>
 
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/see_all_translations"
+                android:layout_weight="0.3"
+                android:text="@string/see_all_translations_with_icon"
+                style="@style/AlienWordControlTextView"/>
+
+            <TextView
+                android:id="@+id/share_translation"
+                android:layout_weight="0.3"
+                android:text="@string/share_with_icon"
+                style="@style/AlienWordControlTextView"/>
 
         </LinearLayout>
 
