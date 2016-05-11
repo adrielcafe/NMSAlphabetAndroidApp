@@ -291,8 +291,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         MaterialSpinner languageView;
         @BindView(R.id.translations_layout)
         LinearLayout translationsLayout;
-        @BindView(R.id.add_translation)
-        TextView addTranslationView;
+        @BindView(R.id.new_translation)
+        TextView newTranslationView;
         @BindView(R.id.see_all_translations)
         TextView seeAllTranslationsView;
 

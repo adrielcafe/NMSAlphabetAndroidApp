@@ -22,10 +22,10 @@
     <string name="best_translation">Best Translation</string>
     <string name="best_translations">Best Translations</string>
     <string name="my_translations">My Translations</string>
-    <string name="new_translation_with_icon">{gmi-plus-circle} New Translation</string>
-    <string name="see_all_translations_with_icon">{gmi-comment-list} See All</string>
+    <string name="see_all_translations_with_icon">{gmi-view-list-alt} See All</string>
     <string name="delete_with_icon">{gmi-delete} Delete</string>
     <string name="edit_with_icon">{gmi-edit} Edit</string>
+    <string name="share_with_icon">{gmi-share} Share</string>
     <string name="delete">Delete</string>
     <string name="delete_translation">Delete Translation</string>
     <string name="translation_will_be_deleted_permanently">This translation will be deleted permanently.\nAre you sure?</string>
@@ -89,5 +89,6 @@
         <item>theme4</item>
         <item>theme5</item>
     </string-array>
+    <string name="new_translation_with_icon">{gmi-plus} New Translation</string>
 
 </resources>

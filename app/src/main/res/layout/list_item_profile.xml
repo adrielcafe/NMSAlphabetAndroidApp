@@ -21,19 +21,6 @@
             android:background="?colorAccent">
 
             <TextView
-                android:id="@+id/share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:padding="10dp"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:textColor="@android:color/white"
-                android:text="{gmi-share}"
-                android:background="?selectableItemBackground"
-                android:clickable="true"/>
-
-            <TextView
                 android:id="@+id/alien_word"
                 android:textColor="@android:color/white"
                 app:font="custom1"
@@ -48,9 +35,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="100dp"
+            android:minHeight="50dp"
             android:paddingTop="15dp"
-            android:paddingBottom="20dp"
+            android:paddingBottom="15dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:orientation="vertical">
@@ -65,7 +52,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:layout_gravity="center"
                 android:background="@color/gray_light"/>
@@ -99,31 +86,32 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_gravity="center"
-                android:background="@color/gray_light"/>
+        </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/gray_light"
+            android:weightSum="0.9">
 
-                <TextView
-                    android:id="@+id/delete_translation"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/delete_with_icon"
-                    style="@style/AlienWordControlTextView"/>
+            <TextView
+                android:id="@+id/edit_translation"
+                android:layout_weight="0.3"
+                android:text="@string/edit_with_icon"
+                style="@style/AlienWordControlTextView"/>
 
-                <TextView
-                    android:id="@+id/edit_translation"
-                    android:layout_alignParentEnd="true"
-                    android:text="@string/edit_with_icon"
-                    style="@style/AlienWordControlTextView"/>
+            <TextView
+                android:id="@+id/delete_translation"
+                android:layout_weight="0.3"
+                android:text="@string/delete_with_icon"
+                style="@style/AlienWordControlTextView"/>
 
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/share_translation"
+                android:layout_weight="0.3"
+                android:text="@string/share_with_icon"
+                style="@style/AlienWordControlTextView"/>
 
         </LinearLayout>
 
