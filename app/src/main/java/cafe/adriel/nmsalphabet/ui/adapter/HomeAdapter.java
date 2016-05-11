@@ -7,12 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
@@ -41,7 +40,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     private String language;
     private List<AlienWord> words;
     private Map<String, DynamicBox> viewStates;
-    private Map<String, List<AlienWordTranslation>> wordTranslations;
+    private Map<String, List<AlienWordTranslation>> enWordTranslations;
+    private Map<String, List<AlienWordTranslation>> ptWordTranslations;
+    private Map<String, List<AlienWordTranslation>> deWordTranslations;
 
     public HomeAdapter(Context context, List<AlienWord> words) {
         this.context = context;
@@ -64,11 +65,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         final AlienWord word = words.get(position);
         final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
 
-        if(language == null){
-            language = LanguageUtil.getCurrentLanguage(context);
+        if(enWordTranslations == null){
+            enWordTranslations = new HashMap<>();
         }
-        if(wordTranslations == null){
-            wordTranslations = new HashMap<>();
+        if(ptWordTranslations == null){
+            ptWordTranslations = new HashMap<>();
+        }
+        if(deWordTranslations == null){
+            deWordTranslations = new HashMap<>();
         }
         if(viewStates == null){
             viewStates = new HashMap<>();
@@ -76,8 +80,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         if(!viewStates.containsKey(word.getObjectId())) {
             viewStates.put(word.getObjectId(), createViewState(holder));
         }
-
-        initFlag(holder);
 
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 0);
         holder.cardLayout.fold(true);
@@ -91,28 +93,41 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         holder.titleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!wordTranslations.containsKey(word.getObjectId())){
-                    loadTranslations(holder, race, word);
-                }
+                loadTranslations(holder, race, word);
                 holder.cardLayout.unfold(false);
             }
         });
+        initLanguage(holder, race, word);
     }
 
-    private void initFlag(ViewHolder holder){
-        int flagResId;
-        switch (language){
-            case LanguageUtil.LANGUAGE_PT:
-                flagResId = R.drawable.flag_brazil;
-                break;
-            case LanguageUtil.LANGUAGE_DE:
-                flagResId = R.drawable.flag_germany;
-                break;
-            default:
-                flagResId = R.drawable.flag_uk;
-                break;
+    private void initLanguage(final ViewHolder holder, final AlienRace race, final AlienWord word){
+        String[] languages = context.getResources().getStringArray(R.array.language_entries);
+        int languageIndex = 0;
+
+        if(language == null){
+            language = LanguageUtil.getCurrentLanguageCode(context);
         }
-        Glide.with(context).load(flagResId).into(holder.countryFlagView);
+        for (int i = 0; i < languages.length; i++){
+            if(languages[i].equals(LanguageUtil.languageCodeToLanguage(context, language))){
+                languageIndex = i;
+            }
+        }
+
+        holder.languageView.setTextColor(Color.BLACK);
+        holder.languageView.setArrowColor(Color.BLACK);
+        holder.languageView.setBackground(null);
+        holder.languageView.setPadding(10, 10, 10, 10);
+        holder.languageView.setItems(languages);
+        holder.languageView.setSelectedIndex(languageIndex);
+        holder.languageView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                updateLanguage(holder, item);
+                loadTranslations(holder, race, word);
+            }
+        });
+
+        updateLanguage(holder, LanguageUtil.languageCodeToLanguage(context, language));
     }
 
     private DynamicBox createViewState(ViewHolder holder){
@@ -147,18 +162,44 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     private void loadTranslations(final ViewHolder holder, AlienRace race, final AlienWord word){
+        switch (language){
+            case LanguageUtil.LANGUAGE_EN:
+                if(enWordTranslations.containsKey(word.getObjectId())){
+                    addTranslations(holder, word, enWordTranslations.get(word.getObjectId()));
+                    return;
+                }
+                break;
+            case LanguageUtil.LANGUAGE_PT:
+                if(ptWordTranslations.containsKey(word.getObjectId())){
+                    addTranslations(holder, word, ptWordTranslations.get(word.getObjectId()));
+                    return;
+                }
+                break;
+            case LanguageUtil.LANGUAGE_DE:
+                if(deWordTranslations.containsKey(word.getObjectId())){
+                    addTranslations(holder, word, deWordTranslations.get(word.getObjectId()));
+                    return;
+                }
+                break;
+        }
         if(Util.isConnected(context)) {
             setViewState(word, Constant.STATE_LOADING);
             DbUtil.getTranslations(race, word, language, new FindCallback<AlienWordTranslation>() {
                 @Override
                 public void done(List<AlienWordTranslation> translations, ParseException e) {
                     if (Util.isNotEmpty(translations)) {
-                        wordTranslations.put(word.getObjectId(), translations);
-                        for(AlienWordTranslation translation : translations){
-                            addTranslation(holder, translation);
-                            addTranslation(holder, translation);
+                        switch (language){
+                            case LanguageUtil.LANGUAGE_EN:
+                                enWordTranslations.put(word.getObjectId(), translations);
+                                break;
+                            case LanguageUtil.LANGUAGE_PT:
+                                ptWordTranslations.put(word.getObjectId(), translations);
+                                break;
+                            case LanguageUtil.LANGUAGE_DE:
+                                deWordTranslations.put(word.getObjectId(), translations);
+                                break;
                         }
-                        setViewState(word, null);
+                        addTranslations(holder, word, translations);
                     } else {
                         setViewState(word, Constant.STATE_EMPTY);
                     }
@@ -167,6 +208,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         } else {
             setViewState(word, Constant.STATE_NO_INTERNET);
         }
+    }
+
+    private void addTranslations(ViewHolder holder, AlienWord word, List<AlienWordTranslation> translations){
+        holder.translationsLayout.removeAllViews();
+        for(AlienWordTranslation translation : translations){
+            addTranslation(holder, translation);
+        }
+        setViewState(word, null);
     }
 
     private void addTranslation(ViewHolder holder, AlienWordTranslation translation){
@@ -207,6 +256,24 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         badge.show();
     }
 
+    private void updateLanguage(ViewHolder holder, String language){
+        final String english = context.getString(R.string.english);
+        final String portuguese = context.getString(R.string.portuguese);
+        final String german = context.getString(R.string.german);
+        int flagResId = -1;
+        if(language.equals(english)){
+            this.language = LanguageUtil.LANGUAGE_EN;
+            flagResId = R.drawable.flag_uk;
+        } else if(language.equals(portuguese)){
+            this.language = LanguageUtil.LANGUAGE_PT;
+            flagResId = R.drawable.flag_brazil;
+        } else if(language.equals(german)){
+            this.language = LanguageUtil.LANGUAGE_DE;
+            flagResId = R.drawable.flag_germany;
+        }
+        holder.languageView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(flagResId), null, holder.languageView.getCompoundDrawables()[2], null);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.title_layout)
         RelativeLayout titleLayout;
@@ -220,8 +287,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         TextView alienRaceTitleView;
         @BindView(R.id.tag)
         TextView alienRaceView;
-        @BindView(R.id.country_flag)
-        ImageView countryFlagView;
+        @BindView(R.id.language)
+        MaterialSpinner languageView;
         @BindView(R.id.translations_layout)
         LinearLayout translationsLayout;
         @BindView(R.id.add_translation)

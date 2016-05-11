@@ -125,7 +125,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             TextView summaryView = (TextView) summaryLayout.getChildAt(1);
             summaryView.setCompoundDrawablePadding(10);
             summaryView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    LanguageUtil.getLanguageFlagDrawable(getActivity(), LanguageUtil.getCurrentLanguage(getActivity())), null, null, null);
+                    LanguageUtil.getLanguageFlagDrawable(getActivity(), LanguageUtil.getCurrentLanguageCode(getActivity())), null, null, null);
         } catch (Exception e){
             e.printStackTrace();
         }
