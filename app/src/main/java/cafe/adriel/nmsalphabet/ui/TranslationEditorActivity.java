@@ -150,7 +150,7 @@ public class TranslationEditorActivity extends BaseActivity {
         racesView.setTextAppearance(this, android.R.style.TextAppearance_Medium);
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(this));
+        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(this));
         racesView.setItems(races);
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
@@ -193,8 +193,7 @@ public class TranslationEditorActivity extends BaseActivity {
     private void editMode(){
         setTitle(R.string.edit_translation);
 
-        // TODO Disable spinner
-//        racesView.setEnabled(false);
+        racesView.setEnabled(false);
         wordView.setEnabled(false);
 
         racesView.setSelectedIndex(DbUtil.getRacePosition(race.getObjectId()) + 1);

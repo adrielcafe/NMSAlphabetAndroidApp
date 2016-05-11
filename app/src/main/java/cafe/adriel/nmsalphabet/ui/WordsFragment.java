@@ -200,7 +200,7 @@ public class WordsFragment extends BaseFragment {
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));
+        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setItems(races);
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
