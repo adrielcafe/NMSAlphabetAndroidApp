@@ -1,5 +1,7 @@
 package cafe.adriel.nmsalphabet.util;
 
+import android.util.Log;
+
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -7,6 +9,7 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -65,6 +68,8 @@ public class DbUtil {
                 e.printStackTrace();
             }
         }
+        Log.e("LIKES 2", likes.size()+"");
+        Log.e("DISLIKES 2", dislikes.size()+"");
     }
 
     public static void cacheData(){
@@ -91,11 +96,13 @@ public class DbUtil {
                     .whereEqualTo("dislikes", App.getUser())
                     .setLimit(PAGE_SIZE_LIKE_DISLIKE)
                     .find();
+            Log.e("LIKES 1", likes.size()+"");
+            Log.e("DISLIKES 1", dislikes.size()+"");
             AlienWordTranslation.unpinAllInBackground(new DeleteCallback() {
                 @Override
                 public void done(ParseException e) {
                     AlienWordTranslation.pinAllInBackground(likes);
-                    AlienWordTranslation.pinAllInBackground(dislikes);
+//                    AlienWordTranslation.pinAllInBackground(dislikes);
                 }
             });
         } catch (Exception e){
@@ -144,11 +151,13 @@ public class DbUtil {
 
     public static boolean isTranslationLiked(AlienWordTranslation translation){
         loadCachedData();
+        Log.e("LIKES 3", likes.size()+"");
         return likes.contains(translation.getObjectId());
     }
 
     public static boolean isTranslationDisliked(AlienWordTranslation translation){
         loadCachedData();
+        Log.e("DISLIKES 3", dislikes.size()+"");
         return dislikes.contains(translation.getObjectId());
     }
 
@@ -157,7 +166,7 @@ public class DbUtil {
         dislikes.remove(translation.getObjectId());
         translation.addLike(App.getUser());
         translation.removeDislike(App.getUser());
-        translation.saveEventually();
+        translation.saveInBackground();
     }
 
     public static void dislikeTranslation(AlienWordTranslation translation){
@@ -165,7 +174,7 @@ public class DbUtil {
         likes.remove(translation.getObjectId());
         translation.addDislike(App.getUser());
         translation.removeLike(App.getUser());
-        translation.saveEventually();
+        translation.saveInBackground();
     }
 
     public static void getWords(String word, AlienRace race, int page, FindCallback<AlienWord> callback){
