@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -259,6 +260,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             int likesCount = Integer.parseInt(likeBadgeView.getText().toString()) + 1;
             int dislikesCount = Integer.parseInt(dislikeBadgeView.getText().toString()) - 1;
 
+            if(likesCount < 0) {
+                likesCount = 0;
+            }
+            if(dislikesCount < 0) {
+                dislikesCount = 0;
+            }
+
             likeBadgeView.setText(likesCount+"");
             dislikeBadgeView.setText(dislikesCount+"");
             likeView.setTextColor(Color.BLACK);
@@ -273,8 +281,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             int likesCount = Integer.parseInt(likeBadgeView.getText().toString()) - 1;
             int dislikesCount = Integer.parseInt(dislikeBadgeView.getText().toString()) + 1;
 
-            likeBadgeView.setText(likesCount);
-            dislikeBadgeView.setText(dislikesCount);
+            if(likesCount < 0) {
+                likesCount = 0;
+            }
+            if(dislikesCount < 0) {
+                dislikesCount = 0;
+            }
+
+            likeBadgeView.setText(likesCount+"");
+            dislikeBadgeView.setText(dislikesCount+"");
             likeView.setTextColor(context.getResources().getColor(R.color.gray));
             dislikeView.setTextColor(Color.BLACK);
 
