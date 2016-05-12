@@ -218,35 +218,71 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         setViewState(word, null);
     }
 
-    private void addTranslation(ViewHolder holder, AlienWordTranslation translation){
+    private void addTranslation(final ViewHolder holder, final AlienWordTranslation translation){
         RelativeLayout translationLayout = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.list_item_translation, null, false);
         TextView translationView = (TextView) translationLayout.findViewById(R.id.translation);
         final TextView likeView = (TextView) translationLayout.findViewById(R.id.like);
         final TextView dislikeView = (TextView) translationLayout.findViewById(R.id.dislike);
+        final BadgeView likeBadgeView = addBadge(likeView, translation.getLikesCount());
+        final BadgeView dislikeBadgeView = addBadge(dislikeView, translation.getDislikesCount());
 
         translationView.setText(translation.getTranslation());
         likeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                likeView.setTextColor(Color.BLACK);
-                dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+                likeTranslation(translation, likeView, dislikeView, likeBadgeView, dislikeBadgeView);
             }
         });
         dislikeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dislikeView.setTextColor(Color.BLACK);
-                likeView.setTextColor(context.getResources().getColor(R.color.gray));
+                dislikeTranslation(translation, likeView, dislikeView, likeBadgeView, dislikeBadgeView);
             }
         });
 
-        addBadge(likeView, translation.getLikesCount());
-        addBadge(dislikeView, translation.getDislikesCount());
+        if(DbUtil.isTranslationLiked(translation)){
+            likeView.setTextColor(Color.BLACK);
+            dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+        } else if(DbUtil.isTranslationDisliked(translation)){
+            likeView.setTextColor(context.getResources().getColor(R.color.gray));
+            dislikeView.setTextColor(Color.BLACK);
+        } else {
+            likeView.setTextColor(context.getResources().getColor(R.color.gray));
+            dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+        }
 
         holder.translationsLayout.addView(translationLayout);
     }
 
-    private void addBadge(View view, int count){
+    private void likeTranslation(AlienWordTranslation translation, TextView likeView, TextView dislikeView, BadgeView likeBadgeView, BadgeView dislikeBadgeView){
+        if(!DbUtil.isTranslationLiked(translation)) {
+            int likesCount = Integer.parseInt(likeBadgeView.getText().toString()) + 1;
+            int dislikesCount = Integer.parseInt(dislikeBadgeView.getText().toString()) - 1;
+
+            likeBadgeView.setText(likesCount);
+            dislikeBadgeView.setText(dislikesCount);
+            likeView.setTextColor(Color.BLACK);
+            dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+
+            DbUtil.likeTranslation(translation);
+        }
+    }
+
+    private void dislikeTranslation(AlienWordTranslation translation, TextView likeView, TextView dislikeView, BadgeView likeBadgeView, BadgeView dislikeBadgeView){
+        if(!DbUtil.isTranslationDisliked(translation)) {
+            int likesCount = Integer.parseInt(likeBadgeView.getText().toString()) - 1;
+            int dislikesCount = Integer.parseInt(dislikeBadgeView.getText().toString()) + 1;
+
+            likeBadgeView.setText(likesCount);
+            dislikeBadgeView.setText(dislikesCount);
+            likeView.setTextColor(context.getResources().getColor(R.color.gray));
+            dislikeView.setTextColor(Color.BLACK);
+
+            DbUtil.dislikeTranslation(translation);
+        }
+    }
+
+    private BadgeView addBadge(View view, int count){
         BadgeView badge = new BadgeView(context, view);
         badge.setText(count+"");
         badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
@@ -254,6 +290,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         badge.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
         badge.setTextSize(11);
         badge.show();
+        return badge;
     }
 
     private void updateLanguage(ViewHolder holder, String language){

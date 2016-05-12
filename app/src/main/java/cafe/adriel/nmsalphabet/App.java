@@ -110,7 +110,7 @@ public class App extends Application {
 
     public static void loadAndCache(){
         getUser();
-        DbUtil.cacheRaces();
+        DbUtil.cacheData();
     }
 
 }
