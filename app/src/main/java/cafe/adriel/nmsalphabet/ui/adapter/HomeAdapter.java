@@ -259,8 +259,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             int likesCount = Integer.parseInt(likeBadgeView.getText().toString()) + 1;
             int dislikesCount = Integer.parseInt(dislikeBadgeView.getText().toString()) - 1;
 
-            likeBadgeView.setText(likesCount);
-            dislikeBadgeView.setText(dislikesCount);
+            likeBadgeView.setText(likesCount+"");
+            dislikeBadgeView.setText(dislikesCount+"");
             likeView.setTextColor(Color.BLACK);
             dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
 

@@ -6,6 +6,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,6 +38,7 @@ public class DbUtil {
             }
         }
         if(likes == null){
+            likes = new HashSet<>();
             try {
                 List<AlienWordTranslation> translations = ParseQuery.getQuery(AlienWordTranslation.class)
                         .whereEqualTo("likes", App.getUser())
@@ -50,6 +52,7 @@ public class DbUtil {
             }
         }
         if(dislikes == null){
+            dislikes = new HashSet<>();
             try {
                 List<AlienWordTranslation> translations = ParseQuery.getQuery(AlienWordTranslation.class)
                         .whereEqualTo("dislikes", App.getUser())
