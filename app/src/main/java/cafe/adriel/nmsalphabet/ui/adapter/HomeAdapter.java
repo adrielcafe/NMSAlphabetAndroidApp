@@ -230,12 +230,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         likeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                disableLikeFor1Second(likeView, dislikeView);
                 likeTranslation(translation, likeView, dislikeView, likeBadgeView, dislikeBadgeView);
             }
         });
         dislikeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                disableLikeFor1Second(likeView, dislikeView);
                 dislikeTranslation(translation, likeView, dislikeView, likeBadgeView, dislikeBadgeView);
             }
         });
@@ -323,6 +325,18 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             flagResId = R.drawable.flag_germany;
         }
         holder.languageView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(flagResId), null, holder.languageView.getCompoundDrawables()[2], null);
+    }
+
+    private void disableLikeFor1Second(final View likeView, final View dislikeView){
+        likeView.setEnabled(false);
+        dislikeView.setEnabled(false);
+        Util.asyncCall(1000, new Runnable() {
+            @Override
+            public void run() {
+                likeView.setEnabled(true);
+                dislikeView.setEnabled(true);
+            }
+        });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
