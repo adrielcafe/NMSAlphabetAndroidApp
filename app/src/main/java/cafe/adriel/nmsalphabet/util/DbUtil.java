@@ -1,15 +1,11 @@
 package cafe.adriel.nmsalphabet.util;
 
-import android.util.Log;
-
-import com.parse.DeleteCallback;
 import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -20,14 +16,27 @@ import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.model.User;
 
 public class DbUtil {
-    public static int PAGE_SIZE_RACE = 100;
-    public static int PAGE_SIZE_LIKE_DISLIKE = 100;
-    public static int PAGE_SIZE_WORD = 50;
-    public static int PAGE_SIZE_TRANSLATION = 5;
+    public static int PAGE_SIZE_RACE            = 100;
+    public static int PAGE_SIZE_LIKE_DISLIKE    = 100;
+    public static int PAGE_SIZE_WORD            = 50;
+    public static int PAGE_SIZE_TRANSLATION     = 5;
 
     private static List<AlienRace> races;
     private static Set<String> likes;
     private static Set<String> dislikes;
+
+    public static void cacheData(){
+        try {
+            List<AlienRace> races = ParseQuery.getQuery(AlienRace.class)
+                    .addAscendingOrder("name")
+                    .setLimit(PAGE_SIZE_RACE)
+                    .find();
+            AlienRace.unpinAll();
+            AlienRace.pinAllInBackground(races);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     private static void loadCachedData(){
         if(races == null){
@@ -40,71 +49,30 @@ public class DbUtil {
                 e.printStackTrace();
             }
         }
-        if(likes == null){
-            likes = new HashSet<>();
-            try {
-                List<AlienWordTranslation> translations = ParseQuery.getQuery(AlienWordTranslation.class)
-                        .whereEqualTo("likes", App.getUser())
-                        .fromLocalDatastore()
-                        .find();
-                for(AlienWordTranslation translation : translations){
-                    likes.add(translation.getObjectId());
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        if(dislikes == null){
-            dislikes = new HashSet<>();
-            try {
-                List<AlienWordTranslation> translations = ParseQuery.getQuery(AlienWordTranslation.class)
-                        .whereEqualTo("dislikes", App.getUser())
-                        .fromLocalDatastore()
-                        .find();
-                for(AlienWordTranslation translation : translations){
-                    dislikes.add(translation.getObjectId());
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        Log.e("LIKES 2", likes.size()+"");
-        Log.e("DISLIKES 2", dislikes.size()+"");
     }
 
-    public static void cacheData(){
+    public static void loadUserLikesAndDislikes(){
         try {
-            races = ParseQuery.getQuery(AlienRace.class)
-                    .addAscendingOrder("name")
-                    .setLimit(PAGE_SIZE_RACE)
-                    .find();
-            AlienRace.unpinAllInBackground(new DeleteCallback() {
-                @Override
-                public void done(ParseException e) {
-                    AlienRace.pinAllInBackground(races);
-                }
-            });
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        try {
-            final List<AlienWordTranslation> likes = ParseQuery.getQuery(AlienWordTranslation.class)
+            List<AlienWordTranslation> likedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
                     .whereEqualTo("likes", App.getUser())
+                    .selectKeys(Arrays.asList("objectId"))
                     .setLimit(PAGE_SIZE_LIKE_DISLIKE)
                     .find();
-            final List<AlienWordTranslation> dislikes = ParseQuery.getQuery(AlienWordTranslation.class)
+            List<AlienWordTranslation> dislikedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
                     .whereEqualTo("dislikes", App.getUser())
+                    .selectKeys(Arrays.asList("objectId"))
                     .setLimit(PAGE_SIZE_LIKE_DISLIKE)
                     .find();
-            Log.e("LIKES 1", likes.size()+"");
-            Log.e("DISLIKES 1", dislikes.size()+"");
-            AlienWordTranslation.unpinAllInBackground(new DeleteCallback() {
-                @Override
-                public void done(ParseException e) {
-                    AlienWordTranslation.pinAllInBackground(likes);
-//                    AlienWordTranslation.pinAllInBackground(dislikes);
-                }
-            });
+
+            likes = new HashSet<>();
+            dislikes = new HashSet<>();
+
+            for(AlienWordTranslation translation : likedTranslations){
+                likes.add(translation.getObjectId());
+            }
+            for(AlienWordTranslation translation : dislikedTranslations){
+                dislikes.add(translation.getObjectId());
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -151,13 +119,11 @@ public class DbUtil {
 
     public static boolean isTranslationLiked(AlienWordTranslation translation){
         loadCachedData();
-        Log.e("LIKES 3", likes.size()+"");
         return likes.contains(translation.getObjectId());
     }
 
     public static boolean isTranslationDisliked(AlienWordTranslation translation){
         loadCachedData();
-        Log.e("DISLIKES 3", dislikes.size()+"");
         return dislikes.contains(translation.getObjectId());
     }
 
@@ -186,8 +152,10 @@ public class DbUtil {
             query.whereEqualTo("race", race);
         }
         query.whereGreaterThan("usersCount", 0)
+                .addDescendingOrder("likesCount")
+                .addAscendingOrder("dislikesCount")
                 .addAscendingOrder("word")
-                .addAscendingOrder("_updated_at")
+                .addDescendingOrder("_created_at")
                 .setLimit(PAGE_SIZE_WORD)
                 .setSkip(PAGE_SIZE_WORD * page)
                 .findInBackground(callback);
@@ -198,7 +166,7 @@ public class DbUtil {
                 .whereEqualTo("users", user)
                 .whereGreaterThan("usersCount", 0)
                 .addAscendingOrder("word")
-                .addAscendingOrder("_updated_at")
+                .addDescendingOrder("_created_at")
                 .setLimit(PAGE_SIZE_WORD)
                 .setSkip(PAGE_SIZE_WORD * page)
                 .findInBackground(callback);
@@ -259,7 +227,7 @@ public class DbUtil {
                     .whereEqualTo("race", race)
                     .whereEqualTo("word", word)
                     .whereEqualTo("language", language)
-                    .orderByDescending("_created_at")
+                    .addDescendingOrder("_created_at")
                     .getFirst();
         } catch (Exception e){
             e.printStackTrace();

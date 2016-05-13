@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.view.ViewPagerFadeTransformer;
+import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
@@ -59,6 +61,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                DbUtil.loadUserLikesAndDislikes();
+            }
+        });
         if(pagerView != null && fabView != null) {
             if (pagerView.getCurrentItem() == 1 || pagerView.getCurrentItem() == 3) {
                 fabView.hide();
