@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.AddTranslationEvent;
 import cafe.adriel.nmsalphabet.event.EditTranslationEvent;
 import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
@@ -115,6 +116,17 @@ public class TranslationEditorActivity extends BaseActivity {
     }
 
     @Subscribe(sticky = true)
+    public void onEvent(AddTranslationEvent event) {
+        EventBus.getDefault().removeStickyEvent(AddTranslationEvent.class);
+        if (event.word != null) {
+            word = event.word;
+            race = DbUtil.getRaceById(word.getRace().getObjectId());
+
+            addMode();
+        }
+    }
+
+    @Subscribe(sticky = true)
     public void onEvent(EditTranslationEvent event) {
         EventBus.getDefault().removeStickyEvent(EditTranslationEvent.class);
         if (event.word != null) {
@@ -188,6 +200,14 @@ public class TranslationEditorActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void addMode(){
+        racesView.setEnabled(false);
+        wordView.setEnabled(false);
+
+        racesView.setSelectedIndex(DbUtil.getRacePosition(race.getObjectId()) + 1);
+        wordView.setText(word.getWord());
     }
 
     private void editMode(){
