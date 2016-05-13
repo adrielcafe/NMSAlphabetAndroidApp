@@ -5,15 +5,15 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.model.User;
+import io.paperdb.Paper;
 
 public class DbUtil {
     public static int PAGE_SIZE_RACE            = 100;
@@ -22,10 +22,11 @@ public class DbUtil {
     public static int PAGE_SIZE_TRANSLATION     = 5;
 
     private static List<AlienRace> races;
-    private static Set<String> likes;
-    private static Set<String> dislikes;
+    private static LinkedList<String> likes;
+    private static LinkedList<String> dislikes;
 
     public static void cacheData(){
+        Paper.book().destroy();
         try {
             List<AlienRace> races = ParseQuery.getQuery(AlienRace.class)
                     .addAscendingOrder("name")
@@ -33,6 +34,33 @@ public class DbUtil {
                     .find();
             AlienRace.unpinAll();
             AlienRace.pinAllInBackground(races);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            List<AlienWordTranslation> likedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
+                    .whereEqualTo("likes", App.getUser())
+                    .selectKeys(Arrays.asList("objectId"))
+                    .setLimit(PAGE_SIZE_LIKE_DISLIKE)
+                    .find();
+            List<AlienWordTranslation> dislikedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
+                    .whereEqualTo("dislikes", App.getUser())
+                    .selectKeys(Arrays.asList("objectId"))
+                    .setLimit(PAGE_SIZE_LIKE_DISLIKE)
+                    .find();
+
+            likes = new LinkedList<>();
+            dislikes = new LinkedList<>();
+
+            for(AlienWordTranslation translation : likedTranslations){
+                likes.add(translation.getObjectId());
+            }
+            for(AlienWordTranslation translation : dislikedTranslations){
+                dislikes.add(translation.getObjectId());
+            }
+
+            Paper.book().write("likes", likes);
+            Paper.book().write("dislikes", dislikes);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -49,32 +77,11 @@ public class DbUtil {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static void loadUserLikesAndDislikes(){
-        try {
-            List<AlienWordTranslation> likedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
-                    .whereEqualTo("likes", App.getUser())
-                    .selectKeys(Arrays.asList("objectId"))
-                    .setLimit(PAGE_SIZE_LIKE_DISLIKE)
-                    .find();
-            List<AlienWordTranslation> dislikedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
-                    .whereEqualTo("dislikes", App.getUser())
-                    .selectKeys(Arrays.asList("objectId"))
-                    .setLimit(PAGE_SIZE_LIKE_DISLIKE)
-                    .find();
-
-            likes = new HashSet<>();
-            dislikes = new HashSet<>();
-
-            for(AlienWordTranslation translation : likedTranslations){
-                likes.add(translation.getObjectId());
-            }
-            for(AlienWordTranslation translation : dislikedTranslations){
-                dislikes.add(translation.getObjectId());
-            }
-        } catch (Exception e){
-            e.printStackTrace();
+        if(likes == null){
+            likes = Paper.book().read("likes", new LinkedList<String>());
+        }
+        if(dislikes == null){
+            dislikes = Paper.book().read("dislikes", new LinkedList<String>());
         }
     }
 
@@ -128,6 +135,7 @@ public class DbUtil {
     }
 
     public static void likeTranslation(AlienWordTranslation translation){
+        loadCachedData();
         likes.add(translation.getObjectId());
         dislikes.remove(translation.getObjectId());
         translation.addLike(App.getUser());
@@ -136,6 +144,7 @@ public class DbUtil {
     }
 
     public static void dislikeTranslation(AlienWordTranslation translation){
+        loadCachedData();
         dislikes.add(translation.getObjectId());
         likes.remove(translation.getObjectId());
         translation.addDislike(App.getUser());
