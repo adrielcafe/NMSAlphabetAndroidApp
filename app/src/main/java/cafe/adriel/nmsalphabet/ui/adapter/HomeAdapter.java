@@ -1,6 +1,8 @@
 package cafe.adriel.nmsalphabet.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +19,10 @@ import com.parse.ParseException;
 import com.ramotion.foldingcell.FoldingCell;
 import com.readystatesoftware.viewbadger.BadgeView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +30,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.AddTranslationEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -97,6 +104,25 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 holder.cardLayout.unfold(false);
             }
         });
+        holder.newTranslationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTranslation(word);
+            }
+        });
+        holder.seeAllTranslationsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seeAllTranslations(word);
+            }
+        });
+        holder.shareTranslationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareTranslation(race, word);
+            }
+        });
+
         initLanguage(holder, race, word);
     }
 
@@ -339,6 +365,44 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         });
     }
 
+    private void newTranslation(AlienWord word){
+        EventBus.getDefault().postSticky(new AddTranslationEvent(word));
+        context.startActivity(new Intent(context, TranslationEditorActivity.class));
+    }
+
+    private void seeAllTranslations(AlienWord word){
+
+    }
+
+    private void shareTranslation(AlienRace race, AlienWord word){
+        List<AlienWordTranslation> translations;
+        switch (language){
+            case LanguageUtil.LANGUAGE_PT:
+                translations = ptWordTranslations.get(word.getObjectId());
+                break;
+            case LanguageUtil.LANGUAGE_DE:
+                translations = deWordTranslations.get(word.getObjectId());
+                break;
+            default:
+                translations = enWordTranslations.get(word.getObjectId());
+                break;
+        }
+        if(Util.isNotEmpty(translations)) {
+            StringBuilder shareText = new StringBuilder()
+                    .append(String.format("%s, (%s's word)\n", word.getWord(), race.getName()))
+                    .append("Translations: ");
+            Iterator<AlienWordTranslation> i = translations.iterator();
+            while (i.hasNext()) {
+                shareText.append(i.next().getTranslation());
+                if (i.hasNext()) {
+                    shareText.append(", ");
+                }
+            }
+            shareText.append(String.format("\nDownload %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
+            Util.shareText((Activity) context, shareText.toString());
+        }
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.title_layout)
         RelativeLayout titleLayout;
@@ -360,6 +424,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         TextView newTranslationView;
         @BindView(R.id.see_all_translations)
         TextView seeAllTranslationsView;
+        @BindView(R.id.share_translation)
+        TextView shareTranslationView;
 
         public ViewHolder(View v) {
             super(v);

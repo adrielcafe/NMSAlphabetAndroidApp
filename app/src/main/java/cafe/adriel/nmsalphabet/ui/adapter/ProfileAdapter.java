@@ -1,5 +1,6 @@
 package cafe.adriel.nmsalphabet.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -111,6 +112,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 editTranslation(word);
             }
         });
+        holder.shareTranslationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareTranslation(race, word);
+            }
+        });
     }
 
     private DynamicBox createViewState(ViewHolder holder){
@@ -168,12 +175,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         if(wordTranslations.containsKey(word.getObjectId())) {
             List<AlienWordTranslation> translations = wordTranslations.get(word.getObjectId());
             for (AlienWordTranslation translation : translations) {
-                if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_EN) && holder.englishTranslationView.getText().toString().isEmpty()) {
-                    holder.englishTranslationView.setText(translation.getTranslation());
-                } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_PT) && holder.portugueseTranslationView.getText().toString().isEmpty()) {
-                    holder.portugueseTranslationView.setText(translation.getTranslation());
-                } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_DE) && holder.germanTranslationView.getText().toString().isEmpty()) {
-                    holder.germanTranslationView.setText(translation.getTranslation());
+                if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_EN) && holder.enTranslationView.getText().toString().isEmpty()) {
+                    holder.enTranslationView.setText(translation.getTranslation());
+                } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_PT) && holder.ptTranslationView.getText().toString().isEmpty()) {
+                    holder.ptTranslationView.setText(translation.getTranslation());
+                } else if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_DE) && holder.deTranslationView.getText().toString().isEmpty()) {
+                    holder.deTranslationView.setText(translation.getTranslation());
                 }
             }
         }
@@ -250,6 +257,23 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         return -1;
     }
 
+    private void shareTranslation(AlienRace race, AlienWord word){
+        AlienWordTranslation translation = null;
+        for(AlienWordTranslation t : wordTranslations.get(word.getObjectId())){
+            if(t.getLanguage().equals(LanguageUtil.getCurrentLanguageCode(context))){
+                translation = t;
+                break;
+            }
+        }
+        if(translation != null) {
+            StringBuilder shareText = new StringBuilder()
+                    .append(String.format("%s, (%s's word)\n", word.getWord(), race.getName()))
+                    .append("Translation: " + translation.getTranslation());
+            shareText.append(String.format("\nDownload %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
+            Util.shareText((Activity) context, shareText.toString());
+        }
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.title_layout)
         RelativeLayout titleLayout;
@@ -266,15 +290,17 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         @BindView(R.id.translations_layout)
         LinearLayout translationsLayout;
         @BindView(R.id.english_translation)
-        TextView englishTranslationView;
+        TextView enTranslationView;
         @BindView(R.id.portuguese_translation)
-        TextView portugueseTranslationView;
+        TextView ptTranslationView;
         @BindView(R.id.german_translation)
-        TextView germanTranslationView;
+        TextView deTranslationView;
         @BindView(R.id.delete_translation)
         TextView removeTranslationView;
         @BindView(R.id.edit_translation)
         TextView editTranslationView;
+        @BindView(R.id.share_translation)
+        TextView shareTranslationView;
 
         public ViewHolder(View v) {
             super(v);
