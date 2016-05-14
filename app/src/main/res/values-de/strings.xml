@@ -58,5 +58,12 @@
     <string name="theme4">Design 4</string>
     <string name="theme5">Design 5</string>
     <string name="unknown_explorer">Unbekannter Entdecker</string>
+    <string name="delete">Löschen</string>
+    <string name="delete_translation">Übersetzung löschen</string>
+    <string name="edit_translation">Übersetzung ändern</string>
+    <string name="no_translation_found">Keine Übersetzung gefunden</string>
+    <string name="share_with_icon">{gmi-share} Teilen</string>
+    <string name="translation_will_be_deleted_permanently">Diese Übersetzung wird entgültig gelöscht.\nBist du dir sicher?</string>
+    <string name="try_another_language">In einer anderen Sprache ausprobieren</string>
 
 </resources>
