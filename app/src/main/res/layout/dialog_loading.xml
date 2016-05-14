@@ -6,4 +6,4 @@
     android:layout_height="wrap_content"
     android:padding="20dp"
     app:SpinKit_Color="@android:color/black"
-    app:SpinKit_Style="Pulse" />
+    app:SpinKit_Style="ThreeBounce" />

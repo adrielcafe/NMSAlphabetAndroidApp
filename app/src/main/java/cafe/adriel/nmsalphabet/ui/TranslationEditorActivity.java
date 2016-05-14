@@ -159,10 +159,10 @@ public class TranslationEditorActivity extends BaseActivity {
         races.add(0, getString(R.string.select_alien_race));
 
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(this));
         racesView.setTextAppearance(this, android.R.style.TextAppearance_Medium);
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(this));
         racesView.setItems(races);
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
@@ -206,6 +206,10 @@ public class TranslationEditorActivity extends BaseActivity {
         racesView.setEnabled(false);
         wordView.setEnabled(false);
 
+        racesView.setTextColor(getResources().getColor(R.color.gray));
+        racesView.setArrowColor(getResources().getColor(R.color.gray));
+        wordView.setTextColor(getResources().getColor(R.color.gray));
+
         racesView.setSelectedIndex(DbUtil.getRacePosition(race.getObjectId()) + 1);
         wordView.setText(word.getWord());
     }
@@ -216,8 +220,13 @@ public class TranslationEditorActivity extends BaseActivity {
         racesView.setEnabled(false);
         wordView.setEnabled(false);
 
+        racesView.setTextColor(getResources().getColor(R.color.gray));
+        racesView.setArrowColor(getResources().getColor(R.color.gray));
+        wordView.setTextColor(getResources().getColor(R.color.gray));
+
         racesView.setSelectedIndex(DbUtil.getRacePosition(race.getObjectId()) + 1);
         wordView.setText(word.getWord());
+
         if(enTranslation != null && Util.isNotEmpty(enTranslation.getTranslation())) {
             enTranslationView.setText(enTranslation.getTranslation());
         }
