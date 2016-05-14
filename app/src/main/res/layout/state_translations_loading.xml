@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             app:SpinKit_Color="@android:color/black"
-            app:SpinKit_Style="Pulse" />
+            app:SpinKit_Style="ThreeBounce" />
 
     </RelativeLayout>
 

@@ -389,8 +389,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         }
         if(Util.isNotEmpty(translations)) {
             StringBuilder shareText = new StringBuilder()
-                    .append(String.format("%s, (%s's word)\n", word.getWord(), race.getName()))
-                    .append("Translations: ");
+                    .append(context.getString(R.string.word) + ": " + word.getWord())
+                    .append("\n")
+                    .append(context.getString(R.string.race) + ": " + race.getName())
+                    .append("\n")
+                    .append(context.getString(R.string.best_translations) + ": ");
             Iterator<AlienWordTranslation> i = translations.iterator();
             while (i.hasNext()) {
                 shareText.append(i.next().getTranslation());
@@ -398,7 +401,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                     shareText.append(", ");
                 }
             }
-            shareText.append(String.format("\nDownload %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
+            shareText.append("\n\n");
+            shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
             Util.shareText((Activity) context, shareText.toString());
         }
     }

@@ -70,10 +70,10 @@ public class TranslateFragment extends BaseFragment {
 
     private void initControls(){
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setItems(getString(R.string.all_alien_races), "Korvax");
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override

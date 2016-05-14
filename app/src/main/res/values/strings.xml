@@ -21,6 +21,7 @@
     <string name="new_translation">New Translation</string>
     <string name="best_translation">Best Translation</string>
     <string name="best_translations">Best Translations</string>
+    <string name="my_translation">My Translation</string>
     <string name="my_translations">My Translations</string>
     <string name="see_all_translations_with_icon">{gmi-view-list-alt} See All</string>
     <string name="delete_with_icon">{gmi-delete} Delete</string>
@@ -33,6 +34,8 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="alien_word">Alien Word</string>
+    <string name="word">Word</string>
+    <string name="race">Race</string>
     <string name="english_translation">English Translation</string>
     <string name="portuguese_translation">Portuguese Translation</string>
     <string name="german_translation">German Translation</string>

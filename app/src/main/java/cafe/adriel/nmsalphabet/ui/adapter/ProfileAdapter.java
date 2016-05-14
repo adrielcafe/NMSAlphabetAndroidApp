@@ -267,9 +267,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         }
         if(translation != null) {
             StringBuilder shareText = new StringBuilder()
-                    .append(String.format("%s, (%s's word)\n", word.getWord(), race.getName()))
-                    .append("Translation: " + translation.getTranslation());
-            shareText.append(String.format("\nDownload %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
+                    .append(context.getString(R.string.word) + ": " + word.getWord())
+                    .append("\n")
+                    .append(context.getString(R.string.race) + ": " + race.getName())
+                    .append("\n")
+                    .append(context.getString(R.string.my_translation) + ": " + translation.getTranslation())
+                    .append("\n\n");
+            shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
             Util.shareText((Activity) context, shareText.toString());
         }
     }
