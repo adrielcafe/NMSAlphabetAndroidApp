@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.easyandroidanimations.library.FadeInAnimation;
+import com.easyandroidanimations.library.FadeOutAnimation;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.parse.FindCallback;
@@ -198,9 +200,9 @@ public class WordsFragment extends BaseFragment {
         });
 
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setItems(races);
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
@@ -444,19 +446,22 @@ public class WordsFragment extends BaseFragment {
         }
     }
 
-    private void setLoadingList(boolean loading){
-        if(loadingView != null) {
-            if(loading) {
-                loadingView.setVisibility(View.VISIBLE);
-            } else {
-                Util.asyncCall(500, new Runnable() {
-                    @Override
-                    public void run() {
-                        loadingView.setVisibility(View.GONE);
-                    }
-                });
+    private void setLoadingList(final boolean loading){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(loading){
+                    new FadeInAnimation(loadingView).animate();
+                } else {
+                    Util.asyncCall(500, new Runnable() {
+                        @Override
+                        public void run() {
+                            new FadeOutAnimation(loadingView).animate();
+                        }
+                    });
+                }
             }
-        }
+        });
     }
 
     private void updateRefreshLayoutMarginTop(){
