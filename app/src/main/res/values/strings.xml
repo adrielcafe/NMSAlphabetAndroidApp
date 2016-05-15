@@ -31,6 +31,7 @@
     <string name="delete_translation">Delete Translation</string>
     <string name="translation_will_be_deleted_permanently">This translation will be deleted permanently.\nAre you sure?</string>
     <string name="edit_translation">Edit Translation</string>
+    <string name="close">Close</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="alien_word">Alien Word</string>

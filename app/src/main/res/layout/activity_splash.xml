@@ -107,8 +107,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:padding="10dp"
+        android:padding="5dp"
         android:textColor="@color/gray_light"
-        android:textSize="12sp"/>
+        android:textSize="10sp"/>
 
 </RelativeLayout>

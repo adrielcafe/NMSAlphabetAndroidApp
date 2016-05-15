@@ -1,4 +1,4 @@
-package cafe.adriel.nmsalphabet.ui.view;
+package cafe.adriel.nmsalphabet.ui.util;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;

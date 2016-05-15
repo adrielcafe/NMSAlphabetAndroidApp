@@ -62,11 +62,11 @@ public class LanguageUtil {
     public static Drawable getLanguageFlagDrawable(Context context, String language){
         switch (language){
             case LANGUAGE_PT:
-                return context.getResources().getDrawable(R.drawable.flag_brazil);
+                return context.getResources().getDrawable(R.drawable.flag_brazil_small);
             case LANGUAGE_DE:
-                return context.getResources().getDrawable(R.drawable.flag_germany);
+                return context.getResources().getDrawable(R.drawable.flag_germany_small);
             default:
-                return context.getResources().getDrawable(R.drawable.flag_uk);
+                return context.getResources().getDrawable(R.drawable.flag_uk_small);
         }
     }
 
