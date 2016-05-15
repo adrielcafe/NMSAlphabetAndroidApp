@@ -44,6 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_behavior="cafe.adriel.nmsalphabet.ui.view.FABScrollBehavior"/>
+        app:layout_behavior="cafe.adriel.nmsalphabet.ui.util.FABScrollBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

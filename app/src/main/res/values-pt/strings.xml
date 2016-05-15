@@ -67,5 +67,6 @@
     <string name="word">Palavra</string>
     <string name="race">Raça</string>
     <string name="my_translation">Minha Tradução</string>
+    <string name="close">Fechar</string>
 
 </resources>

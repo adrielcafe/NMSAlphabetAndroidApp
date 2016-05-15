@@ -53,8 +53,8 @@ import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
-import cafe.adriel.nmsalphabet.ui.view.EndlessRecyclerOnScrollListener;
-import cafe.adriel.nmsalphabet.ui.view.SwipeRefreshLayoutToggleScrollListener;
+import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
+import cafe.adriel.nmsalphabet.ui.util.SwipeRefreshLayoutToggleScrollListener;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.SocialUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -352,7 +352,7 @@ public class WordsFragment extends BaseFragment {
         if(wordsView != null) {
             switch (type) {
                 case HOME:
-                    homeAdapter = new HomeAdapter(getContext(), words);
+                    homeAdapter = new HomeAdapter(getActivity(), words);
                     wordsView.setAdapter(homeAdapter);
                     break;
                 case PROFILE:

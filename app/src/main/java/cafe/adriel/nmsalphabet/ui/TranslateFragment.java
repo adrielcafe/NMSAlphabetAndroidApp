@@ -143,13 +143,13 @@ public class TranslateFragment extends BaseFragment {
         int flagResId;
         switch (LanguageUtil.getCurrentLanguageCode(getContext())){
             case LanguageUtil.LANGUAGE_PT:
-                flagResId = R.drawable.flag_brazil;
+                flagResId = R.drawable.flag_brazil_small;
                 break;
             case LanguageUtil.LANGUAGE_DE:
-                flagResId = R.drawable.flag_germany;
+                flagResId = R.drawable.flag_germany_small;
                 break;
             default:
-                flagResId = R.drawable.flag_uk;
+                flagResId = R.drawable.flag_uk_small;
                 break;
         }
         Glide.with(getContext()).load(flagResId).into(countryFlagView);

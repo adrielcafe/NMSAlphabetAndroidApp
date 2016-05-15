@@ -16,10 +16,11 @@ import cafe.adriel.nmsalphabet.model.User;
 import io.paperdb.Paper;
 
 public class DbUtil {
-    public static int PAGE_SIZE_RACE            = 100;
-    public static int PAGE_SIZE_LIKE_DISLIKE    = 100;
-    public static int PAGE_SIZE_WORD            = 50;
-    public static int PAGE_SIZE_TRANSLATION     = 5;
+    public static int PAGE_SIZE_LIKE_DISLIKE        = 100;
+    public static int PAGE_SIZE_RACES               = 100;
+    public static int PAGE_SIZE_WORDS               = 50;
+    public static int PAGE_SIZE_TRANSLATIONS        = 50;
+    public static int PAGE_SIZE_BEST_TRANSLATIONS   = 3;
 
     private static List<AlienRace> races;
     private static LinkedList<String> likes;
@@ -30,7 +31,7 @@ public class DbUtil {
         try {
             List<AlienRace> races = ParseQuery.getQuery(AlienRace.class)
                     .addAscendingOrder("name")
-                    .setLimit(PAGE_SIZE_RACE)
+                    .setLimit(PAGE_SIZE_RACES)
                     .find();
             AlienRace.unpinAll();
             AlienRace.pinAllInBackground(races);
@@ -165,8 +166,8 @@ public class DbUtil {
                 .addAscendingOrder("dislikesCount")
                 .addAscendingOrder("word")
                 .addDescendingOrder("_created_at")
-                .setLimit(PAGE_SIZE_WORD)
-                .setSkip(PAGE_SIZE_WORD * page)
+                .setLimit(PAGE_SIZE_WORDS)
+                .setSkip(PAGE_SIZE_WORDS * page)
                 .findInBackground(callback);
     }
 
@@ -176,8 +177,8 @@ public class DbUtil {
                 .whereGreaterThan("usersCount", 0)
                 .addAscendingOrder("word")
                 .addDescendingOrder("_created_at")
-                .setLimit(PAGE_SIZE_WORD)
-                .setSkip(PAGE_SIZE_WORD * page)
+                .setLimit(PAGE_SIZE_WORDS)
+                .setSkip(PAGE_SIZE_WORDS * page)
                 .findInBackground(callback);
     }
 
@@ -193,15 +194,28 @@ public class DbUtil {
         }
     }
 
-    public static void getTranslations(AlienRace race, AlienWord word, String language, FindCallback<AlienWordTranslation> callback){
+    public static void getBestTranslations(AlienRace race, AlienWord word, String language, FindCallback<AlienWordTranslation> callback){
         ParseQuery.getQuery(AlienWordTranslation.class)
                 .whereEqualTo("race", race)
                 .whereEqualTo("word", word)
                 .whereEqualTo("language", language)
-                .whereGreaterThan("usersCount", 0)
-                .addDescendingOrder("usersCount")
+                .addDescendingOrder("likesCount")
+                .addAscendingOrder("dislikesCount")
                 .addAscendingOrder("word")
-                .setLimit(PAGE_SIZE_TRANSLATION)
+                .setLimit(PAGE_SIZE_BEST_TRANSLATIONS)
+                .findInBackground(callback);
+    }
+
+    public static void getTranslations(AlienRace race, AlienWord word, String language, int page, FindCallback<AlienWordTranslation> callback){
+        ParseQuery.getQuery(AlienWordTranslation.class)
+                .whereEqualTo("race", race)
+                .whereEqualTo("word", word)
+                .whereEqualTo("language", language)
+                .addDescendingOrder("likesCount")
+                .addAscendingOrder("dislikesCount")
+                .addAscendingOrder("word")
+                .setLimit(PAGE_SIZE_TRANSLATIONS)
+                .setSkip(PAGE_SIZE_TRANSLATIONS * page)
                 .findInBackground(callback);
     }
 

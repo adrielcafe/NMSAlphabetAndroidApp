@@ -1,4 +1,4 @@
-package cafe.adriel.nmsalphabet.ui.view;
+package cafe.adriel.nmsalphabet.ui.util;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
