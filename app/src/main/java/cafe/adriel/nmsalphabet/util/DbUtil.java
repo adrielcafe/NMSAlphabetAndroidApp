@@ -197,6 +197,7 @@ public class DbUtil {
                 .whereEqualTo("race", race)
                 .whereEqualTo("word", word)
                 .whereEqualTo("language", language)
+                .whereGreaterThan("likesCount", 0)
                 .addDescendingOrder("likesCount")
                 .addAscendingOrder("dislikesCount")
                 .addAscendingOrder("word")
