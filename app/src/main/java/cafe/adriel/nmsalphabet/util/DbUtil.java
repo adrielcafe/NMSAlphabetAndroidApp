@@ -162,8 +162,7 @@ public class DbUtil {
             query.whereEqualTo("race", race);
         }
         query.whereGreaterThan("usersCount", 0)
-                .addDescendingOrder("likesCount")
-                .addAscendingOrder("dislikesCount")
+                .addDescendingOrder("usersCount")
                 .addAscendingOrder("word")
                 .addDescendingOrder("_created_at")
                 .setLimit(PAGE_SIZE_WORDS)
@@ -174,7 +173,6 @@ public class DbUtil {
     public static void getWordsByUser(User user, int page, FindCallback<AlienWord> callback){
         ParseQuery.getQuery(AlienWord.class)
                 .whereEqualTo("users", user)
-                .whereGreaterThan("usersCount", 0)
                 .addAscendingOrder("word")
                 .addDescendingOrder("_created_at")
                 .setLimit(PAGE_SIZE_WORDS)
