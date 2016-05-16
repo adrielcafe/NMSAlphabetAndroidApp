@@ -17,29 +17,34 @@ import com.readystatesoftware.viewbadger.BadgeView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.adapter.TranslationAdapter;
 import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
+import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class TranslationUtil {
 
-    public static void showTranslationsDialog(Context context, final AlienWord word, final String languageCode){
+    public static void showTranslationsDialog(final Context context, final AlienWord word, final String languageCode){
+        View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_translations, null, false);
+        RecyclerView translationsView = (RecyclerView) rootView.findViewById(R.id.translations);
+
         final List<AlienWordTranslation> translations = new ArrayList<>();
         final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
         final TranslationAdapter adapter = new TranslationAdapter(context, translations);
+        final DynamicBox viewState = createViewState(context, translationsView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         EndlessRecyclerOnScrollListener infiniteScrollListener = new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
-                updateTranslations(adapter, race, word, translations, languageCode, currentPage);
+                updateTranslations(context, adapter, viewState, race, word, translations, languageCode, currentPage);
             }
         };
 
-        View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_translations, null, false);
-        RecyclerView translationsView = (RecyclerView) rootView.findViewById(R.id.translations);
+        viewState.showCustomView(Constant.STATE_LOADING);
         translationsView.addOnScrollListener(infiniteScrollListener);
         translationsView.setHasFixedSize(true);
         translationsView.setLayoutManager(layoutManager);
@@ -57,7 +62,7 @@ public class TranslationUtil {
                 flagResId = R.drawable.flag_uk_big;
         }
 
-        updateTranslations(adapter, race, word, translations, languageCode, 0);
+        updateTranslations(context, adapter, viewState, race, word, translations, languageCode, 0);
 
         new AlertDialog.Builder(context)
                 .setIcon(flagResId)
@@ -67,16 +72,35 @@ public class TranslationUtil {
                 .show();
     }
 
-    private static void updateTranslations(final TranslationAdapter adapter, AlienRace race, AlienWord word, final List<AlienWordTranslation> translations, String languageCode, int page){
-        DbUtil.getTranslations(race, word, languageCode, page, new FindCallback<AlienWordTranslation>() {
-            @Override
-            public void done(List<AlienWordTranslation> result, ParseException e) {
-                if (Util.isNotEmpty(result)) {
-                    translations.addAll(result);
-                    adapter.notifyDataSetChanged();
+    private static DynamicBox createViewState(Context context, View view){
+        View loadingState = LayoutInflater.from(context).inflate(R.layout.state_translations_loading, null, false);
+        View emptyState = LayoutInflater.from(context).inflate(R.layout.state_translations_empty, null, false);
+        View noInternetState = LayoutInflater.from(context).inflate(R.layout.state_translations_no_internet, null, false);
+
+        DynamicBox viewState = new DynamicBox(context, view);
+        viewState.addCustomView(loadingState, Constant.STATE_LOADING);
+        viewState.addCustomView(emptyState, Constant.STATE_EMPTY);
+        viewState.addCustomView(noInternetState, Constant.STATE_NO_INTERNET);
+        return viewState;
+    }
+
+    private static void updateTranslations(Context context, final TranslationAdapter adapter, final DynamicBox viewState, AlienRace race, AlienWord word, final List<AlienWordTranslation> translations, String languageCode, final int page){
+        if(Util.isConnected(context)) {
+            DbUtil.getTranslations(race, word, languageCode, page, new FindCallback<AlienWordTranslation>() {
+                @Override
+                public void done(List<AlienWordTranslation> result, ParseException e) {
+                    if (Util.isNotEmpty(result)) {
+                        translations.addAll(result);
+                        adapter.notifyDataSetChanged();
+                        viewState.hideAll();
+                    } else if (page == 0) {
+                        viewState.showCustomView(Constant.STATE_EMPTY);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            viewState.showCustomView(Constant.STATE_NO_INTERNET);
+        }
     }
 
     public static void setupTranslation(final Context context, final TranslationAdapter.ViewHolder holder, final AlienWordTranslation translation){
