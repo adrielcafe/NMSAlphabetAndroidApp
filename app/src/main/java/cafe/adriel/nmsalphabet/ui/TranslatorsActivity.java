@@ -26,6 +26,7 @@ public class TranslatorsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translators);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(R.string.translators);
         ButterKnife.bind(this);
         init();
     }
