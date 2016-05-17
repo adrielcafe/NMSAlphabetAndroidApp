@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.ui.view.ViewPagerFadeTransformer;
+import cafe.adriel.nmsalphabet.ui.util.ViewPagerFadeTransformer;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 

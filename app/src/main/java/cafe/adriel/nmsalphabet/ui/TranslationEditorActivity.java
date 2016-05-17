@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.AddTranslationEvent;
 import cafe.adriel.nmsalphabet.event.EditTranslationEvent;
 import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
@@ -42,35 +42,18 @@ import cafe.adriel.nmsalphabet.util.Util;
 
 public class TranslationEditorActivity extends BaseActivity {
 
-    private AlienRace alienRace;
-    private AlienWord alienWord;
+    private AlienRace race;
+    private AlienWord word;
     private AlienWordTranslation enTranslation;
     private AlienWordTranslation ptTranslation;
     private AlienWordTranslation deTranslation;
 
-    private InputFilter alienWordFilter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            String chr = source+"";
-            return chr.isEmpty() || !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
-        }
-    };
-    private InputFilter alienWordTranslationFilter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            String chr = source+"";
-            if(chr.isEmpty() || chr.equals(" ")){
-                return null;
-            } else {
-                return !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
-            }
-        }
-    };
-
     @BindView(R.id.content_layout)
     FrameLayout contentLayout;
     @BindView(R.id.races)
-    MaterialSpinner alienRacesView;
+    MaterialSpinner racesView;
     @BindView(R.id.alien_word)
-    EditText alienWordView;
+    EditText wordView;
     @BindView(R.id.english_translation)
     EditText enTranslationView;
     @BindView(R.id.portuguese_translation)
@@ -133,11 +116,22 @@ public class TranslationEditorActivity extends BaseActivity {
     }
 
     @Subscribe(sticky = true)
+    public void onEvent(AddTranslationEvent event) {
+        EventBus.getDefault().removeStickyEvent(AddTranslationEvent.class);
+        if (event.word != null) {
+            word = event.word;
+            race = DbUtil.getRaceById(word.getRace().getObjectId());
+
+            addMode();
+        }
+    }
+
+    @Subscribe(sticky = true)
     public void onEvent(EditTranslationEvent event) {
         EventBus.getDefault().removeStickyEvent(EditTranslationEvent.class);
         if (event.word != null) {
-            alienWord = event.word;
-            alienRace = DbUtil.getRaceById(alienWord.getRace().getObjectId());
+            word = event.word;
+            race = DbUtil.getRaceById(word.getRace().getObjectId());
 
             for (AlienWordTranslation translation : event.translations) {
                 if (translation.getLanguage().equals(LanguageUtil.LANGUAGE_EN)) {
@@ -164,34 +158,34 @@ public class TranslationEditorActivity extends BaseActivity {
         List<String> races = DbUtil.getRacesName();
         races.add(0, getString(R.string.select_alien_race));
 
-        alienRacesView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
-        alienRacesView.setTextAppearance(this, android.R.style.TextAppearance_Medium);
-        alienRacesView.setTextColor(Color.WHITE);
-        alienRacesView.setArrowColor(Color.WHITE);
-        alienRacesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(this));
-        alienRacesView.setItems(races);
-        alienRacesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+        racesView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(this));
+        racesView.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+        racesView.setTextColor(Color.WHITE);
+        racesView.setArrowColor(Color.WHITE);
+        racesView.setItems(races);
+        racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
 
             }
         });
 
-        alienWordView.post(new Runnable() {
+        wordView.post(new Runnable() {
             @Override
             public void run() {
-                alienRacesView.setHeight(alienWordView.getHeight());
+                racesView.setHeight(wordView.getHeight());
             }
         });
 
-        alienWordView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
+        wordView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
         enTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
         ptTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
         deTranslationView.setBackground(ThemeUtil.getHeaderControlDrawable(this));
 
-        alienWordView.setFilters(new InputFilter[] { alienWordFilter });
-        enTranslationView.setFilters(new InputFilter[] { alienWordTranslationFilter });
-        ptTranslationView.setFilters(new InputFilter[] { alienWordTranslationFilter });
-        deTranslationView.setFilters(new InputFilter[] { alienWordTranslationFilter });
+        wordView.setFilters(new InputFilter[] { Util.getWordInputFilter() });
+        enTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
+        ptTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
+        deTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
     }
 
     private void initFab(){
@@ -208,15 +202,31 @@ public class TranslationEditorActivity extends BaseActivity {
         });
     }
 
+    private void addMode(){
+        racesView.setEnabled(false);
+        wordView.setEnabled(false);
+
+        racesView.setTextColor(getResources().getColor(R.color.gray));
+        racesView.setArrowColor(getResources().getColor(R.color.gray));
+        wordView.setTextColor(getResources().getColor(R.color.gray));
+
+        racesView.setSelectedIndex(DbUtil.getRacePosition(race.getObjectId()) + 1);
+        wordView.setText(word.getWord());
+    }
+
     private void editMode(){
         setTitle(R.string.edit_translation);
 
-        // TODO Disable spinner
-//        alienRacesView.setEnabled(false);
-        alienWordView.setEnabled(false);
+        racesView.setEnabled(false);
+        wordView.setEnabled(false);
 
-        alienRacesView.setSelectedIndex(DbUtil.getRacePosition(alienRace.getObjectId()) + 1);
-        alienWordView.setText(alienWord.getWord());
+        racesView.setTextColor(getResources().getColor(R.color.gray));
+        racesView.setArrowColor(getResources().getColor(R.color.gray));
+        wordView.setTextColor(getResources().getColor(R.color.gray));
+
+        racesView.setSelectedIndex(DbUtil.getRacePosition(race.getObjectId()) + 1);
+        wordView.setText(word.getWord());
+
         if(enTranslation != null && Util.isNotEmpty(enTranslation.getTranslation())) {
             enTranslationView.setText(enTranslation.getTranslation());
         }
@@ -236,41 +246,41 @@ public class TranslationEditorActivity extends BaseActivity {
                 @Override
                 public void run() {
                     List<AlienWordTranslation> translations = new ArrayList<>();
-                    String alienRaceStr = alienRacesView.getText().toString().toUpperCase();
-                    String alienWordStr = alienWordView.getText().toString().toUpperCase();
+                    String raceStr = racesView.getText().toString().toUpperCase();
+                    String wordStr = wordView.getText().toString().toUpperCase();
                     String enTranslationStr = enTranslationView.getText().toString().toUpperCase();
                     String ptTranslationStr = ptTranslationView.getText().toString().toUpperCase();
                     String deTranslationStr = deTranslationView.getText().toString().toUpperCase();
 
                     try {
-                        alienRace = DbUtil.getRaceByName(alienRaceStr);
+                        race = DbUtil.getRaceByName(raceStr);
 
-                        if(alienWord == null) {
-                            alienWord = DbUtil.getWord(alienRace, alienWordStr);
-                            if (alienWord == null) {
-                                alienWord = new AlienWord();
-                                alienWord.setRace(alienRace);
-                                alienWord.setWord(alienWordStr);
-                                alienWord.save();
+                        if(word == null) {
+                            word = DbUtil.getWord(race, wordStr);
+                            if (word == null) {
+                                word = new AlienWord();
+                                word.setRace(race);
+                                word.setWord(wordStr);
+                                word.save();
                             }
                         }
-                        alienWord.addUser(App.getUser());
-                        alienWord.save();
+                        word.addUser(App.getUser());
+                        word.save();
 
                         if (Util.isNotEmpty(enTranslationStr)) {
-                            AlienWordTranslation translation = addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, alienWord, alienRace);
+                            AlienWordTranslation translation = addTranslation(enTranslationStr, LanguageUtil.LANGUAGE_EN, word, race);
                             translations.add(translation);
                         }
                         if (Util.isNotEmpty(ptTranslationStr)) {
-                            AlienWordTranslation translation = addTranslation(ptTranslationStr, LanguageUtil.LANGUAGE_PT, alienWord, alienRace);
+                            AlienWordTranslation translation = addTranslation(ptTranslationStr, LanguageUtil.LANGUAGE_PT, word, race);
                             translations.add(translation);
                         }
                         if (Util.isNotEmpty(deTranslationStr)) {
-                            AlienWordTranslation translation = addTranslation(deTranslationStr, LanguageUtil.LANGUAGE_DE, alienWord, alienRace);
+                            AlienWordTranslation translation = addTranslation(deTranslationStr, LanguageUtil.LANGUAGE_DE, word, race);
                             translations.add(translation);
                         }
 
-                        EventBus.getDefault().postSticky(new TranslationUpdatedEvent(alienWord, translations));
+                        EventBus.getDefault().postSticky(new TranslationUpdatedEvent(word, translations));
 
                         dialog.dismiss();
                         finish();
@@ -304,13 +314,15 @@ public class TranslationEditorActivity extends BaseActivity {
                 e.printStackTrace();
             }
         }
-        if(translation != null) {
+        if (translation != null) {
             try {
                 translation.addUser(App.getUser());
+                translation.addLike(App.getUser());
                 translation.save();
                 if (currentTranslation != null && !currentTranslation.getTranslation().equals(translationStr)) {
                     try {
                         currentTranslation.removeUser(App.getUser());
+                        currentTranslation.removeLike(App.getUser());
                         currentTranslation.save();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -324,10 +336,10 @@ public class TranslationEditorActivity extends BaseActivity {
     }
 
     private boolean isValid(){
-        if(alienRacesView.getText().toString().equals(getString(R.string.select_alien_race))){
+        if(racesView.getText().toString().equals(getString(R.string.select_alien_race))){
             Toast.makeText(this, R.string.select_alien_race, Toast.LENGTH_SHORT).show();
             return false;
-        } else if(Util.isEmpty(alienWordView.getText().toString())){
+        } else if(Util.isEmpty(wordView.getText().toString())){
             Toast.makeText(this, R.string.type_alien_word, Toast.LENGTH_SHORT).show();
             return false;
         } else if(Util.isEmpty(enTranslationView.getText().toString())

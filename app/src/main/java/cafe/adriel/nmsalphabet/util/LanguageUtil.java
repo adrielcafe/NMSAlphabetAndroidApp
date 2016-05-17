@@ -16,30 +16,43 @@ public class LanguageUtil {
     public static final String LANGUAGE_EN = "en";
     public static final String LANGUAGE_DE = "de";
 
-    public static String getCurrentLanguage(Context context){
-        String language = Util.getSettings(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, "");
-        if(Util.isEmpty(language)) {
+    public static String getCurrentLanguageCode(Context context){
+        String languageCode = Util.getSettings(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, "");
+        if(Util.isEmpty(languageCode)) {
             Configuration conf = context.getResources().getConfiguration();
             switch (conf.locale.getLanguage()){
                 case LANGUAGE_PT:
-                    language = LANGUAGE_PT;
+                    languageCode = LANGUAGE_PT;
                     break;
                 case LANGUAGE_DE:
-                    language = LANGUAGE_DE;
+                    languageCode = LANGUAGE_DE;
                     break;
                 default:
-                    language = LANGUAGE_EN;
+                    languageCode = LANGUAGE_EN;
             }
             Util.getSettings(context)
                     .edit()
-                    .putString(Constant.SETTINGS_ACCOUNT_LANGUAGE, language)
+                    .putString(Constant.SETTINGS_ACCOUNT_LANGUAGE, languageCode)
                     .commit();
         }
-        return language;
+        return languageCode;
+    }
+
+    public static String languageCodeToLanguage(Context context, String languageCode){
+        switch (languageCode){
+            case LANGUAGE_EN:
+                return context.getString(R.string.english);
+            case LANGUAGE_PT:
+                return context.getString(R.string.portuguese);
+            case LANGUAGE_DE:
+                return context.getString(R.string.german);
+            default:
+                return null;
+        }
     }
 
     public static void updateLanguage(Context context){
-        String language = getCurrentLanguage(context);
+        String language = getCurrentLanguageCode(context);
         Resources res = context.getResources();
         Configuration conf = res.getConfiguration();
         conf.locale = new Locale(language.toLowerCase());
@@ -49,11 +62,11 @@ public class LanguageUtil {
     public static Drawable getLanguageFlagDrawable(Context context, String language){
         switch (language){
             case LANGUAGE_PT:
-                return context.getResources().getDrawable(R.drawable.flag_brazil);
+                return context.getResources().getDrawable(R.drawable.flag_brazil_small);
             case LANGUAGE_DE:
-                return context.getResources().getDrawable(R.drawable.flag_germany);
+                return context.getResources().getDrawable(R.drawable.flag_germany_small);
             default:
-                return context.getResources().getDrawable(R.drawable.flag_uk);
+                return context.getResources().getDrawable(R.drawable.flag_uk_small);
         }
     }
 

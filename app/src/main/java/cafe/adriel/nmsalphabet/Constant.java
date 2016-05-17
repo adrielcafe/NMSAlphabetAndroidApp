@@ -1,7 +1,12 @@
 package cafe.adriel.nmsalphabet;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import cafe.adriel.nmsalphabet.util.LanguageUtil;
+import cafe.adriel.nmsalphabet.util.Triple;
 
 public class Constant {
     public static final String CONTACT_EMAIL    = "me@adriel.cafe";
@@ -22,6 +27,8 @@ public class Constant {
     public static final String SETTINGS_ACCOUNT_STATUS      = "account_status";
     public static final String SETTINGS_ACCOUNT_LANGUAGE    = "account_language";
     public static final String SETTINGS_ACCOUNT_THEME       = "account_theme";
+    public static final String SETTINGS_ABOUT_NEW_RACE      = "about_new_race";
+    public static final String SETTINGS_ABOUT_TRANSLATORS   = "about_translators";
     public static final String SETTINGS_ABOUT_FEEDBACK      = "about_feedback";
     public static final String SETTINGS_ABOUT_SHARE         = "about_share";
     public static final String SETTINGS_ABOUT_RATE          = "about_rate";
@@ -32,4 +39,10 @@ public class Constant {
     public static final String STATE_EMPTY             = "empty";
     public static final String STATE_NO_INTERNET       = "noInternet";
     public static final String STATE_REQUIRE_SIGN_IN   = "requireSignIn";
+
+    public static final List<Triple<String, String, String>> TRANSLATORS = new ArrayList<>(Arrays.asList(
+            new Triple<>(LanguageUtil.LANGUAGE_EN, "Adriel Café", "@adrielcafe"),
+            new Triple<>(LanguageUtil.LANGUAGE_PT, "Adriel Café", "@adrielcafe"),
+            new Triple<>(LanguageUtil.LANGUAGE_DE, "Natascha Brell", "")
+    ));
 }

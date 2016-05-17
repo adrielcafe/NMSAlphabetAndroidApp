@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,6 +28,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.easyandroidanimations.library.FadeInAnimation;
+import com.easyandroidanimations.library.FadeOutAnimation;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.parse.FindCallback;
@@ -46,11 +49,12 @@ import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.event.UpdateStateEvent;
+import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
-import cafe.adriel.nmsalphabet.ui.view.EndlessRecyclerOnScrollListener;
-import cafe.adriel.nmsalphabet.ui.view.SwipeRefreshLayoutToggleScrollListener;
+import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
+import cafe.adriel.nmsalphabet.ui.util.SwipeRefreshLayoutToggleScrollListener;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.SocialUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -66,6 +70,7 @@ public class WordsFragment extends BaseFragment {
 
     private Type type;
     private List<AlienWord> words;
+    private AlienRace selectedRace;
     private HomeAdapter homeAdapter;
     private ProfileAdapter profileAdapter;
     private EndlessRecyclerOnScrollListener infiniteScrollListener;
@@ -177,6 +182,9 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void initHomeControls(){
+        List<String> races = DbUtil.getRacesName();
+        races.add(0, getString(R.string.all_alien_races));
+
         headerProfileLayout.setVisibility(View.GONE);
         headerHomeLayout.setVisibility(View.VISIBLE);
         headerHomeLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -192,25 +200,25 @@ public class WordsFragment extends BaseFragment {
         });
 
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));
-        racesView.setItems(getString(R.string.all_alien_races), "Korvax");
+        racesView.setItems(races);
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                // TODO
+                selectedRace = DbUtil.getRaceByName(item);
+                updateWords(0);
             }
         });
 
         searchLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        searchView.setFilters(new InputFilter[] { Util.getWordInputFilter() });
         searchView.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if (searchView.getText().length() > 0) {
-                        searchWord(searchView.getText().toString());
-                        return true;
-                    }
+                    updateWords(0);
+                    return true;
                 }
                 return false;
             }
@@ -238,15 +246,14 @@ public class WordsFragment extends BaseFragment {
         searchIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (searchView.getText().length() > 0) {
-                    searchWord(searchView.getText().toString());
-                }
+                updateWords(0);
             }
         });
         searchClearView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchView.setText("");
+                updateWords(0);
             }
         });
     }
@@ -345,7 +352,7 @@ public class WordsFragment extends BaseFragment {
         if(wordsView != null) {
             switch (type) {
                 case HOME:
-                    homeAdapter = new HomeAdapter(getContext(), words);
+                    homeAdapter = new HomeAdapter(getActivity(), words);
                     wordsView.setAdapter(homeAdapter);
                     break;
                 case PROFILE:
@@ -362,10 +369,12 @@ public class WordsFragment extends BaseFragment {
             viewState.showCustomView(Constant.STATE_REQUIRE_SIGN_IN);
             return;
         }
+        Util.hideSoftKeyboard(getActivity());
         setLoadingList(true);
         switch (type) {
             case HOME:
-                DbUtil.getWords(page, new FindCallback<AlienWord>() {
+                String word = searchView.getText().toString();
+                DbUtil.getWords(word, selectedRace, page, new FindCallback<AlienWord>() {
                     @Override
                     public void done(List<AlienWord> objects, ParseException e) {
                         afterUpdateWords(page, objects, e);
@@ -411,10 +420,6 @@ public class WordsFragment extends BaseFragment {
         refreshLayout.setRefreshing(false);
     }
 
-    private void searchWord(String word){
-
-    }
-
     private void refreshWords(){
         resetWords();
         updateWords(0);
@@ -441,19 +446,22 @@ public class WordsFragment extends BaseFragment {
         }
     }
 
-    private void setLoadingList(boolean loading){
-        if(loadingView != null) {
-            if(loading) {
-                loadingView.setVisibility(View.VISIBLE);
-            } else {
-                Util.asyncCall(500, new Runnable() {
-                    @Override
-                    public void run() {
-                        loadingView.setVisibility(View.GONE);
-                    }
-                });
+    private void setLoadingList(final boolean loading){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(loading){
+                    new FadeInAnimation(loadingView).animate();
+                } else {
+                    Util.asyncCall(500, new Runnable() {
+                        @Override
+                        public void run() {
+                            new FadeOutAnimation(loadingView).animate();
+                        }
+                    });
+                }
             }
-        }
+        });
     }
 
     private void updateRefreshLayoutMarginTop(){

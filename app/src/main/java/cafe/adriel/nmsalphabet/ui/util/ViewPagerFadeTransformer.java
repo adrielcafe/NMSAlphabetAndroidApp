@@ -1,4 +1,4 @@
-package cafe.adriel.nmsalphabet.ui.view;
+package cafe.adriel.nmsalphabet.ui.util;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

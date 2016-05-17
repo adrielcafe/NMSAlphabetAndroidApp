@@ -36,19 +36,19 @@
             <EditText
                 android:id="@+id/english_translation"
                 android:hint="@string/english_translation"
-                android:drawableLeft="@drawable/flag_uk"
+                android:drawableLeft="@drawable/flag_uk_small"
                 style="@style/AddTranslationTextView"/>
 
             <EditText
                 android:id="@+id/portuguese_translation"
                 android:hint="@string/portuguese_translation"
-                android:drawableLeft="@drawable/flag_brazil"
+                android:drawableLeft="@drawable/flag_brazil_small"
                 style="@style/AddTranslationTextView"/>
 
             <EditText
                 android:id="@+id/german_translation"
                 android:hint="@string/german_translation"
-                android:drawableLeft="@drawable/flag_germany"
+                android:drawableLeft="@drawable/flag_germany_small"
                 style="@style/AddTranslationTextView"/>
 
         </LinearLayout>
