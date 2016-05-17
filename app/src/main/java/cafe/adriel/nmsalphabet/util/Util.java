@@ -3,6 +3,7 @@ package cafe.adriel.nmsalphabet.util;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -168,6 +170,11 @@ public class Util {
 
     public static String getGooglePlayUrl(Context context){
         return Constant.GOOGLE_PLAY_URL + getPackageName(context);
+    }
+
+    public static void openUrl(Activity activity, String url){
+        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        activity.startActivity(intent);
     }
 
     public static void printAppKeyHash(Context context) {

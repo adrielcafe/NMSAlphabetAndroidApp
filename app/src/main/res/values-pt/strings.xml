@@ -70,5 +70,7 @@
     <string name="close">Fechar</string>
     <string name="discovered_new_race_summary">Envie o nome dela para nós</string>
     <string name="discovered_new_race">Descobriu uma nova raça?</string>
+    <string name="translators">Tradutores</string>
+    <string name="translators_summary">O app está em seu idioma nativo? Agradeça essas pessoas!</string>
 
 </resources>
