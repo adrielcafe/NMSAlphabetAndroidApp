@@ -63,6 +63,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             case Constant.SETTINGS_ABOUT_NEW_RACE:
                 sendNewRace();
                 break;
+            case Constant.SETTINGS_ABOUT_TRANSLATORS:
+                showTranslators();
+                break;
             case Constant.SETTINGS_ABOUT_FEEDBACK:
                 sendFeedback();
                 break;
@@ -97,6 +100,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         accountTheme = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
         Preference accountStatus = findPreference(Constant.SETTINGS_ACCOUNT_STATUS);
         Preference aboutNewRace = findPreference(Constant.SETTINGS_ABOUT_NEW_RACE);
+        Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
         Preference aboutRate = findPreference(Constant.SETTINGS_ABOUT_RATE);
@@ -104,6 +108,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         accountStatus.setOnPreferenceClickListener(this);
         aboutNewRace.setOnPreferenceClickListener(this);
+        aboutTranslators.setOnPreferenceClickListener(this);
         aboutFeedback.setOnPreferenceClickListener(this);
         aboutShare.setOnPreferenceClickListener(this);
         aboutRate.setOnPreferenceClickListener(this);
@@ -201,7 +206,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 .append("<i>* You can attach a photo if you want</i>")
                 .toString())
         );
-        getActivity().startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+        startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+    }
+
+    private void showTranslators(){
+        startActivity(new Intent(getContext(), TranslatorsActivity.class));
     }
 
     private void sendFeedback() {
@@ -213,7 +222,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
         Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
         i.putExtra(Intent.EXTRA_SUBJECT, subject);
-        getActivity().startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+        startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
     }
 
     private void shareApp() {
