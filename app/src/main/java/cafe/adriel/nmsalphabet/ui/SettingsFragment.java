@@ -9,6 +9,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -59,6 +60,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             case Constant.SETTINGS_ACCOUNT_STATUS:
                 changeStatus();
                 break;
+            case Constant.SETTINGS_ABOUT_NEW_RACE:
+                sendNewRace();
+                break;
+            case Constant.SETTINGS_ABOUT_TRANSLATORS:
+                showTranslators();
+                break;
             case Constant.SETTINGS_ABOUT_FEEDBACK:
                 sendFeedback();
                 break;
@@ -92,12 +99,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         accountLanguage = (ListPreference) findPreference(Constant.SETTINGS_ACCOUNT_LANGUAGE);
         accountTheme = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
         Preference accountStatus = findPreference(Constant.SETTINGS_ACCOUNT_STATUS);
+        Preference aboutNewRace = findPreference(Constant.SETTINGS_ABOUT_NEW_RACE);
+        Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
         Preference aboutRate = findPreference(Constant.SETTINGS_ABOUT_RATE);
         Preference aboutVersion = findPreference(Constant.SETTINGS_ABOUT_VERSION);
 
         accountStatus.setOnPreferenceClickListener(this);
+        aboutNewRace.setOnPreferenceClickListener(this);
+        aboutTranslators.setOnPreferenceClickListener(this);
         aboutFeedback.setOnPreferenceClickListener(this);
         aboutShare.setOnPreferenceClickListener(this);
         aboutRate.setOnPreferenceClickListener(this);
@@ -125,7 +136,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             TextView summaryView = (TextView) summaryLayout.getChildAt(1);
             summaryView.setCompoundDrawablePadding(10);
             summaryView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    LanguageUtil.getLanguageFlagDrawable(getActivity(), LanguageUtil.getCurrentLanguage(getActivity())), null, null, null);
+                    LanguageUtil.getLanguageFlagDrawable(getActivity(), LanguageUtil.getCurrentLanguageCode(getActivity())), null, null, null);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -176,6 +187,32 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Util.restartActivity(getActivity());
     }
 
+    private void sendNewRace() {
+        String subject;
+        if(App.isSignedIn()) {
+            subject = String.format("%s - New race discovered by %s [ID: %s]", getString(R.string.app_name), App.getUser().getName(), App.getUser().getObjectId());
+        } else {
+            subject = getString(R.string.app_name) + " - New race discovered";
+        }
+        Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
+        i.putExtra(Intent.EXTRA_SUBJECT, subject);
+        i.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(new StringBuilder()
+                .append("<b>Race Name: </b>")
+                .append("<br>")
+                .append("<b>System and planet where you find her: </b>")
+                .append("<br>")
+                .append("<b>Other info: </b>")
+                .append("<br><br>")
+                .append("<i>* You can attach a photo if you want</i>")
+                .toString())
+        );
+        startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+    }
+
+    private void showTranslators(){
+        startActivity(new Intent(getContext(), TranslatorsActivity.class));
+    }
+
     private void sendFeedback() {
         String subject;
         if(App.isSignedIn()) {
@@ -185,7 +222,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
         Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
         i.putExtra(Intent.EXTRA_SUBJECT, subject);
-        getActivity().startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+        startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
     }
 
     private void shareApp() {

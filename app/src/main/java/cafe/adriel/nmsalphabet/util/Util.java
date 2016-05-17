@@ -3,6 +3,7 @@ package cafe.adriel.nmsalphabet.util;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +19,8 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -36,6 +40,23 @@ public class Util {
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    public static InputFilter alienWordFilter = new InputFilter() {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            String chr = source+"";
+            return chr.isEmpty() || !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
+        }
+    };
+    public static InputFilter alienWordTranslationFilter = new InputFilter() {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            String chr = source+"";
+            if(chr.isEmpty() || chr.equals(" ")){
+                return null;
+            } else {
+                return !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
+            }
+        }
     };
 
     private static ConnectivityManager connectivityManager;
@@ -103,6 +124,14 @@ public class Util {
         }
     }
 
+    public static InputFilter getWordInputFilter(){
+        return alienWordFilter;
+    }
+
+    public static InputFilter getTranslationInputFilter(){
+        return alienWordTranslationFilter;
+    }
+
     public static SharedPreferences getSettings(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
@@ -141,6 +170,11 @@ public class Util {
 
     public static String getGooglePlayUrl(Context context){
         return Constant.GOOGLE_PLAY_URL + getPackageName(context);
+    }
+
+    public static void openUrl(Activity activity, String url){
+        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        activity.startActivity(intent);
     }
 
     public static void printAppKeyHash(Context context) {

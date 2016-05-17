@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class TranslateFragment extends BaseFragment {
 
@@ -68,10 +70,10 @@ public class TranslateFragment extends BaseFragment {
 
     private void initControls(){
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setDropdownColor(ThemeUtil.getPrimaryDarkColor(getContext()));
         racesView.setItems(getString(R.string.all_alien_races), "Korvax");
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
@@ -81,6 +83,7 @@ public class TranslateFragment extends BaseFragment {
         });
 
         phraseLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        phraseView.setFilters(new InputFilter[] { Util.getWordInputFilter() });
         phraseView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -138,15 +141,15 @@ public class TranslateFragment extends BaseFragment {
 
     private void initFlag(){
         int flagResId;
-        switch (LanguageUtil.getCurrentLanguage(getContext())){
+        switch (LanguageUtil.getCurrentLanguageCode(getContext())){
             case LanguageUtil.LANGUAGE_PT:
-                flagResId = R.drawable.flag_brazil;
+                flagResId = R.drawable.flag_brazil_small;
                 break;
             case LanguageUtil.LANGUAGE_DE:
-                flagResId = R.drawable.flag_germany;
+                flagResId = R.drawable.flag_germany_small;
                 break;
             default:
-                flagResId = R.drawable.flag_uk;
+                flagResId = R.drawable.flag_uk_small;
                 break;
         }
         Glide.with(getContext()).load(flagResId).into(countryFlagView);

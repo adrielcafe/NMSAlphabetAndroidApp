@@ -25,6 +25,7 @@ import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.fabric.sdk.android.Fabric;
+import io.paperdb.Paper;
 
 public class App extends Application {
 
@@ -41,6 +42,7 @@ public class App extends Application {
                 .addBoldItalic(Typekit.createFromAsset(this, "fonts/LatoLatin-BoldItalic.ttf"))
                 .addCustom1(Typekit.createFromAsset(this, "fonts/Geomanist-Regular.otf"));
         EventBus.getDefault().register(this);
+        Paper.init(this);
         initFabric();
         initParse();
         initFacebook();
@@ -110,7 +112,7 @@ public class App extends Application {
 
     public static void loadAndCache(){
         getUser();
-        DbUtil.cacheRaces();
+        DbUtil.cacheData();
     }
 
 }

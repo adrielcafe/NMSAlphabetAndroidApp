@@ -4,6 +4,7 @@
     <string name="connect_internet">Connect to the Internet</string>
     <string name="nothing_found">Nothing Found</string>
     <string name="no_translation_found">No translation found</string>
+    <string name="try_another_language">Try in another language</string>
     <string name="home">Home</string>
     <string name="translate">Translate</string>
     <string name="profile">Profile</string>
@@ -20,18 +21,22 @@
     <string name="new_translation">New Translation</string>
     <string name="best_translation">Best Translation</string>
     <string name="best_translations">Best Translations</string>
+    <string name="my_translation">My Translation</string>
     <string name="my_translations">My Translations</string>
-    <string name="new_translation_with_icon">{gmi-plus-circle} New Translation</string>
-    <string name="report_with_icon">{gmi-flag} Report</string>
+    <string name="see_all_translations_with_icon">{gmi-view-list-alt} See All</string>
     <string name="delete_with_icon">{gmi-delete} Delete</string>
     <string name="edit_with_icon">{gmi-edit} Edit</string>
+    <string name="share_with_icon">{gmi-share} Share</string>
     <string name="delete">Delete</string>
     <string name="delete_translation">Delete Translation</string>
     <string name="translation_will_be_deleted_permanently">This translation will be deleted permanently.\nAre you sure?</string>
     <string name="edit_translation">Edit Translation</string>
+    <string name="close">Close</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="alien_word">Alien Word</string>
+    <string name="word">Word</string>
+    <string name="race">Race</string>
     <string name="english_translation">English Translation</string>
     <string name="portuguese_translation">Portuguese Translation</string>
     <string name="german_translation">German Translation</string>
@@ -42,6 +47,10 @@
     <string name="portuguese">Portuguese</string>
     <string name="german">German</string>
     <string name="about">About</string>
+    <string name="translators">Translators</string>
+    <string name="translators_summary">This app is on your native language? Thanks these folk!</string>
+    <string name="discovered_new_race">Discovered a new race?</string>
+    <string name="discovered_new_race_summary">Send her name for us</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_summary">Send suggestions or ask questions</string>
     <string name="share">Share</string>
@@ -88,5 +97,6 @@
         <item>theme4</item>
         <item>theme5</item>
     </string-array>
+    <string name="new_translation_with_icon">{gmi-plus} New Translation</string>
 
 </resources>

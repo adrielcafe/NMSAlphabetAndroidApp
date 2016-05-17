@@ -9,8 +9,8 @@
     <string name="search_word">Procurar Palavra</string>
     <string name="all_alien_races">Todas as Raças Alienígenas</string>
     <string name="best_translations">Melhores Traduções</string>
-    <string name="new_translation_with_icon">{gmi-plus-circle} Nova Tradução</string>
-    <string name="report_with_icon">{gmi-flag} Reportar</string>
+    <string name="new_translation_with_icon">{gmi-plus} Nova Tradução</string>
+    <string name="see_all_translations_with_icon">{gmi-view-list-alt} Ver Todas</string>
     <string name="not_now">Agora Não</string>
     <string name="signin_facebook">Entrar com Facebook</string>
     <string name="new_translation">Nova Tradução</string>
@@ -62,5 +62,15 @@
     <string name="delete_translation">Excluir Tradução</string>
     <string name="edit_translation">Editar Tradução</string>
     <string name="translation_will_be_deleted_permanently">Essa tradução será excluída permanentemente.\nVocê tem certeza?</string>
+    <string name="try_another_language">Tente em outro idioma</string>
+    <string name="share_with_icon">{gmi-share} Compartilhar</string>
+    <string name="word">Palavra</string>
+    <string name="race">Raça</string>
+    <string name="my_translation">Minha Tradução</string>
+    <string name="close">Fechar</string>
+    <string name="discovered_new_race_summary">Envie o nome dela para nós</string>
+    <string name="discovered_new_race">Descobriu uma nova raça?</string>
+    <string name="translators">Tradutores</string>
+    <string name="translators_summary">O app está em seu idioma nativo? Agradeça essas pessoas!</string>
 
 </resources>

@@ -21,8 +21,8 @@
     <string name="best_translation">Passendste Übersetzung</string>
     <string name="best_translations">Passendste Übersetzungen</string>
     <string name="my_translations">Meine Übersetungen</string>
-    <string name="new_translation_with_icon">{gmi-plus-circle} Neue Übersetzung</string>
-    <string name="report_with_icon">{gmi-flag} Melden</string>
+    <string name="new_translation_with_icon">{gmi-plus} Neue Übersetzung</string>
+    <string name="see_all_translations_with_icon">{gmi-view-list-alt} Alle Anzeigen</string>
     <string name="delete_with_icon">{gmi-delete} Löschen</string>
     <string name="edit_with_icon">{gmi-edit} Bearbeiten</string>
     <string name="cancel">Abbrechen</string>
@@ -58,5 +58,12 @@
     <string name="theme4">Design 4</string>
     <string name="theme5">Design 5</string>
     <string name="unknown_explorer">Unbekannter Entdecker</string>
+    <string name="delete">Löschen</string>
+    <string name="delete_translation">Übersetzung löschen</string>
+    <string name="edit_translation">Übersetzung ändern</string>
+    <string name="no_translation_found">Keine Übersetzung gefunden</string>
+    <string name="share_with_icon">{gmi-share} Teilen</string>
+    <string name="translation_will_be_deleted_permanently">Diese Übersetzung wird entgültig gelöscht.\nBist du dir sicher?</string>
+    <string name="try_another_language">In einer anderen Sprache ausprobieren</string>
 
 </resources>
