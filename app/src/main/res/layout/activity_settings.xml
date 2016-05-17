@@ -14,9 +14,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="40dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         class="cafe.adriel.nmsalphabet.ui.SettingsFragment" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:textColor="@color/gray_dark"
+        android:text="Made with {gmi-favorite} in Recife by Adriel Café"/>
 
 </FrameLayout>
