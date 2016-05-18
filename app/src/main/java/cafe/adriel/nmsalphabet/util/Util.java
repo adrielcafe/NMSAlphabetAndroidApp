@@ -168,6 +168,12 @@ public class Util {
         return context.getPackageName();
     }
 
+    public static String getProPackageName(Context context){
+        return getPackageName(context)
+                .replace("dev", "pro")
+                .replace("free", "pro");
+    }
+
     public static String getGooglePlayUrl(Context context){
         return Constant.GOOGLE_PLAY_URL + getPackageName(context);
     }

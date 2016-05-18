@@ -104,6 +104,10 @@ public class App extends Application {
         return getUser() != null;
     }
 
+    public static boolean isPro(Context context){
+        return Util.getPackageName(context).equals(Util.getProPackageName(context));
+    }
+
     public static User getUser(){
         if(user == null){
             user = (User) ParseUser.getCurrentUser();

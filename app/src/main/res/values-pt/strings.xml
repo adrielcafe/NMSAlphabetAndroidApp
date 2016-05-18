@@ -68,6 +68,8 @@
     <string name="race">Raça</string>
     <string name="my_translation">Minha Tradução</string>
     <string name="close">Fechar</string>
+    <string name="upgrade_to_pro_summary">Para quem não gosta de anúncios ou quer me pagar um {gmi-coffee}</string>
+    <string name="upgrade_to_pro">Atualize para PRO</string>
     <string name="discovered_new_race_summary">Envie o nome dela para nós</string>
     <string name="discovered_new_race">Descobriu uma nova raça?</string>
     <string name="translators">Tradutores</string>

@@ -78,15 +78,13 @@ dependencies {
     compile 'com.github.devlight.navigationtabbar:library:1.1.6@aar'
     compile 'com.jaredrummler:material-spinner:1.0.9@aar'
     compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1@aar'
-    compile 'com.ramotion.foldingcell:folding-cell:1.0.0@aar'
+    compile 'com.ramotion.foldingcell:folding-cell:1.0.1@aar'
     compile 'com.tsengvn:Typekit:1.0.0@aar'
     compile 'com.github.deano2390:android-viewbadger:1.0.0@aar'
     compile 'cat.ereza:customactivityoncrash:1.5.0@aar'
     compile 'io.github.kobakei:ratethisapp:1.0.3@aar'
     compile 'com.github.medyo:dynamicbox:1.2@aar'
-
-//    compile 'com.github.iammert:MaterialIntroView:1.5@aar'
-
+    compile 'com.github.iammert:MaterialIntroView:1.5@aar' // Not using yet
 }
 
 repositories {
