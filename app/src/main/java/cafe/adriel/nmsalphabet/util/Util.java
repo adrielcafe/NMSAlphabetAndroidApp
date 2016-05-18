@@ -136,6 +136,14 @@ public class Util {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static int getAppVersionCode(Context context) {
+        try {
+            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
     public static String getAppVersionName(Context context) {
         try {
             return "v" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;

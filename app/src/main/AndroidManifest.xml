@@ -74,6 +74,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".ui.UpdateActivity"
+            android:label="@string/update"
+            android:theme="@style/AppTheme1.NoActionBar.Transparent"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
             android:label="@string/app_name"
             android:name="com.facebook.FacebookActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

@@ -14,8 +14,8 @@ import cafe.adriel.nmsalphabet.util.Util;
 
 public class VersionActivity extends BaseActivity {
 
-    @BindView(R.id.galaxy)
-    ImageView galaxyView;
+    @BindView(R.id.bg)
+    ImageView bgView;
     @BindView(R.id.app_version)
     TextView appVersionView;
 
@@ -23,7 +23,7 @@ public class VersionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_version);
-        tintManager.setTintColor(getResources().getColor(R.color.bg_galaxy));
+        tintManager.setTintColor(getResources().getColor(R.color.bg_version));
         ButterKnife.bind(this);
         init();
     }
@@ -32,10 +32,10 @@ public class VersionActivity extends BaseActivity {
     protected void init() {
         adjustMarginAndPadding();
         Glide.with(this)
-                .load(R.drawable.galaxy)
+                .load(R.drawable.bg_version)
                 .asGif()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(galaxyView);
+                .into(bgView);
         appVersionView.setText(Util.getAppVersionName(this));
     }
 }
