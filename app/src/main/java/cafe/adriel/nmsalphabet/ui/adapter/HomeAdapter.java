@@ -26,12 +26,14 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.AddTranslationEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.ui.MainActivity;
 import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
@@ -265,8 +267,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     private void newTranslation(AlienWord word){
-        EventBus.getDefault().postSticky(new AddTranslationEvent(word));
-        context.startActivity(new Intent(context, TranslationEditorActivity.class));
+        if(App.isSignedIn()) {
+            EventBus.getDefault().postSticky(new AddTranslationEvent(word));
+            context.startActivity(new Intent(context, TranslationEditorActivity.class));
+        } else {
+            MainActivity.showSignInDialog(context);
+        }
     }
 
     private void seeAllTranslations(AlienWord word){

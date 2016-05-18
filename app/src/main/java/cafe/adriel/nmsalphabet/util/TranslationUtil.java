@@ -17,6 +17,7 @@ import com.readystatesoftware.viewbadger.BadgeView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
@@ -108,30 +109,41 @@ public class TranslationUtil {
         final BadgeView dislikeBadgeView = addBadge(context, holder.dislikeView, translation.getDislikesCount());
 
         holder.translationView.setText(translation.getTranslation());
-        holder.likeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disableLikeFor1Second(holder.likeView, holder.dislikeView);
-                likeTranslation(context, translation, holder.likeView, holder.dislikeView, likeBadgeView, dislikeBadgeView);
-            }
-        });
-        holder.dislikeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disableLikeFor1Second(holder.likeView, holder.dislikeView);
-                dislikeTranslation(context, translation, holder.likeView, holder.dislikeView, likeBadgeView, dislikeBadgeView);
-            }
-        });
 
-        if(DbUtil.isTranslationLiked(translation)){
-            holder.likeView.setTextColor(Color.BLACK);
-            holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
-        } else if(DbUtil.isTranslationDisliked(translation)){
-            holder.likeView.setTextColor(context.getResources().getColor(R.color.gray));
-            holder.dislikeView.setTextColor(Color.BLACK);
+        if(App.isSignedIn()) {
+            holder.likeView.setEnabled(true);
+            holder.dislikeView.setEnabled(true);
+            holder.likeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    disableLikeFor1Second(holder.likeView, holder.dislikeView);
+                    likeTranslation(context, translation, holder.likeView, holder.dislikeView, likeBadgeView, dislikeBadgeView);
+                }
+            });
+            holder.dislikeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    disableLikeFor1Second(holder.likeView, holder.dislikeView);
+                    dislikeTranslation(context, translation, holder.likeView, holder.dislikeView, likeBadgeView, dislikeBadgeView);
+                }
+            });
+            if(DbUtil.isTranslationLiked(translation)){
+                holder.likeView.setTextColor(Color.BLACK);
+                holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+            } else if(DbUtil.isTranslationDisliked(translation)){
+                holder.likeView.setTextColor(context.getResources().getColor(R.color.gray));
+                holder.dislikeView.setTextColor(Color.BLACK);
+            } else {
+                holder.likeView.setTextColor(context.getResources().getColor(R.color.gray));
+                holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+            }
         } else {
-            holder.likeView.setTextColor(context.getResources().getColor(R.color.gray));
-            holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+            holder.likeView.setEnabled(false);
+            holder.dislikeView.setEnabled(false);
+            holder.likeView.setOnClickListener(null);
+            holder.dislikeView.setOnClickListener(null);
+            holder.likeView.setTextColor(context.getResources().getColor(R.color.gray_light));
+            holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray_light));
         }
     }
 
