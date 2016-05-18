@@ -2,6 +2,7 @@ package cafe.adriel.nmsalphabet.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -119,26 +120,26 @@ public class MainActivity extends BaseActivity {
                 if(App.isSignedIn()) {
                     startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
                 } else {
-                    showSignInDialog();
+                    showSignInDialog(MainActivity.this);
                 }
             }
         });
     }
 
-    private void showSignInDialog(){
-        new AlertDialog.Builder(this)
+    public static void showSignInDialog(final Activity activity){
+        new AlertDialog.Builder(activity)
                 .setTitle(R.string.new_translation)
                 .setMessage(R.string.signin_to_add_translations)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Util.getSettings(MainActivity.this).edit()
+                        Util.getSettings(activity).edit()
                                 .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
                                 .commit();
                         dialog.dismiss();
-                        finish();
-                        startActivity(new Intent(MainActivity.this, SplashActivity.class));
+                        activity.finish();
+                        activity.startActivity(new Intent(activity, SplashActivity.class));
                     }
                 })
                 .show();
