@@ -55,19 +55,10 @@ public class TranslatorsActivity extends BaseActivity {
 
     private View setupTranslator(String language, String name, final String twitter){
         View rootView = LayoutInflater.from(this).inflate(R.layout.list_item_translator, null, false);
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Util.isNotEmpty(twitter)) {
-                    String url = "http://twitter.com/" + twitter.replace("@", "");
-                    Util.openUrl(TranslatorsActivity.this, url);
-                }
-            }
-        });
-
         TranslatorViewHolder holder = new TranslatorViewHolder(rootView);
         holder.translatorNameView.setText(name);
         holder.translatorTwitterView.setText(twitter);
+
         switch (language){
             case LanguageUtil.LANGUAGE_EN:
                 holder.countryFlagView.setImageResource(R.drawable.flag_uk_big);
@@ -78,6 +69,19 @@ public class TranslatorsActivity extends BaseActivity {
             case LanguageUtil.LANGUAGE_DE:
                 holder.countryFlagView.setImageResource(R.drawable.flag_germany_big);
                 break;
+        }
+
+        if(Util.isNotEmpty(twitter)) {
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String url = "http://twitter.com/" + twitter.replace("@", "");
+                    Util.openUrl(TranslatorsActivity.this, url);
+                }
+            });
+        } else {
+            rootView.setBackground(null);
+            holder.translatorTwitterView.setVisibility(View.GONE);
         }
 
         return rootView;

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -275,6 +276,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                     .append("\n\n");
             shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
             Util.shareText((Activity) context, shareText.toString());
+        } else {
+            Toast.makeText(context, R.string.no_translation_found, Toast.LENGTH_SHORT).show();
         }
     }
 
