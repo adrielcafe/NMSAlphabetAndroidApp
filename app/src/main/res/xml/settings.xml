@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/account">
+    <PreferenceCategory
+        android:key="account"
+        android:title="@string/account">
 
         <Preference
-            android:key="account_status"
-            android:selectable="true" />
+            android:key="account_status" />
 
         <ListPreference
             android:key="account_language"
@@ -23,9 +24,16 @@
             android:entryValues="@array/theme_values"
             android:defaultValue="theme1"/>
 
+        <Preference
+            android:key="account_upgrade_pro"
+            android:title="@string/upgrade_to_pro"
+            android:summary="@string/upgrade_to_pro_summary" />
+
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/about">
+    <PreferenceCategory
+        android:key="about"
+        android:title="@string/about">
 
         <Preference
             android:key="about_new_race"

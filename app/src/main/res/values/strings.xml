@@ -98,5 +98,7 @@
         <item>theme5</item>
     </string-array>
     <string name="new_translation_with_icon">{gmi-plus} New Translation</string>
+    <string name="upgrade_to_pro">Upgrade to PRO</string>
+    <string name="upgrade_to_pro_summary">For those who doesn\'t like ads or want to pay me a {gmi-coffee}</string>
 
 </resources>

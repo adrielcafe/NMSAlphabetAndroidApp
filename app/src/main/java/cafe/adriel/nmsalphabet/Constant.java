@@ -24,9 +24,11 @@ public class Constant {
 
     public static final String EXTRA_TYPE   = "type";
 
+    public static final String SETTINGS_ACCOUNT             = "account";
     public static final String SETTINGS_ACCOUNT_STATUS      = "account_status";
     public static final String SETTINGS_ACCOUNT_LANGUAGE    = "account_language";
     public static final String SETTINGS_ACCOUNT_THEME       = "account_theme";
+    public static final String SETTINGS_ACCOUNT_UPGRADE_PRO = "account_upgrade_pro";
     public static final String SETTINGS_ABOUT_NEW_RACE      = "about_new_race";
     public static final String SETTINGS_ABOUT_TRANSLATORS   = "about_translators";
     public static final String SETTINGS_ABOUT_FEEDBACK      = "about_feedback";

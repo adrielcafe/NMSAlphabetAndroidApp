@@ -7,9 +7,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
@@ -71,6 +73,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             case Constant.SETTINGS_ACCOUNT_STATUS:
                 changeStatus();
                 break;
+            case Constant.SETTINGS_ACCOUNT_UPGRADE_PRO:
+                upgradePro();
+                break;
             case Constant.SETTINGS_ABOUT_NEW_RACE:
                 sendNewRace();
                 break;
@@ -109,7 +114,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void init(){
         accountLanguage = (ListPreference) findPreference(Constant.SETTINGS_ACCOUNT_LANGUAGE);
         accountTheme = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
+        PreferenceCategory account = (PreferenceCategory) findPreference(Constant.SETTINGS_ACCOUNT);
         Preference accountStatus = findPreference(Constant.SETTINGS_ACCOUNT_STATUS);
+        Preference accountUpgradePro = findPreference(Constant.SETTINGS_ACCOUNT_UPGRADE_PRO);
         Preference aboutNewRace = findPreference(Constant.SETTINGS_ABOUT_NEW_RACE);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
         Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
@@ -118,6 +125,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Preference aboutVersion = findPreference(Constant.SETTINGS_ABOUT_VERSION);
 
         accountStatus.setOnPreferenceClickListener(this);
+        accountUpgradePro.setOnPreferenceClickListener(this);
         aboutNewRace.setOnPreferenceClickListener(this);
         aboutFeedback.setOnPreferenceClickListener(this);
         aboutTranslators.setOnPreferenceClickListener(this);
@@ -130,6 +138,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         } else {
             accountStatus.setTitle(R.string.signin);
             accountStatus.setSummary(R.string.signin_to_add_translations);
+        }
+        if(App.isPro(getContext())){
+            account.removePreference(accountUpgradePro);
         }
         aboutVersion.setSummary(Util.getAppVersionName(getActivity()));
 
@@ -183,6 +194,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         accountTheme.setSummary(getThemeEntry(theme));
         Util.restartActivity(MainActivity.getInstance());
         Util.restartActivity(getActivity());
+    }
+
+    private void upgradePro(){
+        Uri marketUri = Uri.parse(Constant.MARKET_URI + Util.getProPackageName(getContext()));
+        Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
+        startActivity(i);
     }
 
     private void sendNewRace() {
