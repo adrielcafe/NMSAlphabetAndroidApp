@@ -99,13 +99,23 @@ public class SplashActivity extends BaseActivity {
         });
         appVersionView.setText(Util.getAppVersionName(this));
 
-        if (hasSignedIn() && Util.isConnected(this)) {
-            if(hasSignedInWithFacebook()){
-                facebookSignIn();
-            } else {
-                anonymousSignIn();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                if(!App.forceUpdate(SplashActivity.this)) {
+                    if (hasSignedIn() && Util.isConnected(SplashActivity.this)) {
+                        if (hasSignedInWithFacebook()) {
+                            facebookSignIn();
+                        } else {
+                            anonymousSignIn();
+                        }
+                    }
+                } else {
+                    finish();
+                    startActivity(new Intent(SplashActivity.this, UpdateActivity.class));
+                }
             }
-        }
+        });
     }
 
     private void facebookSignIn(){

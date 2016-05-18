@@ -44,7 +44,7 @@
     <string name="signin_to_add_translations">Entre para adicionar traduções</string>
     <string name="type_alien_phrase">Digite uma frase alienígena</string>
     <string name="best_translation">Melhor Tradução</string>
-    <string name="restart_app">Reiniciar App</string>
+    <string name="restart_app">Reiniciar Aplicativo</string>
     <string name="crash_msg">Parece que um buraco negro passou por aqui e quebrou o app</string>
     <string name="refresh">Atualizar</string>
     <string name="nothing_found">Nada foi encontrado</string>
@@ -73,6 +73,10 @@
     <string name="discovered_new_race_summary">Envie o nome dela para nós</string>
     <string name="discovered_new_race">Descobriu uma nova raça?</string>
     <string name="translators">Tradutores</string>
-    <string name="translators_summary">O app está em seu idioma nativo? Agradeça essas pessoas!</string>
+    <string name="translators_summary">O aplicativo está em seu idioma nativo? Agradeça essas pessoas!</string>
+    <string name="update">Atualizar</string>
+    <string name="we_became_better">Nos tornamos melhores</string>
+    <string name="current_version_not_supported">A versão atual do aplicativo não é mais suportada</string>
+    <string name="update_app">Atualizar Aplicativo</string>
 
 </resources>

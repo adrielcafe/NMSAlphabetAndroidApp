@@ -8,6 +8,7 @@ import com.crashlytics.android.answers.Answers;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
+import com.parse.ParseConfig;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -118,6 +119,15 @@ public class App extends Application {
     public static void loadAndCache(){
         getUser();
         DbUtil.cacheData();
+    }
+
+    public static boolean forceUpdate(Context context){
+        try {
+            int updateVersion = ParseConfig.get().getInt("FORCE_UPDATE_VERSION", -1);
+            return updateVersion > 0 && Util.getAppVersionCode(context) <= updateVersion;
+        } catch (Exception e){
+            return false;
+        }
     }
 
 }
