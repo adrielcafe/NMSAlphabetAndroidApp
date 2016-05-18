@@ -33,14 +33,14 @@
             android:summary="@string/discovered_new_race_summary" />
 
         <Preference
-            android:key="about_translators"
-            android:title="@string/translators"
-            android:summary="@string/translators_summary" />
-
-        <Preference
             android:key="about_feedback"
             android:title="@string/feedback"
             android:summary="@string/feedback_summary" />
+
+        <Preference
+            android:key="about_translators"
+            android:title="@string/translators"
+            android:summary="@string/translators_summary" />
 
         <Preference
             android:key="about_share"

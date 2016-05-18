@@ -417,7 +417,9 @@ public class WordsFragment extends BaseFragment {
             e.printStackTrace();
         }
         setLoadingList(false);
-        refreshLayout.setRefreshing(false);
+        if(refreshLayout != null) {
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     private void refreshWords(){
@@ -447,21 +449,23 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(final boolean loading){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(loading){
-                    new FadeInAnimation(loadingView).animate();
-                } else {
-                    Util.asyncCall(500, new Runnable() {
-                        @Override
-                        public void run() {
-                            new FadeOutAnimation(loadingView).animate();
-                        }
-                    });
+        if(getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (loading) {
+                        new FadeInAnimation(loadingView).animate();
+                    } else {
+                        Util.asyncCall(500, new Runnable() {
+                            @Override
+                            public void run() {
+                                new FadeOutAnimation(loadingView).animate();
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void updateRefreshLayoutMarginTop(){

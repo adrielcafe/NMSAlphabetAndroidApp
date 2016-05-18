@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.parse.FindCallback;
@@ -273,24 +274,28 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     private void shareTranslation(AlienRace race, AlienWord word){
-        List<AlienWordTranslation> translations = getCurrentLanguageTranslations(word);
-        if(Util.isNotEmpty(translations)) {
-            StringBuilder shareText = new StringBuilder()
-                    .append(context.getString(R.string.word) + ": " + word.getWord())
-                    .append("\n")
-                    .append(context.getString(R.string.race) + ": " + race.getName())
-                    .append("\n")
-                    .append(context.getString(R.string.best_translations) + ": ");
-            Iterator<AlienWordTranslation> i = translations.iterator();
-            while (i.hasNext()) {
-                shareText.append(i.next().getTranslation());
-                if (i.hasNext()) {
-                    shareText.append(", ");
+        if(hasTranslations(word)) {
+            List<AlienWordTranslation> translations = getCurrentLanguageTranslations(word);
+            if(Util.isNotEmpty(translations)) {
+                StringBuilder shareText = new StringBuilder()
+                        .append(context.getString(R.string.word) + ": " + word.getWord())
+                        .append("\n")
+                        .append(context.getString(R.string.race) + ": " + race.getName())
+                        .append("\n")
+                        .append(context.getString(R.string.best_translations) + ": ");
+                Iterator<AlienWordTranslation> i = translations.iterator();
+                while (i.hasNext()) {
+                    shareText.append(i.next().getTranslation());
+                    if (i.hasNext()) {
+                        shareText.append(", ");
+                    }
                 }
+                shareText.append("\n\n");
+                shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
+                Util.shareText(context, shareText.toString());
             }
-            shareText.append("\n\n");
-            shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
-            Util.shareText(context, shareText.toString());
+        } else {
+            Toast.makeText(context, R.string.no_translation_found, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -303,6 +308,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             default:
                 return enWordTranslations.get(word.getObjectId());
         }
+    }
+
+    private boolean hasTranslations(AlienWord word){
+        return Util.isNotEmpty(getCurrentLanguageTranslations(word));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

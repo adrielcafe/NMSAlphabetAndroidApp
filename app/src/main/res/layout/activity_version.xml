@@ -52,7 +52,7 @@
             android:textColor="@color/gray_light"
             android:textStyle="italic"
             android:text="@string/quote"
-            app:font="custom1"/>
+            app:font="custom2"/>
 
     </RelativeLayout>
 

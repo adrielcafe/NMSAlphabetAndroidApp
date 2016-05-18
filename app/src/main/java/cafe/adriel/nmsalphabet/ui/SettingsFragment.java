@@ -11,6 +11,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -51,6 +52,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     updatePreferencies(settingsList);
                 }
             });
+            settingsList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if(scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                        updatePreferencies(settingsList);
+                    }
+                }
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) { }
+            });
         }
     }
 
@@ -63,11 +74,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             case Constant.SETTINGS_ABOUT_NEW_RACE:
                 sendNewRace();
                 break;
-            case Constant.SETTINGS_ABOUT_TRANSLATORS:
-                showTranslators();
-                break;
             case Constant.SETTINGS_ABOUT_FEEDBACK:
                 sendFeedback();
+                break;
+            case Constant.SETTINGS_ABOUT_TRANSLATORS:
+                showTranslators();
                 break;
             case Constant.SETTINGS_ABOUT_SHARE:
                 shareApp();
@@ -100,16 +111,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         accountTheme = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
         Preference accountStatus = findPreference(Constant.SETTINGS_ACCOUNT_STATUS);
         Preference aboutNewRace = findPreference(Constant.SETTINGS_ABOUT_NEW_RACE);
-        Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
+        Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
         Preference aboutRate = findPreference(Constant.SETTINGS_ABOUT_RATE);
         Preference aboutVersion = findPreference(Constant.SETTINGS_ABOUT_VERSION);
 
         accountStatus.setOnPreferenceClickListener(this);
         aboutNewRace.setOnPreferenceClickListener(this);
-        aboutTranslators.setOnPreferenceClickListener(this);
         aboutFeedback.setOnPreferenceClickListener(this);
+        aboutTranslators.setOnPreferenceClickListener(this);
         aboutShare.setOnPreferenceClickListener(this);
         aboutRate.setOnPreferenceClickListener(this);
 
@@ -130,36 +141,23 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void updatePreferencies(ListView accountList){
-        try {
-            LinearLayout languageLayout = (LinearLayout) accountList.getChildAt(2);
-            RelativeLayout summaryLayout = (RelativeLayout) languageLayout.getChildAt(1);
-            TextView summaryView = (TextView) summaryLayout.getChildAt(1);
-            summaryView.setCompoundDrawablePadding(10);
-            summaryView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    LanguageUtil.getLanguageFlagDrawable(getActivity(), LanguageUtil.getCurrentLanguageCode(getActivity())), null, null, null);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        try {
-            LinearLayout themeLayout = (LinearLayout) accountList.getChildAt(3);
-            RelativeLayout summaryLayout = (RelativeLayout) themeLayout.getChildAt(1);
-            TextView summaryView = (TextView) summaryLayout.getChildAt(1);
-            summaryView.setText(ThemeUtil.getThemeCircles(getActivity(), ThemeUtil.getCurrentTheme(getActivity())));
-            summaryView.setTextSize(30);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        try {
-            LinearLayout versionLayout = (LinearLayout) accountList.getChildAt(8);
-            versionLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    showGalaxy();
-                    return true;
+        for(int i = 0; i < accountList.getChildCount(); i++) {
+            try {
+                LinearLayout rootLayout = (LinearLayout) accountList.getChildAt(i);
+                RelativeLayout preferenceLayout = (RelativeLayout) rootLayout.getChildAt(1);
+                TextView titleView = (TextView) preferenceLayout.getChildAt(0);
+                TextView summaryView = (TextView) preferenceLayout.getChildAt(1);
+                if(titleView.getText().toString().equals(getString(R.string.language))) {
+                    summaryView.setCompoundDrawablePadding(10);
+                    summaryView.setCompoundDrawablesRelativeWithIntrinsicBounds(LanguageUtil.getLanguageFlagDrawable(getActivity(),
+                            LanguageUtil.getCurrentLanguageCode(getActivity())), null, null, null);
+                } else if(titleView.getText().toString().equals(getString(R.string.theme))) {
+                    summaryView.setText(ThemeUtil.getThemePreview(getActivity(), ThemeUtil.getCurrentTheme(getActivity())));
+                    summaryView.setTextSize(30);
                 }
-            });
-        } catch (Exception e){
-            e.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -233,10 +231,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Uri marketUri = Uri.parse(Constant.MARKET_URI + Util.getPackageName(getActivity()));
         Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
         startActivity(i);
-    }
-
-    private void showGalaxy(){
-        startActivity(new Intent(getContext(), VersionActivity.class));
     }
 
     private String getLanguageEntry(String value){

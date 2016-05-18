@@ -130,7 +130,7 @@ public class ThemeUtil {
         }
     }
 
-    public static Spanned getThemeCircles(Context context, String theme){
+    public static Spanned getThemePreview(Context context, String theme){
         String primaryDarkColor = Util.toHexColor(getPrimaryDarkColor(context, theme));
         String primaryColor = Util.toHexColor(getPrimaryColor(context, theme));
         String accentColor = Util.toHexColor(getAccentColor(context, theme));

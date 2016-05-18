@@ -40,7 +40,8 @@ public class App extends Application {
                 .addBold(Typekit.createFromAsset(this, "fonts/LatoLatin-Bold.ttf"))
                 .addItalic(Typekit.createFromAsset(this, "fonts/LatoLatin-Italic.ttf"))
                 .addBoldItalic(Typekit.createFromAsset(this, "fonts/LatoLatin-BoldItalic.ttf"))
-                .addCustom1(Typekit.createFromAsset(this, "fonts/Geomanist-Regular.otf"));
+                .addCustom1(Typekit.createFromAsset(this, "fonts/Geomanist-Regular.otf"))
+                .addCustom2(Typekit.createFromAsset(this, "fonts/Handlee-Regular.ttf"));
         EventBus.getDefault().register(this);
         Paper.init(this);
         initFabric();

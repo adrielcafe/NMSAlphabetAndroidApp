@@ -97,19 +97,19 @@ public class ThemePreferenceAdapter extends ListPreference {
             view.setTextSize(30);
             switch (position){
                 case 0:
-                    view.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.THEME_1));
+                    view.setText(ThemeUtil.getThemePreview(getContext(), ThemeUtil.THEME_1));
                     break;
                 case 1:
-                    view.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.THEME_2));
+                    view.setText(ThemeUtil.getThemePreview(getContext(), ThemeUtil.THEME_2));
                     break;
                 case 2:
-                    view.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.THEME_3));
+                    view.setText(ThemeUtil.getThemePreview(getContext(), ThemeUtil.THEME_3));
                     break;
                 case 3:
-                    view.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.THEME_4));
+                    view.setText(ThemeUtil.getThemePreview(getContext(), ThemeUtil.THEME_4));
                     break;
                 case 4:
-                    view.setText(ThemeUtil.getThemeCircles(getContext(), ThemeUtil.THEME_5));
+                    view.setText(ThemeUtil.getThemePreview(getContext(), ThemeUtil.THEME_5));
                     break;
             }
             return view;
