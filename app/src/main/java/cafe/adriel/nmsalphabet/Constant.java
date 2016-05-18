@@ -42,6 +42,7 @@ public class Constant {
 
     public static final List<Triple<String, String, String>> TRANSLATORS = new ArrayList<>(Arrays.asList(
             new Triple<>(LanguageUtil.LANGUAGE_EN, "Adriel Café", "@adrielcafe"),
+            new Triple<>(LanguageUtil.LANGUAGE_EN, "Natascha Brell", ""),
             new Triple<>(LanguageUtil.LANGUAGE_PT, "Adriel Café", "@adrielcafe"),
             new Triple<>(LanguageUtil.LANGUAGE_DE, "Natascha Brell", "")
     ));
