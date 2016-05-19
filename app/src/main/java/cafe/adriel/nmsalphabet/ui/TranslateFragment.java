@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,17 +28,21 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.TranslationUtil;
 import cafe.adriel.nmsalphabet.util.Util;
+import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class TranslateFragment extends BaseFragment {
 
     private AlienRace selectedRace;
     private String languageCode;
+    private DynamicBox viewState;
 
     @BindView(R.id.search_layout)
     RelativeLayout searchLayout;
@@ -51,6 +56,8 @@ public class TranslateFragment extends BaseFragment {
     FloatingActionButton fabView;
     @BindView(R.id.language)
     MaterialSpinner languageView;
+    @BindView(R.id.translation_layout)
+    ScrollView translationLayout;
     @BindView(R.id.translation_separator)
     View translationSeparatorView;
     @BindView(R.id.translated_phrase)
@@ -67,6 +74,7 @@ public class TranslateFragment extends BaseFragment {
 
     @Override
     protected void init(){
+        viewState = TranslationUtil.createViewState(getContext(), translationLayout);
         initControls();
         initFab();
         initLanguage();
@@ -181,13 +189,20 @@ public class TranslateFragment extends BaseFragment {
     }
 
     private void translatePhrase(){
+        final String phrase = searchView.getText().toString();
         Util.hideSoftKeyboard(getActivity());
-        String phrase = searchView.getText().toString();
         if(Util.isNotEmpty(phrase) && selectedRace != null) {
-            languageView.setVisibility(View.VISIBLE);
-            translationSeparatorView.setVisibility(View.VISIBLE);
-            translatedPhraseView.setVisibility(View.VISIBLE);
-            translatedPhraseView.setText(phrase);
+            viewState.showCustomView(Constant.STATE_LOADING);
+            Util.asyncCall(2000, new Runnable() {
+                @Override
+                public void run() {
+                    languageView.setVisibility(View.VISIBLE);
+                    translationSeparatorView.setVisibility(View.VISIBLE);
+                    translatedPhraseView.setVisibility(View.VISIBLE);
+                    translatedPhraseView.setText(phrase);
+                    viewState.hideAll();
+                }
+            });
         }
     }
 
