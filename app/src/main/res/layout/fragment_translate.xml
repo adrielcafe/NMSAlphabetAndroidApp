@@ -101,27 +101,42 @@
                 android:background="@color/gray_light"
                 android:visibility="invisible"/>
 
-            <ScrollView
-                android:id="@+id/translation_layout"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp">
+                android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/translated_phrase"
+                <ScrollView
+                    android:id="@+id/translation_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/legend"
+                    android:paddingBottom="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:background="@color/bg_white"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:id="@+id/translated_phrase"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textAppearance="@android:style/TextAppearance.Large"/>
+
+                </ScrollView>
+
+                <TextView
+                    android:id="@+id/legend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="start|top"
-                    android:textColor="@android:color/black"
-                    android:textAppearance="@android:style/TextAppearance.Large"
-                    android:background="@color/bg_white"
-                    android:inputType="textNoSuggestions"
-                    android:enabled="false"
+                    android:layout_alignParentBottom="true"
+                    android:padding="5dp"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:text="@string/translation_not_found_with_icon"
+                    android:singleLine="true"
                     android:visibility="invisible"/>
 
-            </ScrollView>
+            </RelativeLayout>
 
         </LinearLayout>
 

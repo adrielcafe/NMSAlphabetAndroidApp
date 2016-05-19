@@ -205,6 +205,21 @@ public class DbUtil {
                 .findInBackground(callback);
     }
 
+    public static AlienWordTranslation getBestTranslation(AlienRace race, AlienWord word, String language){
+        try {
+            return ParseQuery.getQuery(AlienWordTranslation.class)
+                    .whereEqualTo("race", race)
+                    .whereEqualTo("word", word)
+                    .whereEqualTo("language", language)
+                    .whereGreaterThan("likesCount", 0)
+                    .addDescendingOrder("likesCount")
+                    .addAscendingOrder("dislikesCount")
+                    .getFirst();
+        } catch (Exception e){
+            return null;
+        }
+    }
+
     public static void getTranslations(AlienRace race, AlienWord word, String language, int page, FindCallback<AlienWordTranslation> callback){
         ParseQuery.getQuery(AlienWordTranslation.class)
                 .whereEqualTo("race", race)

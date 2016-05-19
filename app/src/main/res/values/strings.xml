@@ -8,6 +8,7 @@
     <string name="connect_internet">Connect to the Internet</string>
     <string name="nothing_found">Nothing Found</string>
     <string name="no_translation_found">No translation found</string>
+    <string name="translation_not_found_with_icon">� = Translation not found</string>
     <string name="try_another_language">Try in another language</string>
     <string name="home">Home</string>
     <string name="translate">Translate</string>

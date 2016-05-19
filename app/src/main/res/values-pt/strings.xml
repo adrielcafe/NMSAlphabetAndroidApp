@@ -75,5 +75,6 @@
     <string name="we_became_better">Nos tornamos melhores</string>
     <string name="current_version_not_supported">A versão atual do aplicativo não é mais suportada</string>
     <string name="update_app">Atualizar Aplicativo</string>
+    <string name="translation_not_found_with_icon">� = Tradução não encontrada</string>
 
 </resources>
