@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -197,7 +198,7 @@ public class TranslationEditorActivity extends BaseActivity {
         fabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                scanPicture();
             }
         });
     }
@@ -333,6 +334,11 @@ public class TranslationEditorActivity extends BaseActivity {
             }
         }
         return translation;
+    }
+
+    // TODO
+    private void scanPicture(){
+        Log.e("SCAN", "OPEN CAMERA");
     }
 
     private boolean isValid(){

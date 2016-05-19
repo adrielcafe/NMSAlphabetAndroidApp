@@ -56,7 +56,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             settingsList.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    if(scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    if(scrollState == SCROLL_STATE_IDLE) {
                         updatePreferencies(settingsList);
                     }
                 }

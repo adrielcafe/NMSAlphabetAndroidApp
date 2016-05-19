@@ -26,12 +26,9 @@
     <string name="edit_with_icon">{gmi-edit} Editar</string>
     <string name="about">Sobre</string>
     <string name="account">Conta</string>
-    <string name="english">Inglês</string>
     <string name="feedback">Contato</string>
     <string name="feedback_summary">Envie sugestões ou tire dúvidas</string>
-    <string name="german">Alemão</string>
     <string name="language">Idioma</string>
-    <string name="portuguese">Português</string>
     <string name="rate">Avaliar</string>
     <string name="rate_summary">Gostou do app? Dê 5 estrelas no Google Play!</string>
     <string name="share">Compartilhar</string>
