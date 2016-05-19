@@ -121,6 +121,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/black"
+                        android:textColorLink="@android:color/black"
                         android:textAppearance="@android:style/TextAppearance.Large"/>
 
                 </ScrollView>
