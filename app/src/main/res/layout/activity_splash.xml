@@ -38,7 +38,8 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="50dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/facebook_signin"
@@ -97,7 +98,6 @@
         android:layout_marginBottom="75dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
         app:SpinKit_Color="@android:color/white"
         app:SpinKit_Style="ThreeBounce" />
 

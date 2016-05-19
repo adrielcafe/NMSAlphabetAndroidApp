@@ -104,11 +104,14 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 if(!App.forceUpdate(SplashActivity.this)) {
                     if (hasSignedIn() && Util.isConnected(SplashActivity.this)) {
+                        setLoading(true);
                         if (hasSignedInWithFacebook()) {
                             facebookSignIn();
                         } else {
                             anonymousSignIn();
                         }
+                    } else {
+                        setLoading(false);
                     }
                 } else {
                     finish();
@@ -193,12 +196,14 @@ public class SplashActivity extends BaseActivity {
                     fadeInView = signInLayout;
                     fadeOutView = loadView;
                 }
-                new FadeOutAnimation(fadeOutView).setListener(new AnimationListener() {
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        new FadeInAnimation(fadeInView).animate();
-                    }
-                }).animate();
+                if(fadeInView.getVisibility() != View.VISIBLE) {
+                    new FadeOutAnimation(fadeOutView).setListener(new AnimationListener() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            new FadeInAnimation(fadeInView).animate();
+                        }
+                    }).animate();
+                }
             }
         });
     }

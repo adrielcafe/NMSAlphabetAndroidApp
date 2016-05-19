@@ -25,22 +25,23 @@
                 android:id="@+id/races"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"/>
+                android:layout_marginBottom="30dp"
+                android:textAppearance="@android:style/TextAppearance.Medium"/>
 
             <RelativeLayout
-                android:id="@+id/phrase_layout"
+                android:id="@+id/search_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="20dp">
 
                 <EditText
-                    android:id="@+id/phrase"
+                    android:id="@+id/search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@+id/phrase_clear"
+                    android:layout_toStartOf="@+id/search_clear"
                     android:singleLine="true"
                     android:hint="@string/type_alien_phrase"
                     android:textColorHint="@color/gray"
@@ -53,7 +54,7 @@
                     android:imeOptions="actionSearch"/>
 
                 <TextView
-                    android:id="@+id/phrase_clear"
+                    android:id="@+id/search_clear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -73,40 +74,26 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/translation_header"
-                android:layout_width="match_parent"
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/language"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:orientation="horizontal"
-                android:visibility="invisible">
-
-                <ImageView
-                    android:id="@+id/country_flag"
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/flag_brazil_small"/>
-
-                <TextView
-                    android:layout_marginBottom="0dp"
-                    android:gravity="start|center_vertical"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/best_translation"
-                    style="@style/AlienWordTranslationTextView"/>
-
-            </LinearLayout>
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_gravity="center_vertical"
+                android:minWidth="175dp"
+                android:singleLine="true"
+                android:drawablePadding="5dp"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:visibility="invisible"/>
 
             <View
                 android:id="@+id/translation_separator"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
