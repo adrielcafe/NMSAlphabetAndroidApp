@@ -101,20 +101,27 @@
                 android:background="@color/gray_light"
                 android:visibility="invisible"/>
 
-            <EditText
-                android:id="@+id/translated_phrase"
+            <ScrollView
+                android:id="@+id/translation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="20dp"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:gravity="start|top"
-                android:textColor="@android:color/black"
-                android:textAppearance="@android:style/TextAppearance.Large"
-                android:background="@color/bg_white"
-                android:inputType="textNoSuggestions"
-                android:enabled="false"
-                android:visibility="invisible"/>
+                android:paddingEnd="20dp">
+
+                <EditText
+                    android:id="@+id/translated_phrase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|top"
+                    android:textColor="@android:color/black"
+                    android:textAppearance="@android:style/TextAppearance.Large"
+                    android:background="@color/bg_white"
+                    android:inputType="textNoSuggestions"
+                    android:enabled="false"
+                    android:visibility="invisible"/>
+
+            </ScrollView>
 
         </LinearLayout>
 

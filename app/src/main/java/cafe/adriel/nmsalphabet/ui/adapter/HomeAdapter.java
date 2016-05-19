@@ -86,7 +86,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             viewStates = new HashMap<>();
         }
         if(!viewStates.containsKey(word.getObjectId())) {
-            viewStates.put(word.getObjectId(), createViewState(holder));
+            viewStates.put(word.getObjectId(), TranslationUtil.createViewState(context, holder.translationsLayout));
         }
 
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 0);
@@ -155,18 +155,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         });
 
         updateLanguage(holder, LanguageUtil.languageCodeToLanguage(context, languageCode));
-    }
-
-    private DynamicBox createViewState(ViewHolder holder){
-        View loadingState = LayoutInflater.from(context).inflate(R.layout.state_translations_loading, null, false);
-        View emptyState = LayoutInflater.from(context).inflate(R.layout.state_translations_empty, null, false);
-        View noInternetState = LayoutInflater.from(context).inflate(R.layout.state_translations_no_internet, null, false);
-
-        DynamicBox viewState = new DynamicBox(context, holder.translationsLayout);
-        viewState.addCustomView(loadingState, Constant.STATE_LOADING);
-        viewState.addCustomView(emptyState, Constant.STATE_EMPTY);
-        viewState.addCustomView(noInternetState, Constant.STATE_NO_INTERNET);
-        return viewState;
     }
 
     private DynamicBox getViewState(AlienWord word){

@@ -73,7 +73,7 @@ public class TranslationUtil {
                 .show();
     }
 
-    private static DynamicBox createViewState(Context context, View view){
+    public static DynamicBox createViewState(Context context, View view){
         View loadingState = LayoutInflater.from(context).inflate(R.layout.state_translations_loading, null, false);
         View emptyState = LayoutInflater.from(context).inflate(R.layout.state_translations_empty, null, false);
         View noInternetState = LayoutInflater.from(context).inflate(R.layout.state_translations_no_internet, null, false);

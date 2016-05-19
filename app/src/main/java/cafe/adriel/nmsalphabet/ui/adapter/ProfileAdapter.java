@@ -40,6 +40,7 @@ import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.TranslationUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import mehdi.sakout.dynamicbox.DynamicBox;
 
@@ -80,7 +81,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             viewStates = new HashMap<>();
         }
         if(!viewStates.containsKey(word.getObjectId())) {
-            viewStates.put(word.getObjectId(), createViewState(holder));
+            viewStates.put(word.getObjectId(), TranslationUtil.createViewState(context, holder.translationsLayout));
         }
 
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 0);
@@ -119,18 +120,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 shareTranslation(race, word);
             }
         });
-    }
-
-    private DynamicBox createViewState(ViewHolder holder){
-        View loadingState = LayoutInflater.from(context).inflate(R.layout.state_translations_loading, null, false);
-        View emptyState = LayoutInflater.from(context).inflate(R.layout.state_translations_empty, null, false);
-        View noInternetState = LayoutInflater.from(context).inflate(R.layout.state_translations_no_internet, null, false);
-
-        DynamicBox viewState = new DynamicBox(context, holder.translationsLayout);
-        viewState.addCustomView(loadingState, Constant.STATE_LOADING);
-        viewState.addCustomView(emptyState, Constant.STATE_EMPTY);
-        viewState.addCustomView(noInternetState, Constant.STATE_NO_INTERNET);
-        return viewState;
     }
 
     private DynamicBox getViewState(AlienWord word){
