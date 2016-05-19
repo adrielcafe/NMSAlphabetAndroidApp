@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,7 +28,9 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +39,7 @@ import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.ui.util.TextViewClickMovement;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -48,6 +52,7 @@ public class TranslateFragment extends BaseFragment {
     private AlienRace selectedRace;
     private String languageCode;
     private DynamicBox viewState;
+    private List<AlienWordTranslation> translations;
 
     @BindView(R.id.search_layout)
     RelativeLayout searchLayout;
@@ -82,6 +87,14 @@ public class TranslateFragment extends BaseFragment {
     @Override
     protected void init(){
         viewState = TranslationUtil.createViewState(getContext(), translationLayout);
+        translatedPhraseView.setMovementMethod(new TextViewClickMovement(getContext(), new TextViewClickMovement.OnTextViewClickMovementListener() {
+            @Override
+            public void onLinkClicked(String linkText, TextViewClickMovement.LinkType linkType) {
+                showWordTranslationsDialog(linkText);
+            }
+            @Override
+            public void onLongClick(String text) { }
+        }));
         initControls();
         initFab();
         initLanguage();
@@ -198,7 +211,7 @@ public class TranslateFragment extends BaseFragment {
 
     private void translatePhrase(){
         final String phrase = searchView.getText().toString().trim();
-        final List<AlienWordTranslation> translations = new ArrayList<>();
+        translations = new ArrayList<>();
         Util.hideSoftKeyboard(getActivity());
         if(Util.isNotEmpty(phrase) && selectedRace != null) {
             viewState.showCustomView(Constant.STATE_LOADING);
@@ -209,7 +222,7 @@ public class TranslateFragment extends BaseFragment {
                     String[] words = phrase.split(" ");
                     for(String w : words){
                         AlienWord word = DbUtil.getWord(selectedRace, w);
-                        if(w != null){
+                        if(word != null){
                             AlienWordTranslation translation = DbUtil.getBestTranslation(selectedRace, word, languageCode);
                             translations.add(translation);
                         }
@@ -219,7 +232,7 @@ public class TranslateFragment extends BaseFragment {
                         @Override
                         public void run() {
                             for(AlienWordTranslation translation : translations){
-                                String t = translation == null ? "<font color='#D32F2F'>�</font>" : translation.getTranslation();
+                                String t = translation == null ? "<font color='#D32F2F'>�</font>" : "<a href='http://nms.ab'>" + translation.getTranslation() + "</a>";
                                 translatedPhraseView.setText(String.format("%s %s ", translatedPhraseView.getText().toString(), t));
                             }
                             languageView.setVisibility(View.VISIBLE);
@@ -261,6 +274,15 @@ public class TranslateFragment extends BaseFragment {
             flagResId = R.drawable.flag_germany_small;
         }
         languageView.setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
+    }
+
+    private void showWordTranslationsDialog(String translation){
+        for(AlienWordTranslation t : translations){
+            if(t != null && t.getTranslation().equals(translation)){
+                TranslationUtil.showTranslationsDialog(getContext(), t.getWord(), languageCode);
+                break;
+            }
+        }
     }
 
     private boolean isValid(){
