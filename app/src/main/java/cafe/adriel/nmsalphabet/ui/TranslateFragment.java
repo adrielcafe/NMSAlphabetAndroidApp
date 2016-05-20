@@ -128,7 +128,7 @@ public class TranslateFragment extends BaseFragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if (isValid()) {
+                    if (isPhraseValid()) {
                         translatePhrase();
                     }
                 }
@@ -283,12 +283,7 @@ public class TranslateFragment extends BaseFragment {
         legendView.setVisibility(View.VISIBLE);
         translationLayout.setVisibility(View.VISIBLE);
         translatedPhraseView.setText(Html.fromHtml(translatedPhrase));
-
-        if(Util.isNotEmpty(translatedPhrase)){
-            viewState.hideAll();
-        } else {
-            viewState.showCustomView(Constant.STATE_EMPTY);
-        }
+        viewState.hideAll();
     }
 
     private void showWordTranslationsDialog(String translation){
@@ -309,7 +304,7 @@ public class TranslateFragment extends BaseFragment {
         return null;
     }
 
-    private boolean isValid(){
+    private boolean isPhraseValid(){
         if(racesView.getText().toString().equals(getString(R.string.select_alien_race))){
             Toast.makeText(getContext(), R.string.select_alien_race, Toast.LENGTH_SHORT).show();
             return false;
@@ -319,4 +314,5 @@ public class TranslateFragment extends BaseFragment {
         }
         return true;
     }
+
 }
