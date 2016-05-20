@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,9 +27,7 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +45,8 @@ import cafe.adriel.nmsalphabet.util.Util;
 import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class TranslateFragment extends BaseFragment {
+
+    private static final String TRANSLATION_NOT_FOUND_ICON = "<font color='#D32F2F'>�</font>";
 
     private AlienRace selectedRace;
     private String languageCode;
@@ -87,13 +86,19 @@ public class TranslateFragment extends BaseFragment {
     @Override
     protected void init(){
         viewState = TranslationUtil.createViewState(getContext(), translationLayout);
+        legendView.setText(Html.fromHtml(TRANSLATION_NOT_FOUND_ICON + " = " + getString(R.string.translation_not_found)));
         translatedPhraseView.setMovementMethod(new TextViewClickMovement(getContext(), new TextViewClickMovement.OnTextViewClickMovementListener() {
             @Override
             public void onLinkClicked(String linkText, TextViewClickMovement.LinkType linkType) {
                 showWordTranslationsDialog(linkText);
             }
             @Override
-            public void onLongClick(String text) { }
+            public void onLongClick(String text) {
+                AlienWordTranslation translation = getTranslation(text);
+                if(translation != null){
+                    Toast.makeText(getContext(), translation.getWord().getWord(), Toast.LENGTH_SHORT).show();
+                }
+            }
         }));
         initControls();
         initFab();
@@ -211,41 +216,36 @@ public class TranslateFragment extends BaseFragment {
 
     private void translatePhrase(){
         final String phrase = searchView.getText().toString().trim();
-        translations = new ArrayList<>();
         Util.hideSoftKeyboard(getActivity());
         if(Util.isNotEmpty(phrase) && selectedRace != null) {
-            viewState.showCustomView(Constant.STATE_LOADING);
+            translations = new ArrayList<>();
             translatedPhraseView.setText("");
+            viewState.showCustomView(Constant.STATE_LOADING);
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
+                    final StringBuilder translatedPhrase = new StringBuilder();
                     String[] words = phrase.split(" ");
                     for(String w : words){
                         AlienWord word = DbUtil.getWord(selectedRace, w);
                         if(word != null){
                             AlienWordTranslation translation = DbUtil.getBestTranslation(selectedRace, word, languageCode);
-                            translations.add(translation);
+                            if(translation != null) {
+                                translations.add(translation);
+                                translatedPhrase.append("<a href='http://nms.ab'>" + translation.getTranslation() + "</a>");
+                            } else {
+                                translatedPhrase.append(TRANSLATION_NOT_FOUND_ICON);
+                            }
+                        } else {
+                            translatedPhrase.append(TRANSLATION_NOT_FOUND_ICON);
                         }
+                        translatedPhrase.append(" ");
                     }
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            for(AlienWordTranslation translation : translations){
-                                String t = translation == null ? "<font color='#D32F2F'>�</font>" : "<a href='http://nms.ab'>" + translation.getTranslation() + "</a>";
-                                translatedPhraseView.setText(String.format("%s %s ", translatedPhraseView.getText().toString(), t));
-                            }
-                            languageView.setVisibility(View.VISIBLE);
-                            translationSeparatorView.setVisibility(View.VISIBLE);
-                            legendView.setVisibility(View.VISIBLE);
-                            translationLayout.setVisibility(View.VISIBLE);
-                            translatedPhraseView.setText(Html.fromHtml(translatedPhraseView.getText().toString().trim()));
-
-                            if(Util.isNotEmpty(translatedPhraseView.getText().toString())){
-                                viewState.hideAll();
-                            } else {
-                                viewState.showCustomView(Constant.STATE_EMPTY);
-                            }
+                            updateTranslatedPhrase(translatedPhrase.toString());
                         }
                     });
                 }
@@ -276,13 +276,37 @@ public class TranslateFragment extends BaseFragment {
         languageView.setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
     }
 
+    private void updateTranslatedPhrase(String translatedPhrase){
+        translatedPhrase = translatedPhrase.trim();
+        languageView.setVisibility(View.VISIBLE);
+        translationSeparatorView.setVisibility(View.VISIBLE);
+        legendView.setVisibility(View.VISIBLE);
+        translationLayout.setVisibility(View.VISIBLE);
+        translatedPhraseView.setText(Html.fromHtml(translatedPhrase));
+
+        if(Util.isNotEmpty(translatedPhrase)){
+            viewState.hideAll();
+        } else {
+            viewState.showCustomView(Constant.STATE_EMPTY);
+        }
+    }
+
     private void showWordTranslationsDialog(String translation){
-        for(AlienWordTranslation t : translations){
-            if(t != null && t.getTranslation().equals(translation)){
-                TranslationUtil.showTranslationsDialog(getContext(), t.getWord(), languageCode);
-                break;
+        AlienWordTranslation t = getTranslation(translation);
+        if(t != null) {
+            TranslationUtil.showTranslationsDialog(getContext(), t.getWord(), languageCode);
+        }
+    }
+
+    private AlienWordTranslation getTranslation(String translation){
+        if(translations != null) {
+            for (AlienWordTranslation t : translations) {
+                if (t != null && t.getTranslation().equals(translation)) {
+                    return t;
+                }
             }
         }
+        return null;
     }
 
     private boolean isValid(){

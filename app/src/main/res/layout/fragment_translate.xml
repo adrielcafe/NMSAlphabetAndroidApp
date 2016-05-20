@@ -133,7 +133,6 @@
                     android:layout_alignParentBottom="true"
                     android:padding="5dp"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    android:text="@string/translation_not_found_with_icon"
                     android:singleLine="true"
                     android:visibility="invisible"/>
 

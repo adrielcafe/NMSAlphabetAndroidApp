@@ -85,17 +85,15 @@ public class TextViewClickMovement extends LinkMovementMethod {
 
         @Override
         public void onLongPress(MotionEvent e) {
-            // Notified when a long press occurs.
-            final String text = mBuffer.toString();
+            final String linkText = getLinkText(mWidget, mBuffer, e);
 
             if (mListener != null) {
-                mListener.onLongClick(text);
+                mListener.onLongClick(linkText);
             }
         }
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent event) {
-            // Notified when tap occurs.
             final String linkText = getLinkText(mWidget, mBuffer, event);
 
             LinkType linkType = LinkType.NONE;
