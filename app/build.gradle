@@ -66,7 +66,7 @@ dependencies {
     compile 'com.parse:parse-android:1.13.0@aar'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
     compile 'com.parse.bolts:bolts-tasks:1.4.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.11.0@aar'
+    compile 'com.facebook.android:facebook-android-sdk:4.12.0@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
     compile('io.paperdb:paperdb:1.5@aar'){ transitive = true }
 
@@ -75,7 +75,7 @@ dependencies {
     compile 'com.github.ybq:Android-SpinKit:1.0.4@aar'
     compile 'com.github.2359media:EasyAndroidAnimations:0.8@aar'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4@aar'
-    compile 'com.github.devlight.navigationtabbar:library:1.1.6@aar'
+    compile 'com.github.devlight.navigationtabbar:library:1.1.8@aar'
     compile 'com.jaredrummler:material-spinner:1.0.9@aar'
     compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1@aar'
     compile 'com.ramotion.foldingcell:folding-cell:1.0.1@aar'
