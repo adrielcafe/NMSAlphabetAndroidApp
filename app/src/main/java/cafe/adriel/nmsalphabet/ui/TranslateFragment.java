@@ -27,14 +27,15 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
-import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.util.TextViewClickMovement;
 import cafe.adriel.nmsalphabet.util.DbUtil;
@@ -224,28 +225,13 @@ public class TranslateFragment extends BaseFragment {
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    final StringBuilder translatedPhrase = new StringBuilder();
-                    String[] words = phrase.split(" ");
-                    for(String w : words){
-                        AlienWord word = DbUtil.getWord(selectedRace, w);
-                        if(word != null){
-                            AlienWordTranslation translation = DbUtil.getBestTranslation(selectedRace, word, languageCode);
-                            if(translation != null) {
-                                translations.add(translation);
-                                translatedPhrase.append("<a href='http://nms.ab'>" + translation.getTranslation() + "</a>");
-                            } else {
-                                translatedPhrase.append(TRANSLATION_NOT_FOUND_ICON);
-                            }
-                        } else {
-                            translatedPhrase.append(TRANSLATION_NOT_FOUND_ICON);
-                        }
-                        translatedPhrase.append(" ");
-                    }
-
+                    final String[] words = phrase.split(" ");
+                    final Map<String, AlienWordTranslation> translatedWords = DbUtil
+                            .translateWords(Arrays.asList(words), selectedRace, languageCode);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            updateTranslatedPhrase(translatedPhrase.toString());
+                            updateTranslatedPhrase(words, translatedWords);
                         }
                     });
                 }
@@ -276,14 +262,32 @@ public class TranslateFragment extends BaseFragment {
         languageView.setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
     }
 
-    private void updateTranslatedPhrase(String translatedPhrase){
-        translatedPhrase = translatedPhrase.trim();
+    private void updateTranslatedPhrase(String[] words, Map<String, AlienWordTranslation> translatedWords){
+        final StringBuilder translatedPhrase = new StringBuilder();
+        if(translatedWords != null){
+            for(String word : words){
+                if(translatedWords.containsKey(word)) {
+                    AlienWordTranslation translation = translatedWords.get(word);
+                    translations.add(translation);
+                    translatedPhrase.append("<a href='http://nms.ab'>" + translation.getTranslation() + "</a>");
+                } else {
+                    translatedPhrase.append(TRANSLATION_NOT_FOUND_ICON);
+                }
+                translatedPhrase.append(" ");
+            }
+        }
+
+        String translatedPhraseStr = translatedPhrase.toString().trim();
         languageView.setVisibility(View.VISIBLE);
         translationSeparatorView.setVisibility(View.VISIBLE);
         legendView.setVisibility(View.VISIBLE);
         translationLayout.setVisibility(View.VISIBLE);
-        translatedPhraseView.setText(Html.fromHtml(translatedPhrase));
-        viewState.hideAll();
+        translatedPhraseView.setText(Html.fromHtml(translatedPhraseStr));
+        if(Util.isNotEmpty(translatedPhraseStr)) {
+            viewState.hideAll();
+        } else {
+            viewState.showCustomView(Constant.STATE_EMPTY);
+        }
     }
 
     private void showWordTranslationsDialog(String translation){
