@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -49,8 +48,6 @@ public class TranslationEditorActivity extends BaseActivity {
     private AlienWordTranslation ptTranslation;
     private AlienWordTranslation deTranslation;
 
-    @BindView(R.id.content_layout)
-    FrameLayout contentLayout;
     @BindView(R.id.races)
     MaterialSpinner racesView;
     @BindView(R.id.alien_word)

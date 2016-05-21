@@ -101,42 +101,25 @@
                 android:background="@color/gray_light"
                 android:visibility="invisible"/>
 
-            <RelativeLayout
+            <ScrollView
+                android:id="@+id/translation_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ScrollView
-                    android:id="@+id/translation_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/legend"
-                    android:paddingBottom="20dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:background="@color/bg_white"
-                    android:visibility="invisible">
-
-                    <TextView
-                        android:id="@+id/translated_phrase"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/black"
-                        android:textColorLink="@android:color/black"
-                        android:textAppearance="@android:style/TextAppearance.Large"/>
-
-                </ScrollView>
+                android:layout_height="match_parent"
+                android:paddingBottom="20dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:background="@color/bg_white"
+                android:visibility="invisible">
 
                 <TextView
-                    android:id="@+id/legend"
+                    android:id="@+id/translated_phrase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:padding="5dp"
-                    android:textAppearance="@android:style/TextAppearance.Small"
-                    android:singleLine="true"
-                    android:visibility="invisible"/>
+                    android:textColor="@android:color/black"
+                    android:textColorLink="@android:color/black"
+                    android:textAppearance="@android:style/TextAppearance.Large"/>
 
-            </RelativeLayout>
+            </ScrollView>
 
         </LinearLayout>
 

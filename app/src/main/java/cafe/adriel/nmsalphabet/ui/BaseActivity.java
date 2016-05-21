@@ -19,7 +19,6 @@ import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
-import icepick.Icepick;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected SystemBarTintManager tintManager;
@@ -31,13 +30,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         ThemeUtil.setCustomTheme(this);
         LanguageUtil.updateLanguage(this);
         tintBars();
-        Icepick.restoreInstanceState(this, savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
 
     @Override

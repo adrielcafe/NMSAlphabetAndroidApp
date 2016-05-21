@@ -36,6 +36,7 @@ public class Constant {
     public static final String SETTINGS_ABOUT_RATE          = "about_rate";
     public static final String SETTINGS_ABOUT_VERSION	    = "about_version";
     public static final String SETTINGS_HAS_SIGNED_IN	    = "hasSignedIn";
+    public static final String SETTINGS_FACEBOOK_USER_ID    = "facebookUserId";
 
     public static final String STATE_LOADING           = "loading";
     public static final String STATE_EMPTY             = "empty";

@@ -141,7 +141,7 @@ public class SplashActivity extends BaseActivity {
                             AsyncTask.execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    SocialUtil.updateFacebookProfile();
+                                    SocialUtil.updateFacebookProfile(SplashActivity.this);
                                     SocialUtil.updateFabricProfile();
                                     afterSignIn();
                                 }

@@ -280,7 +280,7 @@ public class WordsFragment extends BaseFragment {
         });
         userNameView.setText(App.isSignedIn() ? App.getUser().getName() : getString(R.string.unknown_explorer));
         Glide.with(getContext())
-                .load(App.isSignedIn() ? SocialUtil.getUserImageUrl() : R.drawable.default_user_image)
+                .load(App.isSignedIn() ? SocialUtil.getUserImageUrl(getContext()) : R.drawable.default_user_image)
                 .asBitmap()
                 .centerCrop()
                 .into(new BitmapImageViewTarget(userImageView) {
@@ -453,16 +453,18 @@ public class WordsFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (loading) {
-                        new FadeInAnimation(loadingView).animate();
-                    } else {
-                        Util.asyncCall(500, new Runnable() {
-                            @Override
-                            public void run() {
-                                new FadeOutAnimation(loadingView).animate();
-                            }
-                        });
-                    }
+                    try {
+                        if (loading) {
+                            new FadeInAnimation(loadingView).animate();
+                        } else {
+                            Util.asyncCall(500, new Runnable() {
+                                @Override
+                                public void run() {
+                                    new FadeOutAnimation(loadingView).animate();
+                                }
+                            });
+                        }
+                    } catch (Exception e){ }
                 }
             });
         }

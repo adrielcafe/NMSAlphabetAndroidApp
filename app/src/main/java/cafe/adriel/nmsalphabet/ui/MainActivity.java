@@ -33,10 +33,6 @@ import cafe.adriel.nmsalphabet.util.Util;
 public class MainActivity extends BaseActivity {
     private static Activity instance;
 
-    private WordsFragment homeFrag;
-    private TranslateFragment translateFrag;
-    private WordsFragment profileFrag;
-
     @BindView(R.id.tabs)
     NavigationTabBar tabView;
     @BindView(R.id.pager)
@@ -160,14 +156,11 @@ public class MainActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    homeFrag = WordsFragment.newInstance(WordsFragment.Type.HOME);
-                    return homeFrag;
+                    return WordsFragment.newInstance(WordsFragment.Type.HOME);
                 case 1:
-                    translateFrag = new TranslateFragment();
-                    return translateFrag;
+                    return new TranslateFragment();
                 case 2:
-                    profileFrag = WordsFragment.newInstance(WordsFragment.Type.PROFILE);
-                    return profileFrag;
+                    return WordsFragment.newInstance(WordsFragment.Type.PROFILE);
                 default:
                     return null;
             }

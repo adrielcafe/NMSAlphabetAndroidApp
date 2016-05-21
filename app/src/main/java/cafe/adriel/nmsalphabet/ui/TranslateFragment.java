@@ -47,12 +47,10 @@ import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class TranslateFragment extends BaseFragment {
 
-    private static final String TRANSLATION_NOT_FOUND_ICON = "<font color='#D32F2F'>�</font>";
-
-    private AlienRace selectedRace;
     private String languageCode;
-    private DynamicBox viewState;
+    private AlienRace selectedRace;
     private List<AlienWordTranslation> translations;
+    private DynamicBox viewState;
 
     @BindView(R.id.search_layout)
     RelativeLayout searchLayout;
@@ -72,8 +70,6 @@ public class TranslateFragment extends BaseFragment {
     View translationSeparatorView;
     @BindView(R.id.translated_phrase)
     TextView translatedPhraseView;
-    @BindView(R.id.legend)
-    TextView legendView;
 
     @Nullable
     @Override
@@ -85,9 +81,14 @@ public class TranslateFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        updateLanguage(languageCode);
+    }
+
+    @Override
     protected void init(){
         viewState = TranslationUtil.createViewState(getContext(), translationLayout);
-        legendView.setText(Html.fromHtml(TRANSLATION_NOT_FOUND_ICON + " = " + getString(R.string.translation_not_found)));
         translatedPhraseView.setMovementMethod(new TextViewClickMovement(getContext(), new TextViewClickMovement.OnTextViewClickMovementListener() {
             @Override
             public void onLinkClicked(String linkText, TextViewClickMovement.LinkType linkType) {
@@ -163,7 +164,6 @@ public class TranslateFragment extends BaseFragment {
             public void onClick(View v) {
                 languageView.setVisibility(View.INVISIBLE);
                 translationSeparatorView.setVisibility(View.INVISIBLE);
-                legendView.setVisibility(View.INVISIBLE);
                 translationLayout.setVisibility(View.INVISIBLE);
                 translatedPhraseView.setText("");
                 searchView.setText("");
@@ -259,7 +259,9 @@ public class TranslateFragment extends BaseFragment {
             languageCode = LanguageUtil.LANGUAGE_DE;
             flagResId = R.drawable.flag_germany_small;
         }
-        languageView.setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
+        try {
+            languageView.setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
+        } catch (Exception e){ }
     }
 
     private void updateTranslatedPhrase(String[] words, Map<String, AlienWordTranslation> translatedWords){
@@ -271,7 +273,7 @@ public class TranslateFragment extends BaseFragment {
                     translations.add(translation);
                     translatedPhrase.append("<a href='http://nms.ab'>" + translation.getTranslation() + "</a>");
                 } else {
-                    translatedPhrase.append(TRANSLATION_NOT_FOUND_ICON);
+                    translatedPhrase.append("<font color='#D32F2F'>" + word + "</font>");
                 }
                 translatedPhrase.append(" ");
             }
@@ -280,7 +282,6 @@ public class TranslateFragment extends BaseFragment {
         String translatedPhraseStr = translatedPhrase.toString().trim();
         languageView.setVisibility(View.VISIBLE);
         translationSeparatorView.setVisibility(View.VISIBLE);
-        legendView.setVisibility(View.VISIBLE);
         translationLayout.setVisibility(View.VISIBLE);
         translatedPhraseView.setText(Html.fromHtml(translatedPhraseStr));
         if(Util.isNotEmpty(translatedPhraseStr)) {

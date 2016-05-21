@@ -23,6 +23,7 @@ import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.model.User;
 import cafe.adriel.nmsalphabet.util.DbUtil;
+import cafe.adriel.nmsalphabet.util.SocialUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.fabric.sdk.android.Fabric;
@@ -35,7 +36,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         CustomActivityOnCrash.install(this);
+        EventBus.getDefault().register(this);
+        Paper.init(this);
         Typekit.getInstance()
                 .addNormal(Typekit.createFromAsset(this, "fonts/LatoLatin-Regular.ttf"))
                 .addBold(Typekit.createFromAsset(this, "fonts/LatoLatin-Bold.ttf"))
@@ -43,8 +47,7 @@ public class App extends Application {
                 .addBoldItalic(Typekit.createFromAsset(this, "fonts/LatoLatin-BoldItalic.ttf"))
                 .addCustom1(Typekit.createFromAsset(this, "fonts/Geomanist-Regular.otf"))
                 .addCustom2(Typekit.createFromAsset(this, "fonts/Handlee-Regular.ttf"));
-        EventBus.getDefault().register(this);
-        Paper.init(this);
+
         initFabric();
         initParse();
         initFacebook();
@@ -96,6 +99,7 @@ public class App extends Application {
     }
 
     public static void signOut(Context context){
+        SocialUtil.logOut();
         ParseUser.logOut();
         Util.getSettings(context).edit().clear().commit();
         user = null;

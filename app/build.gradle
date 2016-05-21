@@ -57,8 +57,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0' // Not using yet
 
-    provided 'frankiesardo:icepick-processor:3.2.0' // Not using yet
-    compile 'frankiesardo:icepick:3.2.0' // Not using yet
     apt     'com.jakewharton:butterknife-compiler:8.0.1'
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
