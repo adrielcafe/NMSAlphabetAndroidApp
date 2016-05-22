@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         targetSdkVersion 23
-        versionCode 1
-        versionName "0.0.1 Alpha"
+        versionCode 10
+        versionName "0.1.0 Beta"
     }
     productFlavors {
         dev {
@@ -61,6 +61,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.goebl:david-webb:1.3.0'
     compile 'com.parse:parse-android:1.13.0@aar'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
     compile 'com.parse.bolts:bolts-tasks:1.4.0'
@@ -83,6 +84,8 @@ dependencies {
     compile 'io.github.kobakei:ratethisapp:1.0.3@aar'
     compile 'com.github.medyo:dynamicbox:1.2@aar'
     compile 'com.github.iammert:MaterialIntroView:1.5.2@aar' // Not using yet
+    compile 'com.github.jkwiecien:EasyImage:1.2.3@aar'
+    compile 'com.isseiaoki:simplecropview:1.1.4@aar'
 }
 
 repositories {

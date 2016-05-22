@@ -1,16 +1,17 @@
 package cafe.adriel.nmsalphabet.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,10 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.ImageCroppedEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.util.TextViewClickMovement;
@@ -44,8 +50,12 @@ import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.TranslationUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import mehdi.sakout.dynamicbox.DynamicBox;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class TranslateFragment extends BaseFragment {
+
+    private static final int REQUEST_TAKE_PICTURE = 0;
 
     private String languageCode;
     private AlienRace selectedRace;
@@ -84,6 +94,57 @@ public class TranslateFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         updateLanguage(languageCode);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(), new DefaultCallback() {
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                cropPicture(imageFile);
+            }
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Subscribe(sticky = true)
+    public void onEvent(final ImageCroppedEvent event) {
+        EventBus.getDefault().removeStickyEvent(ImageCroppedEvent.class);
+        final AlertDialog dialog = Util.showLoadingDialog(getContext());
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                final String text = TranslationUtil.extractTextFromImage(getContext(), event.image);
+                if(Util.isNotEmpty(text)){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            searchView.setText(text);
+                            translatePhrase();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.no_word_found_image), Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
@@ -180,7 +241,7 @@ public class TranslateFragment extends BaseFragment {
         fabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanPicture();
+                takePicture();
             }
         });
     }
@@ -216,7 +277,7 @@ public class TranslateFragment extends BaseFragment {
     }
 
     private void translatePhrase(){
-        final String phrase = searchView.getText().toString().trim();
+        final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
         Util.hideSoftKeyboard(getActivity());
         if(Util.isNotEmpty(phrase) && selectedRace != null) {
             translations = new ArrayList<>();
@@ -239,9 +300,14 @@ public class TranslateFragment extends BaseFragment {
         }
     }
 
-    // TODO
-    private void scanPicture(){
-        Log.e("SCAN", "OPEN CAMERA");
+    private void takePicture(){
+        EasyImage.openChooserWithGallery(this, getString(R.string.select_an_image), REQUEST_TAKE_PICTURE);
+    }
+
+    private void cropPicture(File imageFile){
+        Intent i = new Intent(getContext(), CropImageActivity.class);
+        i.putExtra(Constant.EXTRA_IMAGE_PATH, imageFile.getPath());
+        startActivity(i);
     }
 
     private void updateLanguage(String language){

@@ -1,6 +1,7 @@
 package cafe.adriel.nmsalphabet.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
@@ -10,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.goebl.david.Webb;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.readystatesoftware.viewbadger.BadgeView;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,33 @@ import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
 import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class TranslationUtil {
+
+    private static final String VISION_API_URL          = "https://vision.googleapis.com/v1/images:annotate?key=";
+    private static final String VISION_API_REQUEST_BODY =
+            "{\"requests\": [{\"features\": [{\"type\": \"TEXT_DETECTION\"}],\"image\": {\"content\": \"%s\"}}]}";
+
+    public static String extractTextFromImage(Context context, Bitmap image){
+        String base64Img = Util.toBase64(image);
+        String body = String.format(VISION_API_REQUEST_BODY, base64Img);
+        try {
+            JSONObject json = Util.getWebb()
+                    .post(VISION_API_URL + context.getString(R.string.vision_key))
+                    .header(Webb.HDR_CONTENT_TYPE, Webb.APP_JSON)
+                    .body(body)
+                    .ensureSuccess()
+                    .asJsonObject()
+                    .getBody();
+            String text = json.getJSONArray("responses")
+                    .getJSONObject(0)
+                    .getJSONArray("textAnnotations")
+                    .getJSONObject(0)
+                    .getString("description");
+            return text.toUpperCase();
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static void showTranslationsDialog(final Context context, final AlienWord word, final String languageCode){
         View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_translations, null, false);

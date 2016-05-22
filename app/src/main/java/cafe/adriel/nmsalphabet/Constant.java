@@ -22,7 +22,8 @@ public class Constant {
     public static final String GENDER_MALE      = "male";
     public static final String GENDER_FEMALE    = "female";
 
-    public static final String EXTRA_TYPE   = "type";
+    public static final String EXTRA_IMAGE_PATH = "imageUri";
+    public static final String EXTRA_TYPE       = "type";
 
     public static final String SETTINGS_ACCOUNT             = "account";
     public static final String SETTINGS_ACCOUNT_STATUS      = "account_status";

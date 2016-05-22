@@ -76,5 +76,7 @@
     <string name="current_version_not_supported">A versão atual do aplicativo não é mais suportada</string>
     <string name="update_app">Atualizar Aplicativo</string>
     <string name="translation_not_found">Tradução não encontrada</string>
+    <string name="select_an_image">Selecione uma imagem</string>
+    <string name="no_word_found_image">Nenhuma palavra encontrada na imagem</string>
 
 </resources>
