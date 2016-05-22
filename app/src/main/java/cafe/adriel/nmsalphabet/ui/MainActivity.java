@@ -15,6 +15,8 @@ import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
 import com.gigamole.library.NavigationTabBar;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -25,15 +27,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.App;
+import cafe.adriel.nmsalphabet.BuildConfig;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.util.ViewPagerFadeTransformer;
+import cafe.adriel.nmsalphabet.util.AdUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class MainActivity extends BaseActivity {
 
     private static Activity instance;
+    private static InterstitialAd interstitialAd;
     private boolean backPressed;
 
     @BindView(R.id.tabs)
@@ -42,6 +47,8 @@ public class MainActivity extends BaseActivity {
     ViewPager pagerView;
     @BindView(R.id.fab)
     FloatingActionButton fabView;
+    @BindView(R.id.ad)
+    AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +93,10 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.fab)
     public void addTranslation(){
         if(Util.isConnected(this)) {
-            if (App.isSignedIn()) {
-                startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
+            if(App.isPro(this) || BuildConfig.DEBUG){
+                openTranslationEditor();
             } else {
-                showSignInDialog(MainActivity.this);
+                AdUtil.showInterstitialAd(this, interstitialAd);
             }
         }
     }
@@ -104,6 +111,13 @@ public class MainActivity extends BaseActivity {
         pagerView.setOffscreenPageLimit(2);
         pagerView.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
         pagerView.setPageTransformer(false, new ViewPagerFadeTransformer());
+        interstitialAd = AdUtil.initInterstitialAd(this, new Runnable() {
+            @Override
+            public void run() {
+                openTranslationEditor();
+            }
+        });
+        AdUtil.initBannerAd(this, adView, fabView);
         initTabs();
     }
 
@@ -141,6 +155,14 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void openTranslationEditor(){
+        if (App.isSignedIn()) {
+            startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
+        } else {
+            showSignInDialog(MainActivity.this);
+        }
     }
 
     public static void showSignInDialog(final Activity activity){
