@@ -31,6 +31,7 @@ import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -155,11 +156,6 @@ public class TranslationEditorActivity extends BaseActivity {
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
         racesView.setItems(races);
-        racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-
-            }
-        });
 
         wordView.post(new Runnable() {
             @Override
@@ -213,6 +209,8 @@ public class TranslationEditorActivity extends BaseActivity {
         if(deTranslation != null && Util.isNotEmpty(deTranslation.getTranslation())) {
             deTranslationView.setText(deTranslation.getTranslation());
         }
+
+        AnalyticsUtil.editTranslationEvent(race, word);
     }
 
     private void saveTranslation() {
@@ -258,7 +256,7 @@ public class TranslationEditorActivity extends BaseActivity {
                         }
 
                         EventBus.getDefault().postSticky(new TranslationUpdatedEvent(word, translations));
-
+                        AnalyticsUtil.addTranslationEvent(race, word);
                         dialog.dismiss();
                         finish();
                     } catch (final Exception e) {

@@ -37,6 +37,7 @@ import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -105,7 +106,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         holder.removeTranslationView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeTranslation(word);
+                removeTranslation(race, word);
             }
         });
         holder.editTranslationView.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +182,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         context.startActivity(new Intent(context, TranslationEditorActivity.class));
     }
 
-    private void removeTranslation(final AlienWord word){
+    private void removeTranslation(final AlienRace race, final AlienWord word){
         new AlertDialog.Builder(context)
                 .setTitle(R.string.delete_translation)
                 .setMessage(R.string.translation_will_be_deleted_permanently)
@@ -189,13 +190,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteTranslation(word);
+                        deleteTranslation(race, word);
                     }
                 })
                 .show();
     }
 
-    private void deleteTranslation(final AlienWord word){
+    private void deleteTranslation(final AlienRace race, final AlienWord word){
         final AlertDialog dialog = Util.showLoadingDialog(context);
         word.removeUser(App.getUser());
         word.saveInBackground(new SaveCallback() {
@@ -207,6 +208,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                         translation.saveInBackground();
                     }
                     removeWord(word);
+                    AnalyticsUtil.deleteTranslationEvent(race, word);
                 }
                 dialog.dismiss();
             }
@@ -265,6 +267,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                     .append("\n\n");
             shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
             Util.shareText((Activity) context, shareText.toString());
+            AnalyticsUtil.shareEvent(word);
         } else {
             Toast.makeText(context, R.string.no_translation_found, Toast.LENGTH_SHORT).show();
         }

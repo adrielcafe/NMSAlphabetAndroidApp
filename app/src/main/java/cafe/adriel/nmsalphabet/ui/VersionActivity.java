@@ -9,7 +9,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class VersionActivity extends BaseActivity {
@@ -37,5 +39,6 @@ public class VersionActivity extends BaseActivity {
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(bgView);
         appVersionView.setText(Util.getAppVersionName(this));
+        AnalyticsUtil.sawEastereggEvent(App.getUser());
     }
 }
