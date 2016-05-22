@@ -1,17 +1,13 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -58,8 +54,6 @@ public class TranslationEditorActivity extends BaseActivity {
     EditText ptTranslationView;
     @BindView(R.id.german_translation)
     EditText deTranslationView;
-    @BindView(R.id.fab)
-    FloatingActionButton fabView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +143,6 @@ public class TranslationEditorActivity extends BaseActivity {
     protected void init() {
         adjustMarginAndPadding();
         initForm();
-        initFab();
     }
 
     private void initForm(){
@@ -184,20 +177,6 @@ public class TranslationEditorActivity extends BaseActivity {
         enTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
         ptTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
         deTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
-    }
-
-    private void initFab(){
-        Drawable fabIcon = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_camera)
-                .color(Color.WHITE)
-                .sizeDp(50);
-        fabView.setImageDrawable(fabIcon);
-        fabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanPicture();
-            }
-        });
     }
 
     private void addMode(){
@@ -331,11 +310,6 @@ public class TranslationEditorActivity extends BaseActivity {
             }
         }
         return translation;
-    }
-
-    // TODO
-    private void scanPicture(){
-        Log.e("SCAN", "OPEN CAMERA");
     }
 
     private boolean isValid(){

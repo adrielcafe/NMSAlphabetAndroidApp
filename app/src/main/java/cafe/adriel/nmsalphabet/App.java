@@ -28,6 +28,7 @@ import cafe.adriel.nmsalphabet.util.Util;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.fabric.sdk.android.Fabric;
 import io.paperdb.Paper;
+import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class App extends Application {
 
@@ -39,6 +40,9 @@ public class App extends Application {
 
         CustomActivityOnCrash.install(this);
         EventBus.getDefault().register(this);
+        EasyImage.configuration(this)
+                .saveInRootPicturesDirectory()
+                .setImagesFolderName(getString(R.string.app_name));
         Paper.init(this);
         Typekit.getInstance()
                 .addNormal(Typekit.createFromAsset(this, "fonts/LatoLatin-Regular.ttf"))

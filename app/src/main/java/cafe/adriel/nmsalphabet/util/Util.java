@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -26,6 +27,9 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.goebl.david.Webb;
+
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,7 @@ import cafe.adriel.nmsalphabet.R;
 
 public class Util {
 
+    private static final Webb WEBB = Webb.create();
     private static final Handler ASYNC_HANDLER = new Handler();
     private static final String[] PERMISSIONS = {
             Manifest.permission.CAMERA,
@@ -79,6 +84,21 @@ public class Util {
 
     public static String toHexColor(int color){
         return "#" + Integer.toHexString(color).replaceFirst("ff", "").toUpperCase();
+    }
+
+    public static String toBase64(Bitmap image){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    public static String removeSpecialCharacters(String text){
+        return text.replaceAll("[^\\w\\s]+", "");
+    }
+
+    public static Webb getWebb(){
+        return WEBB;
     }
 
     public static void asyncCall(int delay, Runnable runnable){
