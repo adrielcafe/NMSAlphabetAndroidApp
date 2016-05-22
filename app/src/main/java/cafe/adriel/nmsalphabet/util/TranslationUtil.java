@@ -52,8 +52,10 @@ public class TranslationUtil {
                     .getJSONObject(0)
                     .getJSONArray("textAnnotations")
                     .getJSONObject(0)
-                    .getString("description");
-            return text.toUpperCase();
+                    .getString("description")
+                    .toUpperCase();
+            AnalyticsUtil.ocrEvent(text);
+            return text;
         } catch (Exception e){
             e.printStackTrace();
             return null;
@@ -196,6 +198,7 @@ public class TranslationUtil {
             dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
 
             DbUtil.likeTranslation(translation);
+            AnalyticsUtil.likeEvent(translation.getRace(), translation.getWord(), translation);
         }
     }
 
@@ -217,6 +220,7 @@ public class TranslationUtil {
             dislikeView.setTextColor(Color.BLACK);
 
             DbUtil.dislikeTranslation(translation);
+            AnalyticsUtil.dislikeEvent(translation.getRace(), translation.getWord(), translation);
         }
     }
 

@@ -35,6 +35,7 @@ import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.MainActivity;
 import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -103,6 +104,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             public void onClick(View v) {
                 loadTranslations(holder, race, word);
                 holder.cardLayout.unfold(false);
+                AnalyticsUtil.wordViewEvent(race, word);
             }
         });
         holder.newTranslationView.setOnClickListener(new View.OnClickListener() {
@@ -287,6 +289,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 shareText.append("\n\n");
                 shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
                 Util.shareText(context, shareText.toString());
+                AnalyticsUtil.shareEvent(word);
             }
         } else {
             Toast.makeText(context, R.string.no_translation_found, Toast.LENGTH_SHORT).show();

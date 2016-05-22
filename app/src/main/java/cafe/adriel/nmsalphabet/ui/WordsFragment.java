@@ -55,6 +55,7 @@ import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
 import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
 import cafe.adriel.nmsalphabet.ui.util.SwipeRefreshLayoutToggleScrollListener;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.SocialUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -380,6 +381,9 @@ public class WordsFragment extends BaseFragment {
                         afterUpdateWords(page, objects, e);
                     }
                 });
+                if(page == 0){
+                    AnalyticsUtil.searchEvent(selectedRace, word);
+                }
                 break;
             case PROFILE:
                 DbUtil.getWordsByUser(App.getUser(), page, new FindCallback<AlienWord>() {

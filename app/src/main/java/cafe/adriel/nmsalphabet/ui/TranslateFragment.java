@@ -44,6 +44,7 @@ import cafe.adriel.nmsalphabet.event.ImageCroppedEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.util.TextViewClickMovement;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -283,6 +284,7 @@ public class TranslateFragment extends BaseFragment {
             translations = new ArrayList<>();
             translatedPhraseView.setText("");
             viewState.showCustomView(Constant.STATE_LOADING);
+            AnalyticsUtil.translateEvent(selectedRace, phrase);
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
