@@ -91,6 +91,9 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
 
         <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ddc31cab4f4e58777548048f200abae359a82d7b"/>
+        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
         <meta-data

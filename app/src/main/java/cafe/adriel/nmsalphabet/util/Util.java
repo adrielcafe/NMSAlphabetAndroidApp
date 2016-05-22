@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,10 +28,12 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.goebl.david.Webb;
 
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +68,7 @@ public class Util {
     };
 
     private static ConnectivityManager connectivityManager;
+    private static String deviceId;
 
     public static boolean isEmpty(CharSequence cs) {
         return cs == null || cs.length() == 0;
@@ -99,6 +103,14 @@ public class Util {
 
     public static Webb getWebb(){
         return WEBB;
+    }
+
+    public static String getDeviceId(Context context){
+        if(isEmpty(deviceId)) {
+            String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            deviceId = md5(androidId).toUpperCase();
+        }
+        return deviceId;
     }
 
     public static void asyncCall(int delay, Runnable runnable){
@@ -239,6 +251,21 @@ public class Util {
             });
         }
         return isConnected;
+    }
+
+    public static String md5(String str) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(str.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            Crashlytics.logException(e);
+        }
+        return null;
     }
 
     private static boolean isConnectionFast(int type, int subType){

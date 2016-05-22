@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -31,6 +32,7 @@ import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.util.AdUtil;
 import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
@@ -55,6 +57,8 @@ public class TranslationEditorActivity extends BaseActivity {
     EditText ptTranslationView;
     @BindView(R.id.german_translation)
     EditText deTranslationView;
+    @BindView(R.id.ad)
+    AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +148,7 @@ public class TranslationEditorActivity extends BaseActivity {
     protected void init() {
         adjustMarginAndPadding();
         initForm();
+        AdUtil.initBannerAd(this, adView, null);
     }
 
     private void initForm(){
