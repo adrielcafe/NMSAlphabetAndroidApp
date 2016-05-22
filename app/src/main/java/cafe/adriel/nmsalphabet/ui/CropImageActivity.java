@@ -24,6 +24,7 @@ import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.ImageCroppedEvent;
+import cafe.adriel.nmsalphabet.util.Util;
 
 public class CropImageActivity extends AppCompatActivity {
 
@@ -52,9 +53,11 @@ public class CropImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     public void cropImage(){
-        Bitmap croppedImage = cropView.getCroppedBitmap();
-        EventBus.getDefault().postSticky(new ImageCroppedEvent(croppedImage));
-        finish();
+        if(Util.isConnected(this)) {
+            Bitmap croppedImage = cropView.getCroppedBitmap();
+            EventBus.getDefault().postSticky(new ImageCroppedEvent(croppedImage));
+            finish();
+        }
     }
 
     protected void init() {

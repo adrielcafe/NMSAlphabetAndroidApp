@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.gigamole.library.NavigationTabBar;
 import com.kobakei.ratethisapp.RateThisApp;
@@ -31,7 +32,9 @@ import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class MainActivity extends BaseActivity {
+
     private static Activity instance;
+    private boolean backPressed;
 
     @BindView(R.id.tabs)
     NavigationTabBar tabView;
@@ -64,12 +67,30 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if(backPressed){
+            super.onBackPressed();
+        } else {
+            backPressed = true;
+            Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
+            Util.asyncCall(3000, new Runnable() {
+                @Override
+                public void run() {
+                    backPressed = false;
+                }
+            });
+        }
+    }
+
     @OnClick(R.id.fab)
     public void addTranslation(){
-        if(App.isSignedIn()) {
-            startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
-        } else {
-            showSignInDialog(MainActivity.this);
+        if(Util.isConnected(this)) {
+            if (App.isSignedIn()) {
+                startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
+            } else {
+                showSignInDialog(MainActivity.this);
+            }
         }
     }
 

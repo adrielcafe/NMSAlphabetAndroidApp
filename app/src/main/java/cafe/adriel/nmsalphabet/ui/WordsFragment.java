@@ -39,6 +39,7 @@ import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -364,41 +365,46 @@ public class WordsFragment extends BaseFragment {
             return;
         }
         Util.hideSoftKeyboard(getActivity());
-        setLoadingList(true);
-        switch (type) {
-            case HOME:
-                String word = searchView.getText().toString();
-                DbUtil.getWords(word, selectedRace, page, new FindCallback<AlienWord>() {
-                    @Override
-                    public void done(List<AlienWord> objects, ParseException e) {
-                        afterUpdateWords(page, objects, e);
+        if(Util.isConnected(getContext())) {
+            setLoadingList(true);
+            switch (type) {
+                case HOME:
+                    String word = searchView.getText().toString();
+                    DbUtil.getWords(word, selectedRace, page, new FindCallback<AlienWord>() {
+                        @Override
+                        public void done(List<AlienWord> objects, ParseException e) {
+                            afterUpdateWords(page, objects, e);
+                        }
+                    });
+                    if (page == 0) {
+                        AnalyticsUtil.searchEvent(selectedRace, word);
                     }
-                });
-                if(page == 0){
-                    AnalyticsUtil.searchEvent(selectedRace, word);
-                }
-                break;
-            case PROFILE:
-                DbUtil.getWordsByUser(App.getUser(), page, new FindCallback<AlienWord>() {
-                    @Override
-                    public void done(List<AlienWord> objects, ParseException e) {
-                        afterUpdateWords(page, objects, e);
-                    }
-                });
-                break;
+                    break;
+                case PROFILE:
+                    DbUtil.getWordsByUser(App.getUser(), page, new FindCallback<AlienWord>() {
+                        @Override
+                        public void done(List<AlienWord> objects, ParseException e) {
+                            afterUpdateWords(page, objects, e);
+                        }
+                    });
+                    break;
+            }
         }
     }
 
     private void afterUpdateWords(int page, List<AlienWord> newWords, ParseException e){
+        if(words == null){
+            words = new ArrayList<>();
+        }
         if(page == 0){
             if(Util.isEmpty(newWords)){
                 viewState.showCustomView(Constant.STATE_EMPTY);
             } else {
-                words = newWords;
+                words.addAll(newWords);
                 initAdapter();
                 viewState.hideAll();
             }
-        } else {
+        } else if(Util.isNotEmpty(newWords)){
             words.addAll(newWords);
             switch (type){
                 case HOME:
@@ -420,8 +426,12 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void refreshWords(){
-        resetWords();
-        updateWords(0);
+        if(Util.isConnected(getContext())) {
+            resetWords();
+            updateWords(0);
+        } else {
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     private void resetWords(){
