@@ -102,9 +102,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         holder.titleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadTranslations(holder, race, word);
-                holder.cardLayout.unfold(false);
-                AnalyticsUtil.wordViewEvent(race, word);
+                if(Util.isConnected(context)) {
+                    loadTranslations(holder, race, word);
+                    holder.cardLayout.unfold(false);
+                    AnalyticsUtil.wordViewEvent(race, word);
+                }
             }
         });
         holder.newTranslationView.setOnClickListener(new View.OnClickListener() {

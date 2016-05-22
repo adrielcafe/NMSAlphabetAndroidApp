@@ -160,7 +160,9 @@ public class TranslateFragment extends BaseFragment {
 
     @OnClick(R.id.fab)
     public void pickPicture(){
-        EasyImage.openChooserWithGallery(this, getString(R.string.select_an_image), REQUEST_PICK_PICTURE);
+        if(Util.isConnected(getContext())) {
+            EasyImage.openChooserWithGallery(this, getString(R.string.select_an_image), REQUEST_PICK_PICTURE);
+        }
     }
 
     @Override
@@ -277,27 +279,29 @@ public class TranslateFragment extends BaseFragment {
     }
 
     private void translatePhrase(){
-        final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
-        Util.hideSoftKeyboard(getActivity());
-        if(Util.isNotEmpty(phrase) && selectedRace != null) {
-            translations = new ArrayList<>();
-            translatedPhraseView.setText("");
-            viewState.showCustomView(Constant.STATE_LOADING);
-            AnalyticsUtil.translateEvent(selectedRace, phrase);
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    final String[] words = phrase.split(" ");
-                    final Map<String, AlienWordTranslation> translatedWords = DbUtil
-                            .translateWords(Arrays.asList(words), selectedRace, languageCode);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateTranslatedPhrase(words, translatedWords);
-                        }
-                    });
-                }
-            });
+        if(Util.isConnected(getContext())) {
+            final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
+            Util.hideSoftKeyboard(getActivity());
+            if (Util.isNotEmpty(phrase) && selectedRace != null) {
+                translations = new ArrayList<>();
+                translatedPhraseView.setText("");
+                viewState.showCustomView(Constant.STATE_LOADING);
+                AnalyticsUtil.translateEvent(selectedRace, phrase);
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final String[] words = phrase.split(" ");
+                        final Map<String, AlienWordTranslation> translatedWords = DbUtil
+                                .translateWords(Arrays.asList(words), selectedRace, languageCode);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateTranslatedPhrase(words, translatedWords);
+                            }
+                        });
+                    }
+                });
+            }
         }
     }
 

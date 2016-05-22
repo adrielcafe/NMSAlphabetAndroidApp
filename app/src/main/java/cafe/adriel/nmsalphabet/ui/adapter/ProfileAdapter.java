@@ -97,10 +97,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         holder.titleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!wordTranslations.containsKey(word.getObjectId())){
-                    loadTranslations(holder, race, word);
+                if(Util.isConnected(context)) {
+                    if (!wordTranslations.containsKey(word.getObjectId())) {
+                        loadTranslations(holder, race, word);
+                    }
+                    holder.cardLayout.unfold(false);
                 }
-                holder.cardLayout.unfold(false);
             }
         });
         holder.removeTranslationView.setOnClickListener(new View.OnClickListener() {
@@ -178,22 +180,26 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     }
 
     private void editTranslation(AlienWord word){
-        EventBus.getDefault().postSticky(new EditTranslationEvent(word, wordTranslations.get(word.getObjectId())));
-        context.startActivity(new Intent(context, TranslationEditorActivity.class));
+        if(Util.isConnected(context)) {
+            EventBus.getDefault().postSticky(new EditTranslationEvent(word, wordTranslations.get(word.getObjectId())));
+            context.startActivity(new Intent(context, TranslationEditorActivity.class));
+        }
     }
 
     private void removeTranslation(final AlienRace race, final AlienWord word){
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.delete_translation)
-                .setMessage(R.string.translation_will_be_deleted_permanently)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteTranslation(race, word);
-                    }
-                })
-                .show();
+        if(Util.isConnected(context)) {
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.delete_translation)
+                    .setMessage(R.string.translation_will_be_deleted_permanently)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteTranslation(race, word);
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void deleteTranslation(final AlienRace race, final AlienWord word){

@@ -122,7 +122,7 @@ public class AnalyticsUtil {
         }
     }
 
-    private static boolean isInitialized(){
+    public static boolean isInitialized(){
         return Fabric.isInitialized() && Answers.getInstance() != null;
     }
 

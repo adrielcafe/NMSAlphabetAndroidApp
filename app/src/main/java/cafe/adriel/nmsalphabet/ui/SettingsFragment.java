@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.View;
 import android.widget.AbsListView;
@@ -172,14 +174,21 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void changeStatus() {
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
         if(activity != null) {
-            App.signOut(activity);
-            startActivity(new Intent(activity, SplashActivity.class));
-            activity.finish();
-            if(MainActivity.getInstance() != null){
-                MainActivity.getInstance().finish();
-            }
+            final AlertDialog dialog = Util.showLoadingDialog(activity);
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    App.signOut(activity);
+                    startActivity(new Intent(activity, SplashActivity.class));
+                    activity.finish();
+                    if(MainActivity.getInstance() != null){
+                        MainActivity.getInstance().finish();
+                    }
+                    dialog.dismiss();
+                }
+            });
         }
     }
 

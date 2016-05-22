@@ -70,20 +70,24 @@ public class SplashActivity extends BaseActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                if(!App.forceUpdate(SplashActivity.this)) {
-                    if (hasSignedIn() && Util.isConnected(SplashActivity.this)) {
-                        setLoading(true);
-                        if (hasSignedInWithFacebook()) {
-                            facebookSignIn();
+                if(Util.isConnected(SplashActivity.this)) {
+                    if (!App.forceUpdate(SplashActivity.this)) {
+                        if (hasSignedIn()) {
+                            setLoading(true);
+                            if (hasSignedInWithFacebook()) {
+                                facebookSignIn();
+                            } else {
+                                anonymousSignIn();
+                            }
                         } else {
-                            anonymousSignIn();
+                            setLoading(false);
                         }
                     } else {
-                        setLoading(false);
+                        finish();
+                        startActivity(new Intent(SplashActivity.this, UpdateActivity.class));
                     }
                 } else {
-                    finish();
-                    startActivity(new Intent(SplashActivity.this, UpdateActivity.class));
+                    setLoading(false);
                 }
             }
         });
@@ -92,33 +96,38 @@ public class SplashActivity extends BaseActivity {
     @OnClick(R.id.facebook_signin)
     public void facebookSignIn(){
         if(Util.isConnected(this)) {
-            setLoading(true);
-            if(hasSignedInWithFacebook()){
-                afterSignIn();
-            } else {
-                ParseFacebookUtils.logInWithReadPermissionsInBackground(this, Constant.FACEBOOK_PERMISSIONS, new LogInCallback() {
-                    @Override
-                    public void done(ParseUser user, ParseException err) {
-                        if (user == null) {
-                            setLoading(false);
-                        } else {
-                            if (user.isNew()) {
-                                AnalyticsUtil.signUpEvent("Facebook");
-                            } else {
-                                AnalyticsUtil.signInEvent("Facebook");
-                            }
-                            AsyncTask.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    SocialUtil.updateFacebookProfile(SplashActivity.this);
-                                    SocialUtil.updateFabricProfile();
-                                    afterSignIn();
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    setLoading(true);
+                    if(hasSignedInWithFacebook()){
+                        afterSignIn();
+                    } else {
+                        ParseFacebookUtils.logInWithReadPermissionsInBackground(SplashActivity.this, Constant.FACEBOOK_PERMISSIONS, new LogInCallback() {
+                            @Override
+                            public void done(ParseUser user, ParseException err) {
+                                if (user == null) {
+                                    setLoading(false);
+                                } else {
+                                    if (user.isNew()) {
+                                        AnalyticsUtil.signUpEvent("Facebook");
+                                    } else {
+                                        AnalyticsUtil.signInEvent("Facebook");
+                                    }
+                                    AsyncTask.execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            SocialUtil.updateFacebookProfile(SplashActivity.this);
+                                            SocialUtil.updateFabricProfile();
+                                            afterSignIn();
+                                        }
+                                    });
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
-                });
-            }
+                }
+            });
         }
     }
 

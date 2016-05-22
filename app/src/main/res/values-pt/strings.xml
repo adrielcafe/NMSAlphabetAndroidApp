@@ -78,5 +78,6 @@
     <string name="translation_not_found">Tradução não encontrada</string>
     <string name="select_an_image">Selecione uma imagem</string>
     <string name="no_word_found_image">Nenhuma palavra encontrada na imagem</string>
+    <string name="press_back_again">Pressione VOLTAR novamente para sair</string>
 
 </resources>

@@ -59,8 +59,10 @@ public class SocialUtil {
     }
 
     public static void updateFabricProfile(){
-        Crashlytics.setUserIdentifier(App.getUser().getObjectId());
-        Crashlytics.setUserName(App.getUser().getName());
+        if(AnalyticsUtil.isInitialized()) {
+            Crashlytics.setUserIdentifier(App.getUser().getObjectId());
+            Crashlytics.setUserName(App.getUser().getName());
+        }
     }
 
 }
