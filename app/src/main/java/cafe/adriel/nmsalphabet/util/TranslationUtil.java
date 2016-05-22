@@ -42,7 +42,7 @@ public class TranslationUtil {
         String body = String.format(VISION_API_REQUEST_BODY, base64Img);
         try {
             JSONObject json = Util.getWebb()
-                    .post(VISION_API_URL + context.getString(R.string.vision_key))
+                    .post(VISION_API_URL + context.getString(R.string.google_vision_key))
                     .header(Webb.HDR_CONTENT_TYPE, Webb.APP_JSON)
                     .body(body)
                     .ensureSuccess()
