@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="parse_app_id" translatable="false">20A2FAB7ED2645B4D3B25DCC372AB208AF62DDB5251D72733924045CE7F3781D</string>
+    <!--<string name="parse_app_id" translatable="false">20A2FAB7ED2645B4D3B25DCC372AB208AF62DDB5251D72733924045CE7F3781D</string>-->
     <string name="facebook_app_id" translatable="false">987056394665556</string>
-    <string name="vision_key" translatable="false">AIzaSyBtw-KoULbPpSpHqfJ-uPEXycl9rrhFhsM</string>
+    <string name="google_vision_key" translatable="false">AIzaSyBtw-KoULbPpSpHqfJ-uPEXycl9rrhFhsM</string>
+    <string name="parse_app_id" translatable="false">opu6rH8YJpyQew8ohv3k30oAsQD1VC5qKj5hn2Bk</string>
+    <string name="parse_key" translatable="false">dgGqdW3dmnKGZ4TiR7cGWbFhXoqQJz3fkDal51SD</string>
 
 </resources>
