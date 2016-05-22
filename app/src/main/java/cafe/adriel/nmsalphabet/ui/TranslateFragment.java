@@ -38,6 +38,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.ImageCroppedEvent;
@@ -56,7 +57,7 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class TranslateFragment extends BaseFragment {
 
-    private static final int REQUEST_TAKE_PICTURE = 0;
+    private static final int REQUEST_PICK_PICTURE = 0;
 
     private String languageCode;
     private AlienRace selectedRace;
@@ -148,6 +149,20 @@ public class TranslateFragment extends BaseFragment {
         });
     }
 
+    @OnClick(R.id.search_clear)
+    public void clearSearch(){
+        languageView.setVisibility(View.INVISIBLE);
+        translationSeparatorView.setVisibility(View.INVISIBLE);
+        translationLayout.setVisibility(View.INVISIBLE);
+        translatedPhraseView.setText("");
+        searchView.setText("");
+    }
+
+    @OnClick(R.id.fab)
+    public void pickPicture(){
+        EasyImage.openChooserWithGallery(this, getString(R.string.select_an_image), REQUEST_PICK_PICTURE);
+    }
+
     @Override
     protected void init(){
         viewState = TranslationUtil.createViewState(getContext(), translationLayout);
@@ -221,16 +236,6 @@ public class TranslateFragment extends BaseFragment {
                 racesView.setHeight(searchLayout.getHeight());
             }
         });
-        searchClearView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                languageView.setVisibility(View.INVISIBLE);
-                translationSeparatorView.setVisibility(View.INVISIBLE);
-                translationLayout.setVisibility(View.INVISIBLE);
-                translatedPhraseView.setText("");
-                searchView.setText("");
-            }
-        });
     }
 
     private void initFab(){
@@ -239,12 +244,6 @@ public class TranslateFragment extends BaseFragment {
                 .color(Color.WHITE)
                 .sizeDp(50);
         fabView.setImageDrawable(fabIcon);
-        fabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
     }
 
     private void initLanguage(){
@@ -300,10 +299,6 @@ public class TranslateFragment extends BaseFragment {
                 }
             });
         }
-    }
-
-    private void takePicture(){
-        EasyImage.openChooserWithGallery(this, getString(R.string.select_an_image), REQUEST_TAKE_PICTURE);
     }
 
     private void cropPicture(File imageFile){
