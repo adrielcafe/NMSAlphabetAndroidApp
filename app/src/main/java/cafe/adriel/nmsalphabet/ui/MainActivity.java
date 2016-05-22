@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
 import com.gigamole.library.NavigationTabBar;
 import com.kobakei.ratethisapp.RateThisApp;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
@@ -64,13 +64,26 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @OnClick(R.id.fab)
+    public void addTranslation(){
+        if(App.isSignedIn()) {
+            startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
+        } else {
+            showSignInDialog(MainActivity.this);
+        }
+    }
+
     @Override
     protected void init() {
+        Drawable fabIcon = new IconicsDrawable(this)
+                .icon(MaterialDesignIconic.Icon.gmi_plus)
+                .color(Color.WHITE)
+                .sizeDp(50);
+        fabView.setImageDrawable(fabIcon);
         pagerView.setOffscreenPageLimit(2);
         pagerView.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
         pagerView.setPageTransformer(false, new ViewPagerFadeTransformer());
         initTabs();
-        initFab();
     }
 
     public static Activity getInstance(){
@@ -104,24 +117,6 @@ public class MainActivity extends BaseActivity {
                     fabView.show();
                 } else {
                     fabView.hide();
-                }
-            }
-        });
-    }
-
-    private void initFab(){
-        Drawable fabIcon = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_plus)
-                .color(Color.WHITE)
-                .sizeDp(50);
-        fabView.setImageDrawable(fabIcon);
-        fabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(App.isSignedIn()) {
-                    startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
-                } else {
-                    showSignInDialog(MainActivity.this);
                 }
             }
         });

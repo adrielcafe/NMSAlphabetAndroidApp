@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -44,6 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
@@ -89,14 +89,10 @@ public class WordsFragment extends BaseFragment {
     ImageView userImageView;
     @BindView(R.id.user_name)
     TextView userNameView;
-    @BindView(R.id.settings)
-    Button settingsView;
     @BindView(R.id.search_layout)
     RelativeLayout searchLayout;
     @BindView(R.id.search)
     EditText searchView;
-    @BindView(R.id.search_icon)
-    TextView searchIconView;
     @BindView(R.id.search_clear)
     TextView searchClearView;
     @BindView(R.id.races)
@@ -163,6 +159,22 @@ public class WordsFragment extends BaseFragment {
         }
     }
 
+    @OnClick(R.id.settings)
+    public void openSettings(){
+        startActivity(new Intent(getContext(), SettingsActivity.class));
+    }
+
+    @OnClick(R.id.search_icon)
+    public void search(){
+        updateWords(0);
+    }
+
+    @OnClick(R.id.search_clear)
+    public void clearSearch(){
+        searchView.setText("");
+        search();
+    }
+
     @Override
     protected void init(){
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -196,7 +208,7 @@ public class WordsFragment extends BaseFragment {
                 }
                 updateRefreshLayoutMarginTop();
                 initState();
-                updateWords(0);
+                search();
             }
         });
 
@@ -209,7 +221,7 @@ public class WordsFragment extends BaseFragment {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 selectedRace = DbUtil.getRaceByName(item);
-                updateWords(0);
+                search();
             }
         });
 
@@ -218,7 +230,7 @@ public class WordsFragment extends BaseFragment {
         searchView.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    updateWords(0);
+                    search();
                     return true;
                 }
                 return false;
@@ -244,19 +256,6 @@ public class WordsFragment extends BaseFragment {
                 racesView.setHeight(searchClearView.getHeight());
             }
         });
-        searchIconView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateWords(0);
-            }
-        });
-        searchClearView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchView.setText("");
-                updateWords(0);
-            }
-        });
     }
 
     private void initProfileControls(){
@@ -271,12 +270,6 @@ public class WordsFragment extends BaseFragment {
                 updateRefreshLayoutMarginTop();
                 initState();
                 updateWords(0);
-            }
-        });
-        settingsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), SettingsActivity.class));
             }
         });
         userNameView.setText(App.isSignedIn() ? App.getUser().getName() : getString(R.string.unknown_explorer));

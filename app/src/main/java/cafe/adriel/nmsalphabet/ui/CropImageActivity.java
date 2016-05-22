@@ -6,10 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -22,6 +20,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.ImageCroppedEvent;
@@ -30,8 +29,6 @@ public class CropImageActivity extends AppCompatActivity {
 
     private String imagePath;
 
-    @BindView(R.id.content_layout)
-    FrameLayout contentLayout;
     @BindView(R.id.crop)
     CropImageView cropView;
     @BindView(R.id.fab)
@@ -53,29 +50,24 @@ public class CropImageActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.fab)
+    public void cropImage(){
+        Bitmap croppedImage = cropView.getCroppedBitmap();
+        EventBus.getDefault().postSticky(new ImageCroppedEvent(croppedImage));
+        finish();
+    }
+
     protected void init() {
-        Drawable fabIcon = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_crop)
-                .color(Color.WHITE)
-                .sizeDp(50);
-        fabView.setImageDrawable(fabIcon);
-        fabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cropImage();
-            }
-        });
         Glide.with(this).load(imagePath).asBitmap().into(new SimpleTarget<Bitmap>(1024, 1024) {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                 cropView.setImageBitmap(bitmap);
             }
         });
-    }
-
-    private void cropImage(){
-        Bitmap croppedImage = cropView.getCroppedBitmap();
-        EventBus.getDefault().postSticky(new ImageCroppedEvent(croppedImage));
-        finish();
+        Drawable fabIcon = new IconicsDrawable(this)
+                .icon(MaterialDesignIconic.Icon.gmi_crop)
+                .color(Color.WHITE)
+                .sizeDp(50);
+        fabView.setImageDrawable(fabIcon);
     }
 }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +23,7 @@ import com.parse.ParseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
@@ -37,10 +37,6 @@ public class SplashActivity extends BaseActivity {
     ImageView atlasView;
     @BindView(R.id.signin_layout)
     LinearLayout signInLayout;
-    @BindView(R.id.facebook_signin)
-    RelativeLayout facebookSignInLayout;
-    @BindView(R.id.anonymous_signin)
-    RelativeLayout anonymousSignInLayout;
     @BindView(R.id.load)
     SpinKitView loadView;
     @BindView(R.id.app_version)
@@ -69,34 +65,6 @@ public class SplashActivity extends BaseActivity {
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(atlasView);
 
-        facebookSignInLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Util.isConnected(SplashActivity.this)) {
-                    setLoading(true);
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            facebookSignIn();
-                        }
-                    });
-                }
-            }
-        });
-        anonymousSignInLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Util.isConnected(SplashActivity.this)) {
-                    setLoading(true);
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            anonymousSignIn();
-                        }
-                    });
-                }
-            }
-        });
         appVersionView.setText(Util.getAppVersionName(this));
 
         AsyncTask.execute(new Runnable() {
@@ -121,7 +89,8 @@ public class SplashActivity extends BaseActivity {
         });
     }
 
-    private void facebookSignIn(){
+    @OnClick(R.id.facebook_signin)
+    public void facebookSignIn(){
         if(Util.isConnected(this)) {
             setLoading(true);
             if(hasSignedInWithFacebook()){
@@ -153,7 +122,8 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
-    private void anonymousSignIn(){
+    @OnClick(R.id.anonymous_signin)
+    public void anonymousSignIn(){
         if(Util.isConnected(this)) {
             setLoading(true);
             AnalyticsUtil.signInEvent("Anonymous");
