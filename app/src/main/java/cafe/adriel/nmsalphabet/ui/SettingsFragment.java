@@ -140,7 +140,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             accountStatus.setTitle(R.string.signin);
             accountStatus.setSummary(R.string.signin_to_add_translations);
         }
-        if(App.isPro(getContext())){
+        if(App.isPro(getActivity())){
             account.removePreference(accountUpgradePro);
         }
         aboutVersion.setSummary(Util.getAppVersionName(getActivity()));
@@ -205,7 +205,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void upgradePro(){
-        Uri marketUri = Uri.parse(Constant.MARKET_URI + Util.getProPackageName(getContext()));
+        Uri marketUri = Uri.parse(Constant.MARKET_URI + Util.getProPackageName(getActivity()));
         Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
         startActivity(i);
     }
@@ -229,11 +229,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 .append("<i>* You can attach a photo if you want</i>")
                 .toString())
         );
-        startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+        startActivity(Intent.createChooser(i, getActivity().getString(R.string.feedback)));
     }
 
     private void showTranslators(){
-        startActivity(new Intent(getContext(), TranslatorsActivity.class));
+        startActivity(new Intent(getActivity(), TranslatorsActivity.class));
     }
 
     private void sendFeedback() {
@@ -245,7 +245,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
         Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
         i.putExtra(Intent.EXTRA_SUBJECT, subject);
-        startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+        startActivity(Intent.createChooser(i, getActivity().getString(R.string.feedback)));
     }
 
     private void shareApp() {
