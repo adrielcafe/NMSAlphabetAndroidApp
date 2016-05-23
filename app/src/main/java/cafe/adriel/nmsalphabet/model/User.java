@@ -26,12 +26,4 @@ public class User extends ParseUser implements Serializable {
         put("gender", gender);
     }
 
-    public String getFacebookUserId() {
-        return getString("facebookUserId");
-    }
-
-    public void setFacebookUserId(String facebookUserId){
-        put("facebookUserId", facebookUserId);
-    }
-
 }

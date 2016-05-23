@@ -1,9 +1,15 @@
 <resources>
 
+    <string name="english" translatable="false">English</string>
+    <string name="portuguese" translatable="false">Português</string>
+    <string name="german" translatable="false">Deutsch</string>
+
     <string name="quote">\"We are an impossibility in an impossible universe\"</string>
     <string name="connect_internet">Connect to the Internet</string>
     <string name="nothing_found">Nothing Found</string>
     <string name="no_translation_found">No translation found</string>
+    <string name="no_word_found_image">No word found at the image</string>
+    <string name="translation_not_found">Translation not found</string>
     <string name="try_another_language">Try in another language</string>
     <string name="home">Home</string>
     <string name="translate">Translate</string>
@@ -43,9 +49,6 @@
     <string name="account">Account</string>
     <string name="language">Language</string>
     <string name="theme">Theme</string>
-    <string name="english">English</string>
-    <string name="portuguese">Portuguese</string>
-    <string name="german">German</string>
     <string name="about">About</string>
     <string name="translators">Translators</string>
     <string name="translators_summary">This app is on your native language? Thanks these folk!</string>
@@ -59,6 +62,8 @@
     <string name="rate">Rate</string>
     <string name="rate_summary">Like this app? Give 5 stars on Google Play!</string>
     <string name="version">Version</string>
+    <string name="update">Update</string>
+    <string name="update_app">Update App</string>
     <string name="connected_as">Connected as</string>
     <string name="type_alien_phrase">Type an alien phrase</string>
     <string name="type_alien_word">Type the alien word</string>
@@ -71,6 +76,10 @@
     <string name="theme4">Theme 4</string>
     <string name="theme5">Theme 5</string>
     <string name="unknown_explorer">Unknown Explorer</string>
+    <string name="we_became_better">We became better</string>
+    <string name="current_version_not_supported">The current version of the app is no longer supported</string>
+    <string name="select_an_image">Select an image</string>
+    <string name="press_back_again">Press BACK again to quit</string>
 
     <string-array name="language_entries">
         <item>@string/english</item>
@@ -98,5 +107,7 @@
         <item>theme5</item>
     </string-array>
     <string name="new_translation_with_icon">{gmi-plus} New Translation</string>
+    <string name="upgrade_to_pro">Upgrade to PRO</string>
+    <string name="upgrade_to_pro_summary">For those who doesn\'t like ads or want to pay me a {gmi-coffee}</string>
 
 </resources>

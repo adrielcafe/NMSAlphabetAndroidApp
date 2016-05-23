@@ -1,20 +1,17 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -35,6 +32,8 @@ import cafe.adriel.nmsalphabet.event.TranslationUpdatedEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.util.AdUtil;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -48,8 +47,6 @@ public class TranslationEditorActivity extends BaseActivity {
     private AlienWordTranslation ptTranslation;
     private AlienWordTranslation deTranslation;
 
-    @BindView(R.id.content_layout)
-    FrameLayout contentLayout;
     @BindView(R.id.races)
     MaterialSpinner racesView;
     @BindView(R.id.alien_word)
@@ -60,8 +57,8 @@ public class TranslationEditorActivity extends BaseActivity {
     EditText ptTranslationView;
     @BindView(R.id.german_translation)
     EditText deTranslationView;
-    @BindView(R.id.fab)
-    FloatingActionButton fabView;
+    @BindView(R.id.ad)
+    AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +148,7 @@ public class TranslationEditorActivity extends BaseActivity {
     protected void init() {
         adjustMarginAndPadding();
         initForm();
-        initFab();
+        AdUtil.initBannerAd(this, adView, null);
     }
 
     private void initForm(){
@@ -164,11 +161,6 @@ public class TranslationEditorActivity extends BaseActivity {
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
         racesView.setItems(races);
-        racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-
-            }
-        });
 
         wordView.post(new Runnable() {
             @Override
@@ -186,20 +178,6 @@ public class TranslationEditorActivity extends BaseActivity {
         enTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
         ptTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
         deTranslationView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
-    }
-
-    private void initFab(){
-        Drawable fabIcon = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_camera)
-                .color(Color.WHITE)
-                .sizeDp(50);
-        fabView.setImageDrawable(fabIcon);
-        fabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     private void addMode(){
@@ -236,6 +214,8 @@ public class TranslationEditorActivity extends BaseActivity {
         if(deTranslation != null && Util.isNotEmpty(deTranslation.getTranslation())) {
             deTranslationView.setText(deTranslation.getTranslation());
         }
+
+        AnalyticsUtil.editTranslationEvent(race, word);
     }
 
     private void saveTranslation() {
@@ -281,7 +261,7 @@ public class TranslationEditorActivity extends BaseActivity {
                         }
 
                         EventBus.getDefault().postSticky(new TranslationUpdatedEvent(word, translations));
-
+                        AnalyticsUtil.addTranslationEvent(race, word);
                         dialog.dismiss();
                         finish();
                     } catch (final Exception e) {

@@ -8,9 +8,11 @@ import com.crashlytics.android.answers.Answers;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
+import com.parse.ParseConfig;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.squareup.leakcanary.LeakCanary;
 import com.tsengvn.typekit.Typekit;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,10 +24,12 @@ import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.model.User;
 import cafe.adriel.nmsalphabet.util.DbUtil;
+import cafe.adriel.nmsalphabet.util.SocialUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.fabric.sdk.android.Fabric;
 import io.paperdb.Paper;
+import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class App extends Application {
 
@@ -34,15 +38,21 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        LeakCanary.install(this);
         CustomActivityOnCrash.install(this);
+        EventBus.getDefault().register(this);
+        EasyImage.configuration(this)
+                .saveInRootPicturesDirectory()
+                .setImagesFolderName(getString(R.string.app_name));
+        Paper.init(this);
         Typekit.getInstance()
                 .addNormal(Typekit.createFromAsset(this, "fonts/LatoLatin-Regular.ttf"))
                 .addBold(Typekit.createFromAsset(this, "fonts/LatoLatin-Bold.ttf"))
                 .addItalic(Typekit.createFromAsset(this, "fonts/LatoLatin-Italic.ttf"))
                 .addBoldItalic(Typekit.createFromAsset(this, "fonts/LatoLatin-BoldItalic.ttf"))
-                .addCustom1(Typekit.createFromAsset(this, "fonts/Geomanist-Regular.otf"));
-        EventBus.getDefault().register(this);
-        Paper.init(this);
+                .addCustom1(Typekit.createFromAsset(this, "fonts/Geomanist-Regular.otf"))
+                .addCustom2(Typekit.createFromAsset(this, "fonts/Handlee-Regular.ttf"));
+
         initFabric();
         initParse();
         initFacebook();
@@ -94,6 +104,7 @@ public class App extends Application {
     }
 
     public static void signOut(Context context){
+        SocialUtil.logOut();
         ParseUser.logOut();
         Util.getSettings(context).edit().clear().commit();
         user = null;
@@ -101,6 +112,10 @@ public class App extends Application {
 
     public static boolean isSignedIn(){
         return getUser() != null;
+    }
+
+    public static boolean isPro(Context context){
+        return Util.getPackageName(context).equals(Util.getProPackageName(context));
     }
 
     public static User getUser(){
@@ -113,6 +128,15 @@ public class App extends Application {
     public static void loadAndCache(){
         getUser();
         DbUtil.cacheData();
+    }
+
+    public static boolean forceUpdate(Context context){
+        try {
+            int updateVersion = ParseConfig.get().getInt("FORCE_UPDATE_VERSION", -1);
+            return updateVersion > 0 && Util.getAppVersionCode(context) <= updateVersion;
+        } catch (Exception e){
+            return false;
+        }
     }
 
 }

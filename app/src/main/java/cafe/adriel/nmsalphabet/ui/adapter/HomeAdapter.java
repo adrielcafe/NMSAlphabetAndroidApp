@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.parse.FindCallback;
@@ -25,13 +26,16 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.AddTranslationEvent;
 import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.ui.MainActivity;
 import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -70,6 +74,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         final AlienWord word = words.get(position);
         final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
 
+        initLanguage(holder, race, word);
+
         if(enWordTranslations == null){
             enWordTranslations = new HashMap<>();
         }
@@ -83,7 +89,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             viewStates = new HashMap<>();
         }
         if(!viewStates.containsKey(word.getObjectId())) {
-            viewStates.put(word.getObjectId(), createViewState(holder));
+            viewStates.put(word.getObjectId(), TranslationUtil.createViewState(context, holder.translationsLayout));
         }
 
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 0);
@@ -98,8 +104,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         holder.titleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadTranslations(holder, race, word);
-                holder.cardLayout.unfold(false);
+                if(Util.isConnected(context)) {
+                    loadTranslations(holder, race, word);
+                    holder.cardLayout.unfold(false);
+                    AnalyticsUtil.wordViewEvent(race, word);
+                }
             }
         });
         holder.newTranslationView.setOnClickListener(new View.OnClickListener() {
@@ -120,15 +129,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 shareTranslation(race, word);
             }
         });
-
-        initLanguage(holder, race, word);
     }
 
     private void initLanguage(final ViewHolder holder, final AlienRace race, final AlienWord word){
         String[] languages = context.getResources().getStringArray(R.array.language_entries);
         int languageIndex = 0;
-
-        if(languageCode == null){
+        
+        if(Util.isEmpty(languageCode)){
             languageCode = LanguageUtil.getCurrentLanguageCode(context);
         }
         for (int i = 0; i < languages.length; i++){
@@ -146,24 +153,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         holder.languageView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                updateLanguage(holder, item);
+                languageCode = LanguageUtil.updateLanguageFlag(context, holder.languageView, item);
                 loadTranslations(holder, race, word);
             }
         });
 
-        updateLanguage(holder, LanguageUtil.languageCodeToLanguage(context, languageCode));
-    }
-
-    private DynamicBox createViewState(ViewHolder holder){
-        View loadingState = LayoutInflater.from(context).inflate(R.layout.state_translations_loading, null, false);
-        View emptyState = LayoutInflater.from(context).inflate(R.layout.state_translations_empty, null, false);
-        View noInternetState = LayoutInflater.from(context).inflate(R.layout.state_translations_no_internet, null, false);
-
-        DynamicBox viewState = new DynamicBox(context, holder.translationsLayout);
-        viewState.addCustomView(loadingState, Constant.STATE_LOADING);
-        viewState.addCustomView(emptyState, Constant.STATE_EMPTY);
-        viewState.addCustomView(noInternetState, Constant.STATE_NO_INTERNET);
-        return viewState;
+        languageCode = LanguageUtil.updateLanguageFlag(context, holder.languageView, languageCode);
     }
 
     private DynamicBox getViewState(AlienWord word){
@@ -245,27 +240,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         setViewState(word, null);
     }
 
-    private void updateLanguage(ViewHolder holder, String language){
-        final String english = context.getString(R.string.english);
-        final String portuguese = context.getString(R.string.portuguese);
-        final String german = context.getString(R.string.german);
-        int flagResId = -1;
-        if(language.equals(english)){
-            this.languageCode = LanguageUtil.LANGUAGE_EN;
-            flagResId = R.drawable.flag_uk_small;
-        } else if(language.equals(portuguese)){
-            this.languageCode = LanguageUtil.LANGUAGE_PT;
-            flagResId = R.drawable.flag_brazil_small;
-        } else if(language.equals(german)){
-            this.languageCode = LanguageUtil.LANGUAGE_DE;
-            flagResId = R.drawable.flag_germany_small;
-        }
-        holder.languageView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(flagResId), null, holder.languageView.getCompoundDrawables()[2], null);
-    }
-
     private void newTranslation(AlienWord word){
-        EventBus.getDefault().postSticky(new AddTranslationEvent(word));
-        context.startActivity(new Intent(context, TranslationEditorActivity.class));
+        if(App.isSignedIn()) {
+            EventBus.getDefault().postSticky(new AddTranslationEvent(word));
+            context.startActivity(new Intent(context, TranslationEditorActivity.class));
+        } else {
+            MainActivity.showSignInDialog(context);
+        }
     }
 
     private void seeAllTranslations(AlienWord word){
@@ -273,24 +254,29 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     private void shareTranslation(AlienRace race, AlienWord word){
-        List<AlienWordTranslation> translations = getCurrentLanguageTranslations(word);
-        if(Util.isNotEmpty(translations)) {
-            StringBuilder shareText = new StringBuilder()
-                    .append(context.getString(R.string.word) + ": " + word.getWord())
-                    .append("\n")
-                    .append(context.getString(R.string.race) + ": " + race.getName())
-                    .append("\n")
-                    .append(context.getString(R.string.best_translations) + ": ");
-            Iterator<AlienWordTranslation> i = translations.iterator();
-            while (i.hasNext()) {
-                shareText.append(i.next().getTranslation());
-                if (i.hasNext()) {
-                    shareText.append(", ");
+        if(hasTranslations(word)) {
+            List<AlienWordTranslation> translations = getCurrentLanguageTranslations(word);
+            if(Util.isNotEmpty(translations)) {
+                StringBuilder shareText = new StringBuilder()
+                        .append(context.getString(R.string.word) + ": " + word.getWord())
+                        .append("\n")
+                        .append(context.getString(R.string.race) + ": " + race.getName())
+                        .append("\n")
+                        .append(context.getString(R.string.best_translations) + ": ");
+                Iterator<AlienWordTranslation> i = translations.iterator();
+                while (i.hasNext()) {
+                    shareText.append(i.next().getTranslation());
+                    if (i.hasNext()) {
+                        shareText.append(", ");
+                    }
                 }
+                shareText.append("\n\n");
+                shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
+                Util.shareText(context, shareText.toString());
+                AnalyticsUtil.shareEvent(word);
             }
-            shareText.append("\n\n");
-            shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
-            Util.shareText(context, shareText.toString());
+        } else {
+            Toast.makeText(context, R.string.no_translation_found, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -303,6 +289,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             default:
                 return enWordTranslations.get(word.getObjectId());
         }
+    }
+
+    private boolean hasTranslations(AlienWord word){
+        return Util.isNotEmpty(getCurrentLanguageTranslations(word));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

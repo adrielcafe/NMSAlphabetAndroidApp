@@ -9,11 +9,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,7 +28,12 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.goebl.david.Webb;
+
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +42,7 @@ import cafe.adriel.nmsalphabet.R;
 
 public class Util {
 
+    private static final Webb WEBB = Webb.create();
     private static final Handler ASYNC_HANDLER = new Handler();
     private static final String[] PERMISSIONS = {
             Manifest.permission.CAMERA,
@@ -45,21 +53,22 @@ public class Util {
     public static InputFilter alienWordFilter = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             String chr = source+"";
-            return chr.isEmpty() || !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
+            return chr.isEmpty() || !Character.isLetterOrDigit(chr.charAt(0)) ? "" : chr.toUpperCase();
         }
     };
     public static InputFilter alienWordTranslationFilter = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             String chr = source+"";
-            if(chr.isEmpty() || chr.equals(" ")){
+            if(chr.isEmpty() || chr.equals(" ") || chr.equals("-")){
                 return null;
             } else {
-                return !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
+                return !Character.isLetterOrDigit(chr.charAt(0)) ? "" : chr.toUpperCase();
             }
         }
     };
 
     private static ConnectivityManager connectivityManager;
+    private static String deviceId;
 
     public static boolean isEmpty(CharSequence cs) {
         return cs == null || cs.length() == 0;
@@ -79,6 +88,29 @@ public class Util {
 
     public static String toHexColor(int color){
         return "#" + Integer.toHexString(color).replaceFirst("ff", "").toUpperCase();
+    }
+
+    public static String toBase64(Bitmap image){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    public static String removeSpecialCharacters(String text){
+        return text.replaceAll("[^\\w\\s]+", "");
+    }
+
+    public static Webb getWebb(){
+        return WEBB;
+    }
+
+    public static String getDeviceId(Context context){
+        if(isEmpty(deviceId)) {
+            String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            deviceId = md5(androidId).toUpperCase();
+        }
+        return deviceId;
     }
 
     public static void asyncCall(int delay, Runnable runnable){
@@ -136,6 +168,14 @@ public class Util {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static int getAppVersionCode(Context context) {
+        try {
+            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
     public static String getAppVersionName(Context context) {
         try {
             return "v" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
@@ -166,6 +206,12 @@ public class Util {
 
     public static String getPackageName(Context context){
         return context.getPackageName();
+    }
+
+    public static String getProPackageName(Context context){
+        return getPackageName(context)
+                .replace("dev", "pro")
+                .replace("free", "pro");
     }
 
     public static String getGooglePlayUrl(Context context){
@@ -205,6 +251,21 @@ public class Util {
             });
         }
         return isConnected;
+    }
+
+    public static String md5(String str) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(str.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            Crashlytics.logException(e);
+        }
+        return null;
     }
 
     private static boolean isConnectionFast(int type, int subType){

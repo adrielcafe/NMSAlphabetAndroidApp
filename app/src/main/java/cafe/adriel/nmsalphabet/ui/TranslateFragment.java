@@ -1,11 +1,15 @@
 package cafe.adriel.nmsalphabet.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -14,43 +18,70 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.event.ImageCroppedEvent;
+import cafe.adriel.nmsalphabet.model.AlienRace;
+import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.ui.util.TextViewClickMovement;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
+import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.TranslationUtil;
 import cafe.adriel.nmsalphabet.util.Util;
+import mehdi.sakout.dynamicbox.DynamicBox;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class TranslateFragment extends BaseFragment {
 
-    @BindView(R.id.phrase_layout)
-    RelativeLayout phraseLayout;
-    @BindView(R.id.phrase)
-    EditText phraseView;
-    @BindView(R.id.phrase_clear)
-    TextView phraseClearView;
+    private static final int REQUEST_PICK_PICTURE = 0;
+
+    private String languageCode;
+    private AlienRace selectedRace;
+    private List<AlienWordTranslation> translations;
+    private DynamicBox viewState;
+
+    @BindView(R.id.search_layout)
+    RelativeLayout searchLayout;
+    @BindView(R.id.search)
+    EditText searchView;
+    @BindView(R.id.search_clear)
+    TextView searchClearView;
     @BindView(R.id.races)
     MaterialSpinner racesView;
     @BindView(R.id.fab)
     FloatingActionButton fabView;
-    @BindView(R.id.translation_header)
-    LinearLayout translationHeaderView;
-    @BindView(R.id.country_flag)
-    ImageView countryFlagView;
+    @BindView(R.id.language)
+    MaterialSpinner languageView;
+    @BindView(R.id.translation_layout)
+    ScrollView translationLayout;
     @BindView(R.id.translation_separator)
     View translationSeparatorView;
     @BindView(R.id.translated_phrase)
-    EditText translatedPhraseView;
+    TextView translatedPhraseView;
 
     @Nullable
     @Override
@@ -62,43 +93,133 @@ public class TranslateFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, languageCode);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        EasyImage.handleActivityResult(requestCode, resultCode, data, getActivity(), new DefaultCallback() {
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                cropPicture(imageFile);
+            }
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Subscribe(sticky = true)
+    public void onEvent(final ImageCroppedEvent event) {
+        EventBus.getDefault().removeStickyEvent(ImageCroppedEvent.class);
+        final AlertDialog dialog = Util.showLoadingDialog(getContext());
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                final String text = TranslationUtil.extractTextFromImage(getContext(), event.image);
+                if(Util.isNotEmpty(text)){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            searchView.setText(text);
+                            translatePhrase();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.no_word_found_image), Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
+        });
+    }
+
+    @OnClick(R.id.search_clear)
+    public void clearSearch(){
+        languageView.setVisibility(View.INVISIBLE);
+        translationSeparatorView.setVisibility(View.INVISIBLE);
+        translationLayout.setVisibility(View.INVISIBLE);
+        translatedPhraseView.setText("");
+        searchView.setText("");
+    }
+
+    @OnClick(R.id.fab)
+    public void pickPicture(){
+        if(Util.isConnected(getContext())) {
+            EasyImage.openChooserWithGallery(this, getString(R.string.select_an_image), REQUEST_PICK_PICTURE);
+        }
+    }
+
+    @Override
     protected void init(){
+        viewState = TranslationUtil.createViewState(getContext(), translationLayout);
+        translatedPhraseView.setMovementMethod(new TextViewClickMovement(getContext(), new TextViewClickMovement.OnTextViewClickMovementListener() {
+            @Override
+            public void onLinkClicked(String linkText, TextViewClickMovement.LinkType linkType) {
+                showWordTranslationsDialog(linkText);
+            }
+            @Override
+            public void onLongClick(String text) {
+                AlienWordTranslation translation = getTranslation(text);
+                if(translation != null){
+                    Toast.makeText(getContext(), translation.getWord().getWord(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }));
         initControls();
         initFab();
-        initFlag();
+        initLanguage();
     }
 
     private void initControls(){
+        List<String> races = DbUtil.getRacesName();
+        races.add(0, getString(R.string.select_alien_race));
+
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
         racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
-        racesView.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
         racesView.setTextColor(Color.WHITE);
         racesView.setArrowColor(Color.WHITE);
-        racesView.setItems(getString(R.string.all_alien_races), "Korvax");
+        racesView.setItems(races);
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-
+                selectedRace = DbUtil.getRaceByName(item);
+                translatePhrase();
             }
         });
 
-        phraseLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
-        phraseView.setFilters(new InputFilter[] { Util.getWordInputFilter() });
-        phraseView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        searchLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
+        searchView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
+        searchView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if (phraseView.getText().length() > 0) {
-                        translatePhrase(phraseView.getText().toString());
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (isPhraseValid()) {
+                        translatePhrase();
                     }
                 }
                 return false;
             }
         });
-        phraseView.addTextChangedListener(new TextWatcher() {
+        searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                phraseClearView.setVisibility(s.length() == 0 ? View.INVISIBLE : View.VISIBLE);
+                searchClearView.setVisibility(s.length() == 0 ? View.INVISIBLE : View.VISIBLE);
             }
 
             @Override
@@ -111,16 +232,10 @@ public class TranslateFragment extends BaseFragment {
 
             }
         });
-        phraseView.post(new Runnable() {
+        searchView.post(new Runnable() {
             @Override
             public void run() {
-                racesView.setHeight(phraseLayout.getHeight());
-            }
-        });
-        phraseClearView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phraseView.setText("");
+                racesView.setHeight(searchLayout.getHeight());
             }
         });
     }
@@ -131,34 +246,125 @@ public class TranslateFragment extends BaseFragment {
                 .color(Color.WHITE)
                 .sizeDp(50);
         fabView.setImageDrawable(fabIcon);
-        fabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
 
+    private void initLanguage(){
+        String[] languages = getContext().getResources().getStringArray(R.array.language_entries);
+        int languageIndex = 0;
+
+        if(languageCode == null){
+            languageCode = LanguageUtil.getCurrentLanguageCode(getContext());
+        }
+        for (int i = 0; i < languages.length; i++){
+            if(languages[i].equals(LanguageUtil.languageCodeToLanguage(getContext(), languageCode))){
+                languageIndex = i;
+            }
+        }
+
+        languageView.setTextColor(Color.BLACK);
+        languageView.setArrowColor(Color.BLACK);
+        languageView.setBackground(null);
+        languageView.setPadding(20, 20, 20, 20);
+        languageView.setItems(languages);
+        languageView.setSelectedIndex(languageIndex);
+        languageView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, item);
+                translatePhrase();
             }
         });
+
+        languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, languageCode);
     }
 
-    private void initFlag(){
-        int flagResId;
-        switch (LanguageUtil.getCurrentLanguageCode(getContext())){
-            case LanguageUtil.LANGUAGE_PT:
-                flagResId = R.drawable.flag_brazil_small;
-                break;
-            case LanguageUtil.LANGUAGE_DE:
-                flagResId = R.drawable.flag_germany_small;
-                break;
-            default:
-                flagResId = R.drawable.flag_uk_small;
-                break;
+    private void translatePhrase(){
+        if(Util.isConnected(getContext())) {
+            final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
+            Util.hideSoftKeyboard(getActivity());
+            if (Util.isNotEmpty(phrase) && selectedRace != null) {
+                translations = new ArrayList<>();
+                translatedPhraseView.setText("");
+                viewState.showCustomView(Constant.STATE_LOADING);
+                AnalyticsUtil.translateEvent(selectedRace, phrase);
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final String[] words = phrase.split(" ");
+                        final Map<String, AlienWordTranslation> translatedWords = DbUtil
+                                .translateWords(Arrays.asList(words), selectedRace, languageCode);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateTranslatedPhrase(words, translatedWords);
+                            }
+                        });
+                    }
+                });
+            }
         }
-        Glide.with(getContext()).load(flagResId).into(countryFlagView);
     }
 
-    private void translatePhrase(String phrase){
-        translationHeaderView.setVisibility(View.VISIBLE);
-        translationSeparatorView.setVisibility(View.VISIBLE);
-        translatedPhraseView.setVisibility(View.VISIBLE);
-        translatedPhraseView.setText("HELLO FRIEND");
+    private void cropPicture(File imageFile){
+        Intent i = new Intent(getContext(), CropImageActivity.class);
+        i.putExtra(Constant.EXTRA_IMAGE_PATH, imageFile.getPath());
+        startActivity(i);
     }
+
+    private void updateTranslatedPhrase(String[] words, Map<String, AlienWordTranslation> translatedWords){
+        final StringBuilder translatedPhrase = new StringBuilder();
+        if(translatedWords != null){
+            for(String word : words){
+                if(translatedWords.containsKey(word)) {
+                    AlienWordTranslation translation = translatedWords.get(word);
+                    translations.add(translation);
+                    translatedPhrase.append("<a href='http://nms.ab'>" + translation.getTranslation() + "</a>");
+                } else {
+                    translatedPhrase.append("<font color='#D32F2F'>" + word + "</font>");
+                }
+                translatedPhrase.append(" ");
+            }
+        }
+
+        String translatedPhraseStr = translatedPhrase.toString().trim();
+        languageView.setVisibility(View.VISIBLE);
+        translationSeparatorView.setVisibility(View.VISIBLE);
+        translationLayout.setVisibility(View.VISIBLE);
+        translatedPhraseView.setText(Html.fromHtml(translatedPhraseStr));
+        if(Util.isNotEmpty(translatedPhraseStr)) {
+            viewState.hideAll();
+        } else {
+            viewState.showCustomView(Constant.STATE_EMPTY);
+        }
+    }
+
+    private void showWordTranslationsDialog(String translation){
+        AlienWordTranslation t = getTranslation(translation);
+        if(t != null) {
+            TranslationUtil.showTranslationsDialog(getContext(), t.getWord(), languageCode);
+        }
+    }
+
+    private AlienWordTranslation getTranslation(String translation){
+        if(translations != null) {
+            for (AlienWordTranslation t : translations) {
+                if (t != null && t.getTranslation().equals(translation)) {
+                    return t;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isPhraseValid(){
+        if(racesView.getText().toString().equals(getString(R.string.select_alien_race))){
+            Toast.makeText(getContext(), R.string.select_alien_race, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if(Util.isEmpty(searchView.getText().toString().trim())){
+            Toast.makeText(getContext(), R.string.type_alien_phrase, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
 }

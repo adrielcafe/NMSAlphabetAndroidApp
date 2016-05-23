@@ -23,7 +23,7 @@
 
     <color name="bg_gray">#E0E0E0</color>
     <color name="bg_white">#FAFAFA</color>
-    <color name="bg_galaxy">#002A4B</color>
+    <color name="bg_version">#002A4B</color>
 
     <color name="gray_dark">#616161</color>
     <color name="gray">#BDBDBD</color>
