@@ -95,7 +95,7 @@ public class TranslateFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateLanguage(languageCode);
+        languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, languageCode);
     }
 
     @Override
@@ -270,12 +270,12 @@ public class TranslateFragment extends BaseFragment {
         languageView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                updateLanguage(item);
+                languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, item);
                 translatePhrase();
             }
         });
 
-        updateLanguage(LanguageUtil.languageCodeToLanguage(getContext(), languageCode));
+        languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, languageCode);
     }
 
     private void translatePhrase(){
@@ -309,26 +309,6 @@ public class TranslateFragment extends BaseFragment {
         Intent i = new Intent(getContext(), CropImageActivity.class);
         i.putExtra(Constant.EXTRA_IMAGE_PATH, imageFile.getPath());
         startActivity(i);
-    }
-
-    private void updateLanguage(String language){
-        final String english = getContext().getString(R.string.english);
-        final String portuguese = getContext().getString(R.string.portuguese);
-        final String german = getContext().getString(R.string.german);
-        int flagResId = -1;
-        if(language.equals(english)){
-            languageCode = LanguageUtil.LANGUAGE_EN;
-            flagResId = R.drawable.flag_uk_small;
-        } else if(language.equals(portuguese)){
-            languageCode = LanguageUtil.LANGUAGE_PT;
-            flagResId = R.drawable.flag_brazil_small;
-        } else if(language.equals(german)){
-            languageCode = LanguageUtil.LANGUAGE_DE;
-            flagResId = R.drawable.flag_germany_small;
-        }
-        try {
-            languageView.setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
-        } catch (Exception e){ }
     }
 
     private void updateTranslatedPhrase(String[] words, Map<String, AlienWordTranslation> translatedWords){

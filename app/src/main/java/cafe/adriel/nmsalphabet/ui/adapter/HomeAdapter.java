@@ -74,6 +74,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         final AlienWord word = words.get(position);
         final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
 
+        initLanguage(holder, race, word);
+
         if(enWordTranslations == null){
             enWordTranslations = new HashMap<>();
         }
@@ -127,15 +129,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 shareTranslation(race, word);
             }
         });
-
-        initLanguage(holder, race, word);
     }
 
     private void initLanguage(final ViewHolder holder, final AlienRace race, final AlienWord word){
         String[] languages = context.getResources().getStringArray(R.array.language_entries);
         int languageIndex = 0;
-
-        if(languageCode == null){
+        
+        if(Util.isEmpty(languageCode)){
             languageCode = LanguageUtil.getCurrentLanguageCode(context);
         }
         for (int i = 0; i < languages.length; i++){
@@ -153,12 +153,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         holder.languageView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                updateLanguage(holder, item);
+                languageCode = LanguageUtil.updateLanguageFlag(context, holder.languageView, item);
                 loadTranslations(holder, race, word);
             }
         });
 
-        updateLanguage(holder, LanguageUtil.languageCodeToLanguage(context, languageCode));
+        languageCode = LanguageUtil.updateLanguageFlag(context, holder.languageView, languageCode);
     }
 
     private DynamicBox getViewState(AlienWord word){
@@ -238,24 +238,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             holder.translationsLayout.addView(translationLayout);
         }
         setViewState(word, null);
-    }
-
-    private void updateLanguage(ViewHolder holder, String language){
-        final String english = context.getString(R.string.english);
-        final String portuguese = context.getString(R.string.portuguese);
-        final String german = context.getString(R.string.german);
-        int flagResId = -1;
-        if(language.equals(english)){
-            this.languageCode = LanguageUtil.LANGUAGE_EN;
-            flagResId = R.drawable.flag_uk_small;
-        } else if(language.equals(portuguese)){
-            this.languageCode = LanguageUtil.LANGUAGE_PT;
-            flagResId = R.drawable.flag_brazil_small;
-        } else if(language.equals(german)){
-            this.languageCode = LanguageUtil.LANGUAGE_DE;
-            flagResId = R.drawable.flag_germany_small;
-        }
-        holder.languageView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(flagResId), null, holder.languageView.getCompoundDrawables()[2], null);
     }
 
     private void newTranslation(AlienWord word){
