@@ -78,5 +78,9 @@
     <string name="press_back_again">Pressione VOLTAR novamente para sair</string>
     <string name="delete">Excluir</string>
     <string name="service_unavailable">Serviço indisponível</string>
+    <string name="intro_add_translation">Descobriu uma nova tradução? Adicione aqui!</string>
+    <string name="intro_home">Pesquise palavras alienígenas e suas traduções</string>
+    <string name="intro_profile">Gerencie suas traduções</string>
+    <string name="intro_translate">Traduza frases alienígenas com sua câmera</string>
 
 </resources>

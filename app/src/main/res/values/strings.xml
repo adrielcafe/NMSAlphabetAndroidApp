@@ -78,6 +78,10 @@
     <string name="select_an_image">Select an image</string>
     <string name="press_back_again">Press BACK again to quit</string>
     <string name="service_unavailable">Service unavailable</string>
+    <string name="intro_home">Search for alien words and their translations</string>
+    <string name="intro_translate">Translate alien phrases with your camera</string>
+    <string name="intro_profile">Manage your translations</string>
+    <string name="intro_add_translation">Discovered a new translation? Add here!</string>
 
     <string-array name="language_entries">
         <item>@string/english</item>
