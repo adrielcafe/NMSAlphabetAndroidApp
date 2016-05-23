@@ -53,16 +53,16 @@ public class Util {
     public static InputFilter alienWordFilter = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             String chr = source+"";
-            return chr.isEmpty() || !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
+            return chr.isEmpty() || !Character.isLetterOrDigit(chr.charAt(0)) ? "" : chr.toUpperCase();
         }
     };
     public static InputFilter alienWordTranslationFilter = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             String chr = source+"";
-            if(chr.isEmpty() || chr.equals(" ")){
+            if(chr.isEmpty() || chr.equals(" ") || chr.equals("-")){
                 return null;
             } else {
-                return !Character.isLetter(chr.charAt(0)) ? "" : chr.toUpperCase();
+                return !Character.isLetterOrDigit(chr.charAt(0)) ? "" : chr.toUpperCase();
             }
         }
     };
