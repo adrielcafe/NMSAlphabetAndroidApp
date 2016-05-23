@@ -139,11 +139,12 @@ public class Util {
                     .setFocusGravity(FocusGravity.CENTER)
                     .setFocusType(Focus.NORMAL)
                     .setDelayMillis(500)
+                    .setListener(listener)
                     .enableIcon(true)
                     .enableDotAnimation(true)
                     .enableFadeAnimation(true)
+                    .dismissOnTouch(true)
                     .performClick(false)
-                    .setListener(listener)
                     .show();
         } catch (Exception e){ }
     }
