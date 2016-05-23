@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +26,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -39,6 +41,10 @@ import java.util.List;
 
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import co.mobiwise.materialintro.animation.MaterialIntroListener;
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 
 public class Util {
 
@@ -122,6 +128,24 @@ public class Util {
                 .setView(R.layout.dialog_loading)
                 .setCancelable(false)
                 .show();
+    }
+
+    public static void showShowcase(Activity activity, String id, @StringRes int textResId, View view, MaterialIntroListener listener){
+        try {
+            new MaterialIntroView.Builder(activity)
+                    .setUsageId(id)
+                    .setTarget(view)
+                    .setInfoText(activity.getString(textResId))
+                    .setFocusGravity(FocusGravity.CENTER)
+                    .setFocusType(Focus.NORMAL)
+                    .setDelayMillis(500)
+                    .enableIcon(true)
+                    .enableDotAnimation(true)
+                    .enableFadeAnimation(true)
+                    .performClick(false)
+                    .setListener(listener)
+                    .show();
+        } catch (Exception e){ }
     }
 
     public static void shareText(Activity activity, String text){

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -64,6 +65,8 @@ public class TranslateFragment extends BaseFragment {
     private List<AlienWordTranslation> translations;
     private DynamicBox viewState;
 
+    @BindView(R.id.controls_layout)
+    LinearLayout controlsLayout;
     @BindView(R.id.search_layout)
     RelativeLayout searchLayout;
     @BindView(R.id.search)
@@ -221,12 +224,10 @@ public class TranslateFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
                 searchClearView.setVisibility(s.length() == 0 ? View.INVISIBLE : View.VISIBLE);
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 

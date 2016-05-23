@@ -44,10 +44,15 @@ public class Constant {
     public static final String STATE_NO_INTERNET       = "noInternet";
     public static final String STATE_REQUIRE_SIGN_IN   = "requireSignIn";
 
+    public static final String INTRO_HOME               = "introHome";
+    public static final String INTRO_TRANSLATE          = "introTranslate";
+    public static final String INTRO_PROFILE            = "introProfile";
+    public static final String INTRO_ADD_TRANSLATION    = "introAddTranslation";
+
     public static final List<Triple<String, String, String>> TRANSLATORS = new ArrayList<>(Arrays.asList(
-            new Triple<>(LanguageUtil.LANGUAGE_EN, "Adriel Café", "@adrielcafe"),
-            new Triple<>(LanguageUtil.LANGUAGE_EN, "Natascha Brell", ""),
-            new Triple<>(LanguageUtil.LANGUAGE_PT, "Adriel Café", "@adrielcafe"),
-            new Triple<>(LanguageUtil.LANGUAGE_DE, "Natascha Brell", "")
+        new Triple<>(LanguageUtil.LANGUAGE_EN, "Adriel Café", "@adrielcafe"),
+        new Triple<>(LanguageUtil.LANGUAGE_EN, "Natascha Brell", ""),
+        new Triple<>(LanguageUtil.LANGUAGE_PT, "Adriel Café", "@adrielcafe"),
+        new Triple<>(LanguageUtil.LANGUAGE_DE, "Natascha Brell", "")
     ));
 }
