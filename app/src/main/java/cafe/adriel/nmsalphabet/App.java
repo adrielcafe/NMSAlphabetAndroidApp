@@ -12,6 +12,7 @@ import com.parse.ParseConfig;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.squareup.leakcanary.LeakCanary;
 import com.tsengvn.typekit.Typekit;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,7 +38,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        LeakCanary.install(this);
         CustomActivityOnCrash.install(this);
         EventBus.getDefault().register(this);
         EasyImage.configuration(this)
