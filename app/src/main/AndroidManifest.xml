@@ -26,8 +26,8 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <action android:name="cat.ereza.customactivityoncrash.RESTART" />
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -68,8 +68,19 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".ui.CropImageActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme1.NoActionBar"
+            android:launchMode="singleTop"/>
+        <activity
             android:name=".ui.VersionActivity"
             android:label="@string/version"
+            android:theme="@style/AppTheme1.NoActionBar.Transparent"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.UpdateActivity"
+            android:label="@string/update"
             android:theme="@style/AppTheme1.NoActionBar.Transparent"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
@@ -87,10 +98,10 @@
             android:value="@string/facebook_app_id"/>
         <meta-data
             android:name="com.parse.APPLICATION_ID"
-            android:value="opu6rH8YJpyQew8ohv3k30oAsQD1VC5qKj5hn2Bk" />
+            android:value="@string/parse_app_id" />
         <meta-data
             android:name="com.parse.CLIENT_KEY"
-            android:value="dgGqdW3dmnKGZ4TiR7cGWbFhXoqQJz3fkDal51SD" />
+            android:value="@string/parse_key" />
 
     </application>
 

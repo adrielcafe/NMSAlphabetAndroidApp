@@ -22,11 +22,14 @@ public class Constant {
     public static final String GENDER_MALE      = "male";
     public static final String GENDER_FEMALE    = "female";
 
-    public static final String EXTRA_TYPE   = "type";
+    public static final String EXTRA_IMAGE_PATH = "imageUri";
+    public static final String EXTRA_TYPE       = "type";
 
+    public static final String SETTINGS_ACCOUNT             = "account";
     public static final String SETTINGS_ACCOUNT_STATUS      = "account_status";
     public static final String SETTINGS_ACCOUNT_LANGUAGE    = "account_language";
     public static final String SETTINGS_ACCOUNT_THEME       = "account_theme";
+    public static final String SETTINGS_ACCOUNT_UPGRADE_PRO = "account_upgrade_pro";
     public static final String SETTINGS_ABOUT_NEW_RACE      = "about_new_race";
     public static final String SETTINGS_ABOUT_TRANSLATORS   = "about_translators";
     public static final String SETTINGS_ABOUT_FEEDBACK      = "about_feedback";
@@ -34,6 +37,7 @@ public class Constant {
     public static final String SETTINGS_ABOUT_RATE          = "about_rate";
     public static final String SETTINGS_ABOUT_VERSION	    = "about_version";
     public static final String SETTINGS_HAS_SIGNED_IN	    = "hasSignedIn";
+    public static final String SETTINGS_FACEBOOK_USER_ID    = "facebookUserId";
 
     public static final String STATE_LOADING           = "loading";
     public static final String STATE_EMPTY             = "empty";
@@ -42,6 +46,7 @@ public class Constant {
 
     public static final List<Triple<String, String, String>> TRANSLATORS = new ArrayList<>(Arrays.asList(
             new Triple<>(LanguageUtil.LANGUAGE_EN, "Adriel Café", "@adrielcafe"),
+            new Triple<>(LanguageUtil.LANGUAGE_EN, "Natascha Brell", ""),
             new Triple<>(LanguageUtil.LANGUAGE_PT, "Adriel Café", "@adrielcafe"),
             new Triple<>(LanguageUtil.LANGUAGE_DE, "Natascha Brell", "")
     ));

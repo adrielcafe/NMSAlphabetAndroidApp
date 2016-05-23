@@ -1,12 +1,15 @@
 package cafe.adriel.nmsalphabet.util;
 
 import com.parse.FindCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.model.AlienRace;
@@ -205,6 +208,21 @@ public class DbUtil {
                 .findInBackground(callback);
     }
 
+    public static AlienWordTranslation getBestTranslation(AlienRace race, AlienWord word, String language){
+        try {
+            return ParseQuery.getQuery(AlienWordTranslation.class)
+                    .whereEqualTo("race", race)
+                    .whereEqualTo("word", word)
+                    .whereEqualTo("language", language)
+                    .whereGreaterThan("likesCount", 0)
+                    .addDescendingOrder("likesCount")
+                    .addAscendingOrder("dislikesCount")
+                    .getFirst();
+        } catch (Exception e){
+            return null;
+        }
+    }
+
     public static void getTranslations(AlienRace race, AlienWord word, String language, int page, FindCallback<AlienWordTranslation> callback){
         ParseQuery.getQuery(AlienWordTranslation.class)
                 .whereEqualTo("race", race)
@@ -251,6 +269,19 @@ public class DbUtil {
                     .whereEqualTo("language", language)
                     .addDescendingOrder("_created_at")
                     .getFirst();
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Map<String, AlienWordTranslation> translateWords(List<String> words, AlienRace race, String language){
+        Map<String, Object> params = new HashMap<>();
+        params.put("words", words);
+        params.put("raceId", race.getObjectId());
+        params.put("language", language);
+        try {
+            return ParseCloud.callFunction("translateWords", params);
         } catch (Exception e){
             e.printStackTrace();
             return null;

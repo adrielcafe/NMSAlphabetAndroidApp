@@ -1,17 +1,14 @@
 package cafe.adriel.nmsalphabet.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 import cafe.adriel.nmsalphabet.R;
 
 public class SettingsActivity extends BaseActivity {
-
-    @BindView(R.id.content_layout)
-    FrameLayout contentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +27,12 @@ public class SettingsActivity extends BaseActivity {
                 onBackPressed();
                 break;
         }
+        return true;
+    }
+
+    @OnLongClick(R.id.code_with_love)
+    public boolean showVersionActivity(){
+        startActivity(new Intent(SettingsActivity.this, VersionActivity.class));
         return true;
     }
 

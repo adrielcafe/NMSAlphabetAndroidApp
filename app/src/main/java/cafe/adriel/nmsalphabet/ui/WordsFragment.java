@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -40,10 +39,12 @@ import com.rohit.recycleritemclicksupport.RecyclerItemClickSupport;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
@@ -55,6 +56,7 @@ import cafe.adriel.nmsalphabet.ui.adapter.HomeAdapter;
 import cafe.adriel.nmsalphabet.ui.adapter.ProfileAdapter;
 import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
 import cafe.adriel.nmsalphabet.ui.util.SwipeRefreshLayoutToggleScrollListener;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.SocialUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
@@ -88,14 +90,10 @@ public class WordsFragment extends BaseFragment {
     ImageView userImageView;
     @BindView(R.id.user_name)
     TextView userNameView;
-    @BindView(R.id.settings)
-    Button settingsView;
     @BindView(R.id.search_layout)
     RelativeLayout searchLayout;
     @BindView(R.id.search)
     EditText searchView;
-    @BindView(R.id.search_icon)
-    TextView searchIconView;
     @BindView(R.id.search_clear)
     TextView searchClearView;
     @BindView(R.id.races)
@@ -162,6 +160,22 @@ public class WordsFragment extends BaseFragment {
         }
     }
 
+    @OnClick(R.id.settings)
+    public void openSettings(){
+        startActivity(new Intent(getContext(), SettingsActivity.class));
+    }
+
+    @OnClick(R.id.search_icon)
+    public void search(){
+        updateWords(0);
+    }
+
+    @OnClick(R.id.search_clear)
+    public void clearSearch(){
+        searchView.setText("");
+        search();
+    }
+
     @Override
     protected void init(){
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -195,7 +209,7 @@ public class WordsFragment extends BaseFragment {
                 }
                 updateRefreshLayoutMarginTop();
                 initState();
-                updateWords(0);
+                search();
             }
         });
 
@@ -208,7 +222,7 @@ public class WordsFragment extends BaseFragment {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 selectedRace = DbUtil.getRaceByName(item);
-                updateWords(0);
+                search();
             }
         });
 
@@ -217,7 +231,7 @@ public class WordsFragment extends BaseFragment {
         searchView.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    updateWords(0);
+                    search();
                     return true;
                 }
                 return false;
@@ -243,19 +257,6 @@ public class WordsFragment extends BaseFragment {
                 racesView.setHeight(searchClearView.getHeight());
             }
         });
-        searchIconView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateWords(0);
-            }
-        });
-        searchClearView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchView.setText("");
-                updateWords(0);
-            }
-        });
     }
 
     private void initProfileControls(){
@@ -272,15 +273,9 @@ public class WordsFragment extends BaseFragment {
                 updateWords(0);
             }
         });
-        settingsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), SettingsActivity.class));
-            }
-        });
         userNameView.setText(App.isSignedIn() ? App.getUser().getName() : getString(R.string.unknown_explorer));
         Glide.with(getContext())
-                .load(App.isSignedIn() ? SocialUtil.getUserImageUrl() : R.drawable.default_user_image)
+                .load(App.isSignedIn() ? SocialUtil.getUserImageUrl(getContext()) : R.drawable.default_user_image)
                 .asBitmap()
                 .centerCrop()
                 .into(new BitmapImageViewTarget(userImageView) {
@@ -370,38 +365,46 @@ public class WordsFragment extends BaseFragment {
             return;
         }
         Util.hideSoftKeyboard(getActivity());
-        setLoadingList(true);
-        switch (type) {
-            case HOME:
-                String word = searchView.getText().toString();
-                DbUtil.getWords(word, selectedRace, page, new FindCallback<AlienWord>() {
-                    @Override
-                    public void done(List<AlienWord> objects, ParseException e) {
-                        afterUpdateWords(page, objects, e);
+        if(Util.isConnected(getContext())) {
+            setLoadingList(true);
+            switch (type) {
+                case HOME:
+                    String word = searchView.getText().toString();
+                    DbUtil.getWords(word, selectedRace, page, new FindCallback<AlienWord>() {
+                        @Override
+                        public void done(List<AlienWord> objects, ParseException e) {
+                            afterUpdateWords(page, objects, e);
+                        }
+                    });
+                    if (page == 0) {
+                        AnalyticsUtil.searchEvent(selectedRace, word);
                     }
-                });
-                break;
-            case PROFILE:
-                DbUtil.getWordsByUser(App.getUser(), page, new FindCallback<AlienWord>() {
-                    @Override
-                    public void done(List<AlienWord> objects, ParseException e) {
-                        afterUpdateWords(page, objects, e);
-                    }
-                });
-                break;
+                    break;
+                case PROFILE:
+                    DbUtil.getWordsByUser(App.getUser(), page, new FindCallback<AlienWord>() {
+                        @Override
+                        public void done(List<AlienWord> objects, ParseException e) {
+                            afterUpdateWords(page, objects, e);
+                        }
+                    });
+                    break;
+            }
         }
     }
 
     private void afterUpdateWords(int page, List<AlienWord> newWords, ParseException e){
+        if(words == null){
+            words = new ArrayList<>();
+        }
         if(page == 0){
             if(Util.isEmpty(newWords)){
                 viewState.showCustomView(Constant.STATE_EMPTY);
             } else {
-                words = newWords;
+                words.addAll(newWords);
                 initAdapter();
                 viewState.hideAll();
             }
-        } else {
+        } else if(Util.isNotEmpty(newWords)){
             words.addAll(newWords);
             switch (type){
                 case HOME:
@@ -417,12 +420,18 @@ public class WordsFragment extends BaseFragment {
             e.printStackTrace();
         }
         setLoadingList(false);
-        refreshLayout.setRefreshing(false);
+        if(refreshLayout != null) {
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     private void refreshWords(){
-        resetWords();
-        updateWords(0);
+        if(Util.isConnected(getContext())) {
+            resetWords();
+            updateWords(0);
+        } else {
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     private void resetWords(){
@@ -447,21 +456,25 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(final boolean loading){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(loading){
-                    new FadeInAnimation(loadingView).animate();
-                } else {
-                    Util.asyncCall(500, new Runnable() {
-                        @Override
-                        public void run() {
-                            new FadeOutAnimation(loadingView).animate();
+        if(getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (loading) {
+                            new FadeInAnimation(loadingView).animate();
+                        } else {
+                            Util.asyncCall(500, new Runnable() {
+                                @Override
+                                public void run() {
+                                    new FadeOutAnimation(loadingView).animate();
+                                }
+                            });
                         }
-                    });
+                    } catch (Exception e){ }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void updateRefreshLayoutMarginTop(){

@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -51,6 +55,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     updatePreferencies(settingsList);
                 }
             });
+            settingsList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if(scrollState == SCROLL_STATE_IDLE) {
+                        updatePreferencies(settingsList);
+                    }
+                }
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) { }
+            });
         }
     }
 
@@ -60,14 +74,17 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             case Constant.SETTINGS_ACCOUNT_STATUS:
                 changeStatus();
                 break;
+            case Constant.SETTINGS_ACCOUNT_UPGRADE_PRO:
+                upgradePro();
+                break;
             case Constant.SETTINGS_ABOUT_NEW_RACE:
                 sendNewRace();
                 break;
-            case Constant.SETTINGS_ABOUT_TRANSLATORS:
-                showTranslators();
-                break;
             case Constant.SETTINGS_ABOUT_FEEDBACK:
                 sendFeedback();
+                break;
+            case Constant.SETTINGS_ABOUT_TRANSLATORS:
+                showTranslators();
                 break;
             case Constant.SETTINGS_ABOUT_SHARE:
                 shareApp();
@@ -98,18 +115,21 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void init(){
         accountLanguage = (ListPreference) findPreference(Constant.SETTINGS_ACCOUNT_LANGUAGE);
         accountTheme = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
+        PreferenceCategory account = (PreferenceCategory) findPreference(Constant.SETTINGS_ACCOUNT);
         Preference accountStatus = findPreference(Constant.SETTINGS_ACCOUNT_STATUS);
+        Preference accountUpgradePro = findPreference(Constant.SETTINGS_ACCOUNT_UPGRADE_PRO);
         Preference aboutNewRace = findPreference(Constant.SETTINGS_ABOUT_NEW_RACE);
-        Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
+        Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
         Preference aboutRate = findPreference(Constant.SETTINGS_ABOUT_RATE);
         Preference aboutVersion = findPreference(Constant.SETTINGS_ABOUT_VERSION);
 
         accountStatus.setOnPreferenceClickListener(this);
+        accountUpgradePro.setOnPreferenceClickListener(this);
         aboutNewRace.setOnPreferenceClickListener(this);
-        aboutTranslators.setOnPreferenceClickListener(this);
         aboutFeedback.setOnPreferenceClickListener(this);
+        aboutTranslators.setOnPreferenceClickListener(this);
         aboutShare.setOnPreferenceClickListener(this);
         aboutRate.setOnPreferenceClickListener(this);
 
@@ -119,6 +139,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         } else {
             accountStatus.setTitle(R.string.signin);
             accountStatus.setSummary(R.string.signin_to_add_translations);
+        }
+        if(App.isPro(getActivity())){
+            account.removePreference(accountUpgradePro);
         }
         aboutVersion.setSummary(Util.getAppVersionName(getActivity()));
 
@@ -130,48 +153,42 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void updatePreferencies(ListView accountList){
-        try {
-            LinearLayout languageLayout = (LinearLayout) accountList.getChildAt(2);
-            RelativeLayout summaryLayout = (RelativeLayout) languageLayout.getChildAt(1);
-            TextView summaryView = (TextView) summaryLayout.getChildAt(1);
-            summaryView.setCompoundDrawablePadding(10);
-            summaryView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    LanguageUtil.getLanguageFlagDrawable(getActivity(), LanguageUtil.getCurrentLanguageCode(getActivity())), null, null, null);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        try {
-            LinearLayout themeLayout = (LinearLayout) accountList.getChildAt(3);
-            RelativeLayout summaryLayout = (RelativeLayout) themeLayout.getChildAt(1);
-            TextView summaryView = (TextView) summaryLayout.getChildAt(1);
-            summaryView.setText(ThemeUtil.getThemeCircles(getActivity(), ThemeUtil.getCurrentTheme(getActivity())));
-            summaryView.setTextSize(30);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        try {
-            LinearLayout versionLayout = (LinearLayout) accountList.getChildAt(8);
-            versionLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    showGalaxy();
-                    return true;
+        for(int i = 0; i < accountList.getChildCount(); i++) {
+            try {
+                LinearLayout rootLayout = (LinearLayout) accountList.getChildAt(i);
+                RelativeLayout preferenceLayout = (RelativeLayout) rootLayout.getChildAt(1);
+                TextView titleView = (TextView) preferenceLayout.getChildAt(0);
+                TextView summaryView = (TextView) preferenceLayout.getChildAt(1);
+                if(titleView.getText().toString().equals(getString(R.string.language))) {
+                    summaryView.setCompoundDrawablePadding(10);
+                    summaryView.setCompoundDrawablesRelativeWithIntrinsicBounds(LanguageUtil.getLanguageFlagDrawable(getActivity(),
+                            LanguageUtil.getCurrentLanguageCode(getActivity())), null, null, null);
+                } else if(titleView.getText().toString().equals(getString(R.string.theme))) {
+                    summaryView.setText(ThemeUtil.getThemePreview(getActivity(), ThemeUtil.getCurrentTheme(getActivity())));
+                    summaryView.setTextSize(30);
                 }
-            });
-        } catch (Exception e){
-            e.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
     private void changeStatus() {
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
         if(activity != null) {
-            App.signOut(activity);
-            startActivity(new Intent(activity, SplashActivity.class));
-            activity.finish();
-            if(MainActivity.getInstance() != null){
-                MainActivity.getInstance().finish();
-            }
+            final AlertDialog dialog = Util.showLoadingDialog(activity);
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    App.signOut(activity);
+                    startActivity(new Intent(activity, SplashActivity.class));
+                    activity.finish();
+                    if(MainActivity.getInstance() != null){
+                        MainActivity.getInstance().finish();
+                    }
+                    dialog.dismiss();
+                }
+            });
         }
     }
 
@@ -185,6 +202,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         accountTheme.setSummary(getThemeEntry(theme));
         Util.restartActivity(MainActivity.getInstance());
         Util.restartActivity(getActivity());
+    }
+
+    private void upgradePro(){
+        Uri marketUri = Uri.parse(Constant.MARKET_URI + Util.getProPackageName(getActivity()));
+        Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
+        startActivity(i);
     }
 
     private void sendNewRace() {
@@ -206,11 +229,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 .append("<i>* You can attach a photo if you want</i>")
                 .toString())
         );
-        startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+        startActivity(Intent.createChooser(i, getActivity().getString(R.string.feedback)));
     }
 
     private void showTranslators(){
-        startActivity(new Intent(getContext(), TranslatorsActivity.class));
+        startActivity(new Intent(getActivity(), TranslatorsActivity.class));
     }
 
     private void sendFeedback() {
@@ -222,7 +245,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
         Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
         i.putExtra(Intent.EXTRA_SUBJECT, subject);
-        startActivity(Intent.createChooser(i, getContext().getString(R.string.feedback)));
+        startActivity(Intent.createChooser(i, getActivity().getString(R.string.feedback)));
     }
 
     private void shareApp() {
@@ -233,10 +256,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Uri marketUri = Uri.parse(Constant.MARKET_URI + Util.getPackageName(getActivity()));
         Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
         startActivity(i);
-    }
-
-    private void showGalaxy(){
-        startActivity(new Intent(getContext(), VersionActivity.class));
     }
 
     private String getLanguageEntry(String value){

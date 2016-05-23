@@ -1,6 +1,7 @@
 package cafe.adriel.nmsalphabet.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
@@ -10,13 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.goebl.david.Webb;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.readystatesoftware.viewbadger.BadgeView;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.model.AlienRace;
@@ -27,6 +32,35 @@ import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
 import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class TranslationUtil {
+
+    private static final String VISION_API_URL          = "https://vision.googleapis.com/v1/images:annotate?key=";
+    private static final String VISION_API_REQUEST_BODY =
+            "{\"requests\": [{\"features\": [{\"type\": \"TEXT_DETECTION\"}],\"image\": {\"content\": \"%s\"}}]}";
+
+    public static String extractTextFromImage(Context context, Bitmap image){
+        String base64Img = Util.toBase64(image);
+        String body = String.format(VISION_API_REQUEST_BODY, base64Img);
+        try {
+            JSONObject json = Util.getWebb()
+                    .post(VISION_API_URL + context.getString(R.string.google_vision_key))
+                    .header(Webb.HDR_CONTENT_TYPE, Webb.APP_JSON)
+                    .body(body)
+                    .ensureSuccess()
+                    .asJsonObject()
+                    .getBody();
+            String text = json.getJSONArray("responses")
+                    .getJSONObject(0)
+                    .getJSONArray("textAnnotations")
+                    .getJSONObject(0)
+                    .getString("description")
+                    .toUpperCase();
+            AnalyticsUtil.ocrEvent(text);
+            return text;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static void showTranslationsDialog(final Context context, final AlienWord word, final String languageCode){
         View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_translations, null, false);
@@ -72,7 +106,7 @@ public class TranslationUtil {
                 .show();
     }
 
-    private static DynamicBox createViewState(Context context, View view){
+    public static DynamicBox createViewState(Context context, View view){
         View loadingState = LayoutInflater.from(context).inflate(R.layout.state_translations_loading, null, false);
         View emptyState = LayoutInflater.from(context).inflate(R.layout.state_translations_empty, null, false);
         View noInternetState = LayoutInflater.from(context).inflate(R.layout.state_translations_no_internet, null, false);
@@ -108,30 +142,41 @@ public class TranslationUtil {
         final BadgeView dislikeBadgeView = addBadge(context, holder.dislikeView, translation.getDislikesCount());
 
         holder.translationView.setText(translation.getTranslation());
-        holder.likeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disableLikeFor1Second(holder.likeView, holder.dislikeView);
-                likeTranslation(context, translation, holder.likeView, holder.dislikeView, likeBadgeView, dislikeBadgeView);
-            }
-        });
-        holder.dislikeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disableLikeFor1Second(holder.likeView, holder.dislikeView);
-                dislikeTranslation(context, translation, holder.likeView, holder.dislikeView, likeBadgeView, dislikeBadgeView);
-            }
-        });
 
-        if(DbUtil.isTranslationLiked(translation)){
-            holder.likeView.setTextColor(Color.BLACK);
-            holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
-        } else if(DbUtil.isTranslationDisliked(translation)){
-            holder.likeView.setTextColor(context.getResources().getColor(R.color.gray));
-            holder.dislikeView.setTextColor(Color.BLACK);
+        if(App.isSignedIn()) {
+            holder.likeView.setEnabled(true);
+            holder.dislikeView.setEnabled(true);
+            holder.likeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    disableLikeFor1Second(holder.likeView, holder.dislikeView);
+                    likeTranslation(context, translation, holder.likeView, holder.dislikeView, likeBadgeView, dislikeBadgeView);
+                }
+            });
+            holder.dislikeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    disableLikeFor1Second(holder.likeView, holder.dislikeView);
+                    dislikeTranslation(context, translation, holder.likeView, holder.dislikeView, likeBadgeView, dislikeBadgeView);
+                }
+            });
+            if(DbUtil.isTranslationLiked(translation)){
+                holder.likeView.setTextColor(Color.BLACK);
+                holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+            } else if(DbUtil.isTranslationDisliked(translation)){
+                holder.likeView.setTextColor(context.getResources().getColor(R.color.gray));
+                holder.dislikeView.setTextColor(Color.BLACK);
+            } else {
+                holder.likeView.setTextColor(context.getResources().getColor(R.color.gray));
+                holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+            }
         } else {
-            holder.likeView.setTextColor(context.getResources().getColor(R.color.gray));
-            holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
+            holder.likeView.setEnabled(false);
+            holder.dislikeView.setEnabled(false);
+            holder.likeView.setOnClickListener(null);
+            holder.dislikeView.setOnClickListener(null);
+            holder.likeView.setTextColor(context.getResources().getColor(R.color.gray_light));
+            holder.dislikeView.setTextColor(context.getResources().getColor(R.color.gray_light));
         }
     }
 
@@ -153,6 +198,7 @@ public class TranslationUtil {
             dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
 
             DbUtil.likeTranslation(translation);
+            AnalyticsUtil.likeEvent(translation.getRace(), translation.getWord(), translation);
         }
     }
 
@@ -174,6 +220,7 @@ public class TranslationUtil {
             dislikeView.setTextColor(Color.BLACK);
 
             DbUtil.dislikeTranslation(translation);
+            AnalyticsUtil.dislikeEvent(translation.getRace(), translation.getWord(), translation);
         }
     }
 

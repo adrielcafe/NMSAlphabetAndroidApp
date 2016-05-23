@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -36,9 +37,11 @@ import cafe.adriel.nmsalphabet.model.AlienRace;
 import cafe.adriel.nmsalphabet.model.AlienWord;
 import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.TranslationEditorActivity;
+import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.TranslationUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import mehdi.sakout.dynamicbox.DynamicBox;
 
@@ -79,7 +82,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             viewStates = new HashMap<>();
         }
         if(!viewStates.containsKey(word.getObjectId())) {
-            viewStates.put(word.getObjectId(), createViewState(holder));
+            viewStates.put(word.getObjectId(), TranslationUtil.createViewState(context, holder.translationsLayout));
         }
 
         holder.cardLayout.initialize(1000, context.getResources().getColor(R.color.gray), 0);
@@ -94,16 +97,18 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         holder.titleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!wordTranslations.containsKey(word.getObjectId())){
-                    loadTranslations(holder, race, word);
+                if(Util.isConnected(context)) {
+                    if (!wordTranslations.containsKey(word.getObjectId())) {
+                        loadTranslations(holder, race, word);
+                    }
+                    holder.cardLayout.unfold(false);
                 }
-                holder.cardLayout.unfold(false);
             }
         });
         holder.removeTranslationView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeTranslation(word);
+                removeTranslation(race, word);
             }
         });
         holder.editTranslationView.setOnClickListener(new View.OnClickListener() {
@@ -118,18 +123,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 shareTranslation(race, word);
             }
         });
-    }
-
-    private DynamicBox createViewState(ViewHolder holder){
-        View loadingState = LayoutInflater.from(context).inflate(R.layout.state_translations_loading, null, false);
-        View emptyState = LayoutInflater.from(context).inflate(R.layout.state_translations_empty, null, false);
-        View noInternetState = LayoutInflater.from(context).inflate(R.layout.state_translations_no_internet, null, false);
-
-        DynamicBox viewState = new DynamicBox(context, holder.translationsLayout);
-        viewState.addCustomView(loadingState, Constant.STATE_LOADING);
-        viewState.addCustomView(emptyState, Constant.STATE_EMPTY);
-        viewState.addCustomView(noInternetState, Constant.STATE_NO_INTERNET);
-        return viewState;
     }
 
     private DynamicBox getViewState(AlienWord word){
@@ -187,25 +180,29 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     }
 
     private void editTranslation(AlienWord word){
-        EventBus.getDefault().postSticky(new EditTranslationEvent(word, wordTranslations.get(word.getObjectId())));
-        context.startActivity(new Intent(context, TranslationEditorActivity.class));
+        if(Util.isConnected(context)) {
+            EventBus.getDefault().postSticky(new EditTranslationEvent(word, wordTranslations.get(word.getObjectId())));
+            context.startActivity(new Intent(context, TranslationEditorActivity.class));
+        }
     }
 
-    private void removeTranslation(final AlienWord word){
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.delete_translation)
-                .setMessage(R.string.translation_will_be_deleted_permanently)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteTranslation(word);
-                    }
-                })
-                .show();
+    private void removeTranslation(final AlienRace race, final AlienWord word){
+        if(Util.isConnected(context)) {
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.delete_translation)
+                    .setMessage(R.string.translation_will_be_deleted_permanently)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteTranslation(race, word);
+                        }
+                    })
+                    .show();
+        }
     }
 
-    private void deleteTranslation(final AlienWord word){
+    private void deleteTranslation(final AlienRace race, final AlienWord word){
         final AlertDialog dialog = Util.showLoadingDialog(context);
         word.removeUser(App.getUser());
         word.saveInBackground(new SaveCallback() {
@@ -217,6 +214,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                         translation.saveInBackground();
                     }
                     removeWord(word);
+                    AnalyticsUtil.deleteTranslationEvent(race, word);
                 }
                 dialog.dismiss();
             }
@@ -275,6 +273,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                     .append("\n\n");
             shareText.append(String.format("Download %s: %s", context.getString(R.string.app_name), Util.getGooglePlayUrl(context)));
             Util.shareText((Activity) context, shareText.toString());
+            AnalyticsUtil.shareEvent(word);
+        } else {
+            Toast.makeText(context, R.string.no_translation_found, Toast.LENGTH_SHORT).show();
         }
     }
 

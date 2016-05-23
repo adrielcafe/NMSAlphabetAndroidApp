@@ -12,9 +12,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
+import android.widget.Toast;
 
 import com.gigamole.library.NavigationTabBar;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -23,19 +25,21 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.App;
+import cafe.adriel.nmsalphabet.BuildConfig;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.util.ViewPagerFadeTransformer;
+import cafe.adriel.nmsalphabet.util.AdUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class MainActivity extends BaseActivity {
-    private static Activity instance;
 
-    private WordsFragment homeFrag;
-    private TranslateFragment translateFrag;
-    private WordsFragment profileFrag;
+    private static Activity instance;
+    private static InterstitialAd interstitialAd;
+    private boolean backPressed;
 
     @BindView(R.id.tabs)
     NavigationTabBar tabView;
@@ -43,6 +47,8 @@ public class MainActivity extends BaseActivity {
     ViewPager pagerView;
     @BindView(R.id.fab)
     FloatingActionButton fabView;
+    @BindView(R.id.ad)
+    AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +75,50 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if(backPressed){
+            super.onBackPressed();
+        } else {
+            backPressed = true;
+            Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
+            Util.asyncCall(3000, new Runnable() {
+                @Override
+                public void run() {
+                    backPressed = false;
+                }
+            });
+        }
+    }
+
+    @OnClick(R.id.fab)
+    public void addTranslation(){
+        if(Util.isConnected(this)) {
+            if(App.isPro(this) || BuildConfig.DEBUG){
+                openTranslationEditor();
+            } else {
+                AdUtil.showInterstitialAd(this, interstitialAd);
+            }
+        }
+    }
+
+    @Override
     protected void init() {
+        Drawable fabIcon = new IconicsDrawable(this)
+                .icon(MaterialDesignIconic.Icon.gmi_plus)
+                .color(Color.WHITE)
+                .sizeDp(50);
+        fabView.setImageDrawable(fabIcon);
         pagerView.setOffscreenPageLimit(2);
         pagerView.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
         pagerView.setPageTransformer(false, new ViewPagerFadeTransformer());
+        interstitialAd = AdUtil.initInterstitialAd(this, new Runnable() {
+            @Override
+            public void run() {
+                openTranslationEditor();
+            }
+        });
+        AdUtil.initBannerAd(this, adView, fabView);
         initTabs();
-        initFab();
     }
 
     public static Activity getInstance(){
@@ -85,9 +129,15 @@ public class MainActivity extends BaseActivity {
         String userGender = App.isSignedIn() ? App.getUser().getGender() : Constant.GENDER_MALE;
         int tabColor = ThemeUtil.getPrimaryDarkColor(this);
         ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
-        models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_home), tabColor, getString(R.string.home)));
-        models.add(new NavigationTabBar.Model(getResources().getDrawable(R.drawable.tab_translation), tabColor, getString(R.string.translate)));
-        models.add(new NavigationTabBar.Model(getResources().getDrawable(userGender.equals(Constant.GENDER_FEMALE) ? R.drawable.tab_profile_female : R.drawable.tab_profile_male), tabColor, getString(R.string.profile)));
+        models.add(new NavigationTabBar.Model
+                .Builder(getResources().getDrawable(R.drawable.tab_home), tabColor)
+                .title(getString(R.string.home)).build());
+        models.add(new NavigationTabBar.Model
+                .Builder(getResources().getDrawable(R.drawable.tab_translation), tabColor)
+                .title(getString(R.string.translate)).build());
+        models.add(new NavigationTabBar.Model
+                .Builder(getResources().getDrawable(userGender.equals(Constant.GENDER_FEMALE) ? R.drawable.tab_profile_female : R.drawable.tab_profile_male), tabColor)
+                .title(getString(R.string.profile)).build());
         tabView.setModels(models);
         tabView.setViewPager(pagerView);
         tabView.setOnTabBarSelectedIndexListener(new NavigationTabBar.OnTabBarSelectedIndexListener() {
@@ -107,38 +157,28 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void initFab(){
-        Drawable fabIcon = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_plus)
-                .color(Color.WHITE)
-                .sizeDp(50);
-        fabView.setImageDrawable(fabIcon);
-        fabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(App.isSignedIn()) {
-                    startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
-                } else {
-                    showSignInDialog();
-                }
-            }
-        });
+    private void openTranslationEditor(){
+        if (App.isSignedIn()) {
+            startActivity(new Intent(MainActivity.this, TranslationEditorActivity.class));
+        } else {
+            showSignInDialog(MainActivity.this);
+        }
     }
 
-    private void showSignInDialog(){
-        new AlertDialog.Builder(this)
+    public static void showSignInDialog(final Activity activity){
+        new AlertDialog.Builder(activity)
                 .setTitle(R.string.new_translation)
                 .setMessage(R.string.signin_to_add_translations)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Util.getSettings(MainActivity.this).edit()
+                        Util.getSettings(activity).edit()
                                 .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
                                 .commit();
                         dialog.dismiss();
-                        finish();
-                        startActivity(new Intent(MainActivity.this, SplashActivity.class));
+                        activity.finish();
+                        activity.startActivity(new Intent(activity, SplashActivity.class));
                     }
                 })
                 .show();
@@ -154,14 +194,11 @@ public class MainActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    homeFrag = WordsFragment.newInstance(WordsFragment.Type.HOME);
-                    return homeFrag;
+                    return WordsFragment.newInstance(WordsFragment.Type.HOME);
                 case 1:
-                    translateFrag = new TranslateFragment();
-                    return translateFrag;
+                    return new TranslateFragment();
                 case 2:
-                    profileFrag = WordsFragment.newInstance(WordsFragment.Type.PROFILE);
-                    return profileFrag;
+                    return WordsFragment.newInstance(WordsFragment.Type.PROFILE);
                 default:
                     return null;
             }
