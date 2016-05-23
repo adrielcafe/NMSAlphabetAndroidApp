@@ -126,12 +126,14 @@ public class MainActivity extends BaseActivity {
         Util.asyncCall(500, new Runnable() {
             @Override
             public void run() {
-                Util.showShowcase(MainActivity.this, Constant.INTRO_HOME, R.string.intro_home, homeFrag.headerHomeLayout, new MaterialIntroListener() {
-                    @Override
-                    public void onUserClicked(String s) {
-                        Util.showShowcase(MainActivity.this, Constant.INTRO_ADD_TRANSLATION, R.string.intro_add_translation, fabView, null);
-                    }
-                });
+                try {
+                    Util.showShowcase(MainActivity.this, Constant.INTRO_HOME, R.string.intro_home, homeFrag.headerHomeLayout, new MaterialIntroListener() {
+                        @Override
+                        public void onUserClicked(String s) {
+                            Util.showShowcase(MainActivity.this, Constant.INTRO_ADD_TRANSLATION, R.string.intro_add_translation, fabView, null);
+                        }
+                    });
+                } catch (Exception e){ }
             }
         });
     }
@@ -169,11 +171,15 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 1:
                         fabView.hide();
-                        Util.showShowcase(MainActivity.this, Constant.INTRO_TRANSLATE, R.string.intro_translate, translateFrag.controlsLayout, null);
+                        try {
+                            Util.showShowcase(MainActivity.this, Constant.INTRO_TRANSLATE, R.string.intro_translate, translateFrag.controlsLayout, null);
+                        } catch (Exception e){ }
                         break;
                     case 2:
                         fabView.show();
-                        Util.showShowcase(MainActivity.this, Constant.INTRO_PROFILE, R.string.intro_profile, profileFrag.wordsView, null);
+                        try {
+                            Util.showShowcase(MainActivity.this, Constant.INTRO_PROFILE, R.string.intro_profile, profileFrag.wordsView, null);
+                        } catch (Exception e){ }
                         break;
                 }
             }
