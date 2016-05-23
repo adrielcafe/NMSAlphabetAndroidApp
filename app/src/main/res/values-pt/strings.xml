@@ -17,9 +17,6 @@
     <string name="cancel">Cancelar</string>
     <string name="save">Salvar</string>
     <string name="alien_word">Palavra Alienígena</string>
-    <string name="english_translation">Tradução em Inglês</string>
-    <string name="german_translation">Tradução em Alemão</string>
-    <string name="portuguese_translation">Tradução em Português</string>
     <string name="select_alien_race">Selecione a Raça Alienígena</string>
     <string name="my_translations">Minhas Traduções</string>
     <string name="delete_with_icon">{gmi-delete} Excluir</string>
@@ -79,5 +76,7 @@
     <string name="select_an_image">Selecione uma imagem</string>
     <string name="no_word_found_image">Nenhuma palavra encontrada na imagem</string>
     <string name="press_back_again">Pressione VOLTAR novamente para sair</string>
+    <string name="delete">Excluir</string>
+    <string name="service_unavailable">Serviço indisponível</string>
 
 </resources>

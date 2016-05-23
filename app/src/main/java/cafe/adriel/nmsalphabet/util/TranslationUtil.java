@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.goebl.david.Response;
 import com.goebl.david.Webb;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -33,29 +35,34 @@ import mehdi.sakout.dynamicbox.DynamicBox;
 
 public class TranslationUtil {
 
-    private static final String VISION_API_URL          = "https://vision.googleapis.com/v1/images:annotate?key=";
-    private static final String VISION_API_REQUEST_BODY =
+    private static final String VISION_API_URL  = "https://vision.googleapis.com/v1/images:annotate?key=";
+    private static final String VISION_API_BODY =
             "{\"requests\": [{\"features\": [{\"type\": \"TEXT_DETECTION\"}],\"image\": {\"content\": \"%s\"}}]}";
 
     public static String extractTextFromImage(Context context, Bitmap image){
         String base64Img = Util.toBase64(image);
-        String body = String.format(VISION_API_REQUEST_BODY, base64Img);
+        String body = String.format(VISION_API_BODY, base64Img);
         try {
-            JSONObject json = Util.getWebb()
+            Response<JSONObject> response = Util.getWebb()
                     .post(VISION_API_URL + context.getString(R.string.google_vision_key))
                     .header(Webb.HDR_CONTENT_TYPE, Webb.APP_JSON)
                     .body(body)
-                    .ensureSuccess()
-                    .asJsonObject()
-                    .getBody();
-            String text = json.getJSONArray("responses")
-                    .getJSONObject(0)
-                    .getJSONArray("textAnnotations")
-                    .getJSONObject(0)
-                    .getString("description")
-                    .toUpperCase();
-            AnalyticsUtil.ocrEvent(text);
-            return text;
+                    .asJsonObject();
+            if(response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+                JSONObject json = response.getBody();
+                String text = json.getJSONArray("responses")
+                        .getJSONObject(0)
+                        .getJSONArray("textAnnotations")
+                        .getJSONObject(0)
+                        .getString("description")
+                        .toUpperCase();
+                AnalyticsUtil.ocrEvent(text);
+                return text;
+            } else {
+                Toast.makeText(context, R.string.service_unavailable, Toast.LENGTH_SHORT).show();
+                AnalyticsUtil.ocrEvent(context.getString(R.string.service_unavailable));
+                return null;
+            }
         } catch (Exception e){
             e.printStackTrace();
             return null;

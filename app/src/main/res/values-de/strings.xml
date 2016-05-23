@@ -28,9 +28,6 @@
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
     <string name="alien_word">Außerirdisches Wort</string>
-    <string name="english_translation">Englische Übersetzung</string>
-    <string name="portuguese_translation">Portugisische Übersetzung</string>
-    <string name="german_translation">Deutsche Übersetzung</string>
     <string name="account">Account</string>
     <string name="language">Sprache</string>
     <string name="theme">Design</string>
