@@ -32,16 +32,12 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import cafe.adriel.nmsalphabet.Constant;

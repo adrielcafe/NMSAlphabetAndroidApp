@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -127,15 +126,12 @@ public class TranslationUtil {
                         .getJSONObject(0)
                         .getString("ParsedText")
                         .toUpperCase();
-                Log.e("TEXT", text+"");
                 AnalyticsUtil.ocrEvent(text);
                 return text;
             } else {
-                Log.e("TEXT", "NULL 1");
                 return null;
             }
         } catch (Exception e){
-            Log.e("TEXT", "NULL 2");
             e.printStackTrace();
             return null;
         }
