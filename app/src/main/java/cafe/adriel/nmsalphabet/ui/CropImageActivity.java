@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -46,6 +47,7 @@ public class CropImageActivity extends AppCompatActivity {
         imagePath = getIntent().getStringExtra(Constant.EXTRA_IMAGE_PATH);
         if(imagePath != null){
             init();
+            Toast.makeText(this, getString(R.string.select_phrase_on_image), Toast.LENGTH_SHORT).show();
         } else {
             finish();
         }

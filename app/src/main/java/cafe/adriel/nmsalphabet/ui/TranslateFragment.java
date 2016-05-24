@@ -136,18 +136,19 @@ public class TranslateFragment extends BaseFragment {
             @Override
             public void run() {
                 final String text = TranslationUtil.extractTextFromImage(getContext(), event.image);
-                if(Util.isNotEmpty(text)){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(Util.isNotEmpty(text)){
                             searchView.setText(text);
                             translatePhrase();
+                            Toast.makeText(getContext(), getString(R.string.check_if_phrase_is_correct), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.no_word_found_image), Toast.LENGTH_SHORT).show();
                         }
-                    });
-                } else {
-                    Toast.makeText(getContext(), getString(R.string.no_word_found_image), Toast.LENGTH_SHORT).show();
-                }
-                dialog.dismiss();
+                        dialog.dismiss();
+                    }
+                });
             }
         });
     }
