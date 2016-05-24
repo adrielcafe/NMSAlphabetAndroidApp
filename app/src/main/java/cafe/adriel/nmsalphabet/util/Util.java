@@ -31,12 +31,17 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.goebl.david.Webb;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import cafe.adriel.nmsalphabet.Constant;
@@ -45,10 +50,11 @@ import co.mobiwise.materialintro.animation.MaterialIntroListener;
 import co.mobiwise.materialintro.shape.Focus;
 import co.mobiwise.materialintro.shape.FocusGravity;
 import co.mobiwise.materialintro.view.MaterialIntroView;
+import okhttp3.OkHttpClient;
 
 public class Util {
 
-    private static final Webb WEBB = Webb.create();
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     private static final Handler ASYNC_HANDLER = new Handler();
     private static final String[] PERMISSIONS = {
             Manifest.permission.CAMERA,
@@ -96,19 +102,38 @@ public class Util {
         return "#" + Integer.toHexString(color).replaceFirst("ff", "").toUpperCase();
     }
 
-    public static String toBase64(Bitmap image){
+    public static byte[] toByteArray(Bitmap image){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    public static String toBase64(Bitmap image){
+        byte[] byteArray = toByteArray(image);
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    public static File toFile(Bitmap image, String name){
+        try {
+            File file = File.createTempFile(name, ".jpg");
+            byte[] byteArray = toByteArray(image);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(byteArray);
+            fos.flush();
+            fos.close();
+            return file;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String removeSpecialCharacters(String text){
         return text.replaceAll("[^\\w\\s]+", "");
     }
 
-    public static Webb getWebb(){
-        return WEBB;
+    public static OkHttpClient getHttpClient(){
+        return HTTP_CLIENT;
     }
 
     public static String getDeviceId(Context context){

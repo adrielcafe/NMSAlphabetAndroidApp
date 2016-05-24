@@ -7,19 +7,19 @@ import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.goebl.david.Response;
-import com.goebl.david.Webb;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,24 +32,65 @@ import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.adapter.TranslationAdapter;
 import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
 import mehdi.sakout.dynamicbox.DynamicBox;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class TranslationUtil {
 
-    private static final String VISION_API_URL  = "https://vision.googleapis.com/v1/images:annotate?key=";
-    private static final String VISION_API_BODY =
+    private static final String OCR_SPACE_API_URL   = "https://apifree2.ocr.space/parse/image";
+    private static final String VISION_API_URL      = "https://vision.googleapis.com/v1/images:annotate?key=";
+    private static final String VISION_API_BODY     =
             "{\"requests\": [{\"features\": [{\"type\": \"TEXT_DETECTION\"}],\"image\": {\"content\": \"%s\"}}]}";
 
     public static String extractTextFromImage(Context context, Bitmap image){
+        String text;
+        try {
+            if(App.isPro(context)) {
+                text = extractTextWithVisionApi(context, image);
+                if(text != null){
+                    return text;
+                } else {
+                    text = extractTextWithOcrSpaceApi(context, image);
+                    if(text != null){
+                        return text;
+                    } else {
+                        Toast.makeText(context, R.string.service_unavailable, Toast.LENGTH_SHORT).show();
+                        AnalyticsUtil.ocrEvent(context.getString(R.string.service_unavailable));
+                        return null;
+                    }
+                }
+            } else {
+                text = extractTextWithOcrSpaceApi(context, image);
+                if(text != null){
+                    return text;
+                } else {
+                    Toast.makeText(context, R.string.service_unavailable, Toast.LENGTH_SHORT).show();
+                    AnalyticsUtil.ocrEvent(context.getString(R.string.service_unavailable));
+                    return null;
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static String extractTextWithVisionApi(Context context, Bitmap image){
         String base64Img = Util.toBase64(image);
         String body = String.format(VISION_API_BODY, base64Img);
         try {
-            Response<JSONObject> response = Util.getWebb()
-                    .post(VISION_API_URL + context.getString(R.string.google_vision_key))
-                    .header(Webb.HDR_CONTENT_TYPE, Webb.APP_JSON)
-                    .body(body)
-                    .asJsonObject();
-            if(response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
-                JSONObject json = response.getBody();
+            RequestBody postBody = RequestBody.create(MediaType.parse(""), body);
+            Request request = new Request.Builder()
+                    .url(VISION_API_URL + context.getString(R.string.google_vision_key))
+                    .post(postBody)
+                    .header("Content-Type", "application/json")
+                    .build();
+            Response response = Util.getHttpClient().newCall(request).execute();
+            if(response.code() >= 200 && response.code() < 300) {
+                JSONObject json = new JSONObject(response.body().string());
                 String text = json.getJSONArray("responses")
                         .getJSONObject(0)
                         .getJSONArray("textAnnotations")
@@ -59,11 +100,42 @@ public class TranslationUtil {
                 AnalyticsUtil.ocrEvent(text);
                 return text;
             } else {
-                Toast.makeText(context, R.string.service_unavailable, Toast.LENGTH_SHORT).show();
-                AnalyticsUtil.ocrEvent(context.getString(R.string.service_unavailable));
                 return null;
             }
         } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static String extractTextWithOcrSpaceApi(Context context, Bitmap image){
+        File imageFile = Util.toFile(image, "alien_phrase_");
+        try {
+            RequestBody formBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("apikey", context.getString(R.string.ocr_space_key))
+                    .addFormDataPart("file", imageFile.getName(), RequestBody.create(MediaType.parse("image/jpg"), imageFile))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(OCR_SPACE_API_URL)
+                    .post(formBody)
+                    .build();
+            Response response = Util.getHttpClient().newCall(request).execute();
+            if(response.code() >= 200 && response.code() < 300) {
+                JSONObject json = new JSONObject(response.body().string());
+                String text = json.getJSONArray("ParsedResults")
+                        .getJSONObject(0)
+                        .getString("ParsedText")
+                        .toUpperCase();
+                Log.e("TEXT", text+"");
+                AnalyticsUtil.ocrEvent(text);
+                return text;
+            } else {
+                Log.e("TEXT", "NULL 1");
+                return null;
+            }
+        } catch (Exception e){
+            Log.e("TEXT", "NULL 2");
             e.printStackTrace();
             return null;
         }

@@ -82,6 +82,8 @@
     <string name="intro_translate">Translate alien phrases with your camera</string>
     <string name="intro_profile">Manage your translations</string>
     <string name="intro_add_translation">Discovered a new translation? Add here!</string>
+    <string name="check_if_phrase_is_correct">Check if phrase is correct</string>
+    <string name="select_phrase_on_image">Select the phrase on the image</string>
 
     <string-array name="language_entries">
         <item>@string/english</item>
