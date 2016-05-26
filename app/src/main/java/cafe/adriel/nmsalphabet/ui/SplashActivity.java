@@ -60,7 +60,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void init() {
         Glide.with(this)
-                .load(R.drawable.atlas)
+                .load(R.drawable.bg_splash)
                 .asGif()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(atlasView);
