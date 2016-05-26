@@ -138,22 +138,26 @@ public class DbUtil {
         return dislikes.contains(translation.getObjectId());
     }
 
-    public static void likeTranslation(AlienWordTranslation translation){
+    public static void likeTranslation(AlienWordTranslation translation, boolean save){
         loadCachedData();
         likes.add(translation.getObjectId());
         dislikes.remove(translation.getObjectId());
         translation.addLike(App.getUser());
         translation.removeDislike(App.getUser());
-        translation.saveInBackground();
+        if(save) {
+            translation.saveInBackground();
+        }
     }
 
-    public static void dislikeTranslation(AlienWordTranslation translation){
+    public static void dislikeTranslation(AlienWordTranslation translation, boolean save){
         loadCachedData();
         dislikes.add(translation.getObjectId());
         likes.remove(translation.getObjectId());
         translation.addDislike(App.getUser());
         translation.removeLike(App.getUser());
-        translation.saveInBackground();
+        if(save) {
+            translation.saveInBackground();
+        }
     }
 
     public static void getWords(String word, AlienRace race, int page, FindCallback<AlienWord> callback){

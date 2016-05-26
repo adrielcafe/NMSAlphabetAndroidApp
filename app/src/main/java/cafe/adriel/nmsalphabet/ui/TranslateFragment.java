@@ -343,7 +343,7 @@ public class TranslateFragment extends BaseFragment {
     private void showWordTranslationsDialog(String translation){
         AlienWordTranslation t = getTranslation(translation);
         if(t != null) {
-            TranslationUtil.showTranslationsDialog(getContext(), t.getWord(), languageCode);
+            TranslationUtil.showTranslationsDialog(getContext(), t.getRace(), t.getWord(), languageCode);
         }
     }
 
