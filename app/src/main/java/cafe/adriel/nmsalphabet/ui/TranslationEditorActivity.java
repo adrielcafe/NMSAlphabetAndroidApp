@@ -296,13 +296,13 @@ public class TranslationEditorActivity extends BaseActivity {
         }
         if (translation != null) {
             try {
+                DbUtil.likeTranslation(translation, false);
                 translation.addUser(App.getUser());
-                translation.addLike(App.getUser());
                 translation.save();
                 if (currentTranslation != null && !currentTranslation.getTranslation().equals(translationStr)) {
                     try {
+                        DbUtil.dislikeTranslation(translation, false);
                         currentTranslation.removeUser(App.getUser());
-                        currentTranslation.removeLike(App.getUser());
                         currentTranslation.save();
                     } catch (Exception e) {
                         e.printStackTrace();

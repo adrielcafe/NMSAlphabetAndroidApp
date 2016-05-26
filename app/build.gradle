@@ -63,7 +63,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.3.0'
     compile 'com.squareup.okio:okio:1.8.0'
     compile 'com.parse:parse-android:1.13.0@aar'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
@@ -94,5 +94,4 @@ dependencies {
 repositories {
     maven { url 'https://jitpack.io' }
     maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://clojars.org/repo/" }
 }

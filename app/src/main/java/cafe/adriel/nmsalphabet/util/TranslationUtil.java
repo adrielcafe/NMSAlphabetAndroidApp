@@ -137,12 +137,11 @@ public class TranslationUtil {
         }
     }
 
-    public static void showTranslationsDialog(final Context context, final AlienWord word, final String languageCode){
+    public static void showTranslationsDialog(final Context context, final AlienRace race, final AlienWord word, final String languageCode){
         View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_translations, null, false);
         RecyclerView translationsView = (RecyclerView) rootView.findViewById(R.id.translations);
 
         final List<AlienWordTranslation> translations = new ArrayList<>();
-        final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
         final TranslationAdapter adapter = new TranslationAdapter(context, translations);
         final DynamicBox viewState = createViewState(context, translationsView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
@@ -272,7 +271,7 @@ public class TranslationUtil {
             likeView.setTextColor(Color.BLACK);
             dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
 
-            DbUtil.likeTranslation(translation);
+            DbUtil.likeTranslation(translation, true);
             AnalyticsUtil.likeEvent(translation.getRace(), translation.getWord(), translation);
         }
     }
@@ -294,7 +293,7 @@ public class TranslationUtil {
             likeView.setTextColor(context.getResources().getColor(R.color.gray));
             dislikeView.setTextColor(Color.BLACK);
 
-            DbUtil.dislikeTranslation(translation);
+            DbUtil.dislikeTranslation(translation, true);
             AnalyticsUtil.dislikeEvent(translation.getRace(), translation.getWord(), translation);
         }
     }
