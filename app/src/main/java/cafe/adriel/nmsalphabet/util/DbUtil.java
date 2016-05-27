@@ -109,6 +109,15 @@ public class DbUtil {
         return null;
     }
 
+    public static AlienRace getRaceByPosition(int position){
+        loadCachedData();
+        if(races.size() < position){
+            return races.get(position);
+        } else {
+            return null;
+        }
+    }
+
     public static int getRacePosition(String id){
         loadCachedData();
         for(int i = 0; i < races.size(); i++){

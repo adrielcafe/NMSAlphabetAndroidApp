@@ -1,5 +1,6 @@
 package cafe.adriel.nmsalphabet.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -44,33 +45,29 @@ public class TranslationUtil {
     private static final String VISION_API_BODY     =
             "{\"requests\": [{\"features\": [{\"type\": \"TEXT_DETECTION\"}],\"image\": {\"content\": \"%s\"}}]}";
 
-    public static String extractTextFromImage(Context context, Bitmap image){
+    public static String extractTextFromImage(final Activity activity, Bitmap image){
         String text;
         try {
-            if(App.isPro(context)) {
-                text = extractTextWithVisionApi(context, image);
-                if(text != null){
-                    return text;
-                } else {
-                    text = extractTextWithOcrSpaceApi(context, image);
-                    if(text != null){
-                        return text;
-                    } else {
-                        Toast.makeText(context, R.string.service_unavailable, Toast.LENGTH_SHORT).show();
-                        AnalyticsUtil.ocrEvent(context.getString(R.string.service_unavailable));
-                        return null;
-                    }
+            if(App.isPro(activity)) {
+                text = extractTextWithVisionApi(activity, image);
+                if(text == null){
+                    text = extractTextWithOcrSpaceApi(activity, image);
                 }
             } else {
-                text = extractTextWithOcrSpaceApi(context, image);
-                if(text != null){
-                    return text;
-                } else {
-                    Toast.makeText(context, R.string.service_unavailable, Toast.LENGTH_SHORT).show();
-                    AnalyticsUtil.ocrEvent(context.getString(R.string.service_unavailable));
-                    return null;
-                }
+                text = extractTextWithOcrSpaceApi(activity, image);
             }
+            if(text == null){
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity, R.string.service_unavailable, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AnalyticsUtil.ocrEvent(activity.getString(R.string.service_unavailable));
+            } else {
+                AnalyticsUtil.ocrEvent(text);
+            }
+            return text;
         } catch (Exception e){
             e.printStackTrace();
             return null;
@@ -96,7 +93,6 @@ public class TranslationUtil {
                         .getJSONObject(0)
                         .getString("description")
                         .toUpperCase();
-                AnalyticsUtil.ocrEvent(text);
                 return text;
             } else {
                 return null;
@@ -107,12 +103,12 @@ public class TranslationUtil {
         }
     }
 
-    private static String extractTextWithOcrSpaceApi(Context context, Bitmap image){
-        File imageFile = Util.toFile(image, "alien_phrase_");
+    private static String extractTextWithOcrSpaceApi(final Activity activity, Bitmap image){
+        File imageFile = Util.toFile(activity, image, "alien_phrase_");
         try {
             RequestBody formBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("apikey", context.getString(R.string.ocr_space_key))
+                    .addFormDataPart("apikey", activity.getString(R.string.ocr_space_key))
                     .addFormDataPart("file", imageFile.getName(), RequestBody.create(MediaType.parse("image/jpg"), imageFile))
                     .build();
             Request request = new Request.Builder()
@@ -122,12 +118,22 @@ public class TranslationUtil {
             Response response = Util.getHttpClient().newCall(request).execute();
             if(response.code() >= 200 && response.code() < 300) {
                 JSONObject json = new JSONObject(response.body().string());
-                String text = json.getJSONArray("ParsedResults")
-                        .getJSONObject(0)
-                        .getString("ParsedText")
-                        .toUpperCase();
-                AnalyticsUtil.ocrEvent(text);
-                return text;
+                final String error = json.getString("ErrorMessage");
+                if (Util.isEmpty(error)) {
+                    String text = json.getJSONArray("ParsedResults")
+                            .getJSONObject(0)
+                            .getString("ParsedText")
+                            .toUpperCase();
+                    return text;
+                } else {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return null;
+                }
             } else {
                 return null;
             }

@@ -301,7 +301,7 @@ public class TranslationEditorActivity extends BaseActivity {
                 translation.save();
                 if (currentTranslation != null && !currentTranslation.getTranslation().equals(translationStr)) {
                     try {
-                        DbUtil.dislikeTranslation(translation, false);
+                        DbUtil.dislikeTranslation(currentTranslation, false);
                         currentTranslation.removeUser(App.getUser());
                         currentTranslation.save();
                     } catch (Exception e) {
