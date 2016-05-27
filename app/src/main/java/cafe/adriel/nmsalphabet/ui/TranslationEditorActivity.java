@@ -65,12 +65,14 @@ public class TranslationEditorActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translation_editor);
         ButterKnife.bind(this);
-        getSupportActionBar().setElevation(0);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_close)
-                .color(Color.WHITE)
-                .sizeDp(16));
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setElevation(0);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(new IconicsDrawable(this)
+                    .icon(MaterialDesignIconic.Icon.gmi_close)
+                    .color(Color.WHITE)
+                    .sizeDp(16));
+        }
         setTitle(R.string.new_translation);
         init();
     }

@@ -5,7 +5,7 @@ import com.parse.ParseCloud;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,12 +44,12 @@ public class DbUtil {
         try {
             List<AlienWordTranslation> likedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
                     .whereEqualTo("likes", App.getUser())
-                    .selectKeys(Arrays.asList("objectId"))
+                    .selectKeys(Collections.singletonList("objectId"))
                     .setLimit(PAGE_SIZE_LIKE_DISLIKE)
                     .find();
             List<AlienWordTranslation> dislikedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
                     .whereEqualTo("dislikes", App.getUser())
-                    .selectKeys(Arrays.asList("objectId"))
+                    .selectKeys(Collections.singletonList("objectId"))
                     .setLimit(PAGE_SIZE_LIKE_DISLIKE)
                     .find();
 

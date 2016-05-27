@@ -30,8 +30,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -148,7 +146,8 @@ public class Util {
     public static String getDeviceId(Context context){
         if(isEmpty(deviceId)) {
             String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            deviceId = md5(androidId).toUpperCase();
+            String md5 = md5(androidId);
+            deviceId = isNotEmpty(md5) ? md5.toUpperCase() : null;
         }
         return deviceId;
     }
@@ -198,7 +197,7 @@ public class Util {
             }
         }
         if(!missingPermissions.isEmpty()){
-            ActivityCompat.requestPermissions(context, missingPermissions.toArray(new String[]{}), 0);
+            ActivityCompat.requestPermissions(context, missingPermissions.toArray(new String[missingPermissions.size()]), 0);
         }
     }
 
@@ -316,15 +315,14 @@ public class Util {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] array = md.digest(str.getBytes());
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < array.length; ++i) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            StringBuilder sb = new StringBuilder();
+            for (byte anArray : array) {
+                sb.append(Integer.toHexString((anArray & 0xFF) | 0x100).substring(1, 3));
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            Crashlytics.logException(e);
+            return null;
         }
-        return null;
     }
 
     private static boolean isConnectionFast(int type, int subType){
