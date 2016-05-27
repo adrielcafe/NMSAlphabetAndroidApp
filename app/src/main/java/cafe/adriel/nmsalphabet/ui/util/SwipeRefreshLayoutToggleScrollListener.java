@@ -24,7 +24,6 @@ public class SwipeRefreshLayoutToggleScrollListener extends RecyclerView.OnScrol
         int firstVisible = llm.findFirstCompletelyVisibleItemPosition();
         if(firstVisible != RecyclerView.NO_POSITION)
             mSwipeLayout.setEnabled(firstVisible == mExpectedVisiblePosition);
-
     }
 
     @Override
