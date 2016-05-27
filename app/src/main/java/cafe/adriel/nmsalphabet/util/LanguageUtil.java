@@ -68,14 +68,14 @@ public class LanguageUtil {
         String german = context.getString(R.string.german);
         int flagResId = -1;
         try {
-            if(language.equals(english) || language.equals(LanguageUtil.LANGUAGE_EN)){
-                languageCode = LanguageUtil.LANGUAGE_EN;
+            if(language.equals(english) || language.equals(LANGUAGE_EN)){
+                languageCode = LANGUAGE_EN;
                 flagResId = R.drawable.flag_uk_small;
-            } else if(language.equals(portuguese) || language.equals(LanguageUtil.LANGUAGE_PT)){
-                languageCode = LanguageUtil.LANGUAGE_PT;
+            } else if(language.equals(portuguese) || language.equals(LANGUAGE_PT)){
+                languageCode = LANGUAGE_PT;
                 flagResId = R.drawable.flag_brazil_small;
-            } else if(language.equals(german) || language.equals(LanguageUtil.LANGUAGE_DE)){
-                languageCode = LanguageUtil.LANGUAGE_DE;
+            } else if(language.equals(german) || language.equals(LANGUAGE_DE)){
+                languageCode = LANGUAGE_DE;
                 flagResId = R.drawable.flag_germany_small;
             }
             languageView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);

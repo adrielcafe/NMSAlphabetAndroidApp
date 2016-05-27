@@ -19,10 +19,10 @@ public class SwipeRefreshLayoutToggleScrollListener extends RecyclerView.OnScrol
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        notifyScrollStateChanged(recyclerView,newState);
+        notifyScrollStateChanged(recyclerView, newState);
         LinearLayoutManager llm = (LinearLayoutManager) recyclerView.getLayoutManager();
         int firstVisible = llm.findFirstCompletelyVisibleItemPosition();
-        if(firstVisible != RecyclerView.NO_POSITION)
+        if (firstVisible != RecyclerView.NO_POSITION)
             mSwipeLayout.setEnabled(firstVisible == mExpectedVisiblePosition);
     }
 
@@ -32,26 +32,26 @@ public class SwipeRefreshLayoutToggleScrollListener extends RecyclerView.OnScrol
         notifyOnScrolled(recyclerView, dx, dy);
     }
 
-    public void setExpectedFirstVisiblePosition(int position){
+    public void setExpectedFirstVisiblePosition(int position) {
         mExpectedVisiblePosition = position;
     }
 
-    public void addScrollListener(RecyclerView.OnScrollListener listener){
+    public void addScrollListener(RecyclerView.OnScrollListener listener) {
         mScrollListeners.add(listener);
     }
 
-    public boolean removeScrollListener(RecyclerView.OnScrollListener listener){
+    public boolean removeScrollListener(RecyclerView.OnScrollListener listener) {
         return mScrollListeners.remove(listener);
     }
 
-    private void notifyOnScrolled(RecyclerView recyclerView, int dx, int dy){
-        for(RecyclerView.OnScrollListener listener : mScrollListeners){
+    private void notifyOnScrolled(RecyclerView recyclerView, int dx, int dy) {
+        for (RecyclerView.OnScrollListener listener : mScrollListeners) {
             listener.onScrolled(recyclerView, dx, dy);
         }
     }
 
-    private void notifyScrollStateChanged(RecyclerView recyclerView, int newState){
-        for(RecyclerView.OnScrollListener listener : mScrollListeners){
+    private void notifyScrollStateChanged(RecyclerView recyclerView, int newState) {
+        for (RecyclerView.OnScrollListener listener : mScrollListeners) {
             listener.onScrollStateChanged(recyclerView, newState);
         }
     }

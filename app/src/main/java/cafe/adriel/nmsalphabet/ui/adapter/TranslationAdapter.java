@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -46,8 +45,6 @@ public class TranslationAdapter extends RecyclerView.Adapter<TranslationAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.translation)
         public TextView translationView;
-        @BindView(R.id.like_layout)
-        public LinearLayout likeLayout;
         @BindView(R.id.like)
         public TextView likeView;
         @BindView(R.id.dislike)

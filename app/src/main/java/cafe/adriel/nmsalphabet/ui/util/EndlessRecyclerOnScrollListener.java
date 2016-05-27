@@ -4,12 +4,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
+    int firstVisibleItem, visibleItemCount, totalItemCount;
     private LinearLayoutManager layoutManager;
     private boolean loading = true;
     private int currentPage = 0;
     private int previousTotal = 0;
     private int visibleThreshold = 5;
-    int firstVisibleItem, visibleItemCount, totalItemCount;
 
     public EndlessRecyclerOnScrollListener(LinearLayoutManager layoutManager) {
         this.layoutManager = layoutManager;
@@ -34,7 +34,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         }
     }
 
-    public void reset(){
+    public void reset() {
         loading = true;
         currentPage = 0;
         previousTotal = 0;

@@ -87,13 +87,12 @@ public class TranslationUtil {
             Response response = Util.getHttpClient().newCall(request).execute();
             if(response.code() >= 200 && response.code() < 300) {
                 JSONObject json = new JSONObject(response.body().string());
-                String text = json.getJSONArray("responses")
+                return json.getJSONArray("responses")
                         .getJSONObject(0)
                         .getJSONArray("textAnnotations")
                         .getJSONObject(0)
                         .getString("description")
                         .toUpperCase();
-                return text;
             } else {
                 return null;
             }
