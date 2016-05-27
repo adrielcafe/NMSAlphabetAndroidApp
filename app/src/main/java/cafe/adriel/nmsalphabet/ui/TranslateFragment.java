@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -135,7 +137,7 @@ public class TranslateFragment extends BaseFragment {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                final String text = TranslationUtil.extractTextFromImage(getContext(), event.image);
+                final String text = TranslationUtil.extractTextFromImage(getActivity(), event.image);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -284,6 +286,9 @@ public class TranslateFragment extends BaseFragment {
         if(Util.isConnected(getContext())) {
             final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
             Util.hideSoftKeyboard(getActivity());
+            if(selectedRace == null){
+                selectedRace = DbUtil.getRaceByPosition(racesView.getSelectedIndex());
+            }
             if (Util.isNotEmpty(phrase) && selectedRace != null) {
                 translations = new ArrayList<>();
                 translatedPhraseView.setText("");
@@ -343,7 +348,12 @@ public class TranslateFragment extends BaseFragment {
     private void showWordTranslationsDialog(String translation){
         AlienWordTranslation t = getTranslation(translation);
         if(t != null) {
-            TranslationUtil.showTranslationsDialog(getContext(), t.getRace(), t.getWord(), languageCode);
+            t.fetchIfNeededInBackground(new GetCallback<AlienWordTranslation>() {
+                @Override
+                public void done(AlienWordTranslation object, ParseException e) {
+                    TranslationUtil.showTranslationsDialog(getContext(), object.getRace(), object.getWord(), languageCode);
+                }
+            });
         }
     }
 

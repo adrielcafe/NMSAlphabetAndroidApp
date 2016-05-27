@@ -47,11 +47,14 @@ import co.mobiwise.materialintro.shape.Focus;
 import co.mobiwise.materialintro.shape.FocusGravity;
 import co.mobiwise.materialintro.view.MaterialIntroView;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class Util {
 
-    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     private static final Handler ASYNC_HANDLER = new Handler();
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
+            .addInterceptor(new HttpLoggingInterceptor())
+            .build();
     private static final String[] PERMISSIONS = {
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -78,12 +81,12 @@ public class Util {
     private static ConnectivityManager connectivityManager;
     private static String deviceId;
 
-    public static boolean isEmpty(CharSequence cs) {
-        return cs == null || cs.length() == 0;
+    public static boolean isEmpty(String str) {
+        return str == null || str.length() == 0 || str.toLowerCase().equals("null");
     }
 
-    public static boolean isNotEmpty(CharSequence cs) {
-        return !isEmpty(cs);
+    public static boolean isNotEmpty(String str) {
+        return !isEmpty(str);
     }
 
     public static boolean isEmpty(List list) {
@@ -99,9 +102,19 @@ public class Util {
     }
 
     public static byte[] toByteArray(Bitmap image){
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
+        int maxSize = 1024000;
+        int quality = 95;
+        byte[] bytes;
+        do {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+            quality -= 10;
+            if(quality < 0){
+                break;
+            }
+        } while (bytes.length > maxSize);
+        return bytes;
     }
 
     public static String toBase64(Bitmap image){
@@ -109,9 +122,9 @@ public class Util {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
-    public static File toFile(Bitmap image, String name){
+    public static File toFile(Context context, Bitmap image, String name){
         try {
-            File file = File.createTempFile(name, ".jpg");
+            File file = File.createTempFile(name, ".jpg", context.getCacheDir());
             byte[] byteArray = toByteArray(image);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(byteArray);
