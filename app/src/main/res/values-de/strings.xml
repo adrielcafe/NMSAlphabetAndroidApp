@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="quote">\"Wir sind eine Unmöglichkeit, in einer unmöglichen Welt\"</string>
+    <string name="quote">\"Wir sind eine Unmöglichkeit, in einer unmöglichen Welt\" - Ray Bradbury</string>
     <string name="connect_internet">Internetverbindung herstellen</string>
     <string name="nothing_found">Nichts gefunden</string>
-    <string name="home">Start</string>
+    <string name="home">Home</string>
     <string name="translate">Übersetzen</string>
     <string name="profile">Profil</string>
     <string name="settings">Einstellungen</string>
@@ -22,7 +22,7 @@
     <string name="best_translations">Passendste Übersetzungen</string>
     <string name="my_translations">Meine Übersetungen</string>
     <string name="new_translation_with_icon">{gmi-plus} Neue Übersetzung</string>
-    <string name="see_all_translations_with_icon">{gmi-view-list-alt} Alle Anzeigen</string>
+    <string name="see_all_translations_with_icon">{gmi-view-list-alt} Alle anzeigen</string>
     <string name="delete_with_icon">{gmi-delete} Löschen</string>
     <string name="edit_with_icon">{gmi-edit} Bearbeiten</string>
     <string name="cancel">Abbrechen</string>
@@ -58,6 +58,32 @@
     <string name="no_translation_found">Keine Übersetzung gefunden</string>
     <string name="share_with_icon">{gmi-share} Teilen</string>
     <string name="translation_will_be_deleted_permanently">Diese Übersetzung wird entgültig gelöscht.\nBist du dir sicher?</string>
-    <string name="try_another_language">In einer anderen Sprache ausprobieren</string>
+    <string name="try_another_language">Probier\'s vielleicht in einer anderen Sprache</string>
+    <string name="close">Schließen</string>
+    <string name="check_if_phrase_is_correct">Überprüfe ob der Satz korrekt ist</string>
+    <string name="upgrade_to_pro_summary">Für diejenigen, die keine Werbung mögen oder mir einen {gmi-coffee} spendieren wollen</string>
+    <string name="word">Wort</string>
+    <string name="we_became_better">Wir sind besser geworden</string>
+    <string name="upgrade_to_pro">Upgrade auf die PRO Version</string>
+    <string name="update_app">App aktualisieren</string>
+    <string name="update">Aktualisieren</string>
+    <string name="translators_summary">Diese App ist in deiner Muttersprache? Dann danke diesen Leuten!</string>
+    <string name="translators">Übersetzer</string>
+    <string name="translation_not_found">Übersetzung nicht gefunden</string>
+    <string name="select_an_image">Wähle eine Quelle</string>
+    <string name="select_phrase_on_image">Wähle den Satz auf dem Bild</string>
+    <string name="service_unavailable">Service nicht verfügbar</string>
+    <string name="press_back_again">Drücke nochmal ZURÜCK zum Beenden</string>
+    <string name="no_word_found_image">In dem Bild wurde kein Wort gefunden</string>
+    <string name="my_translation">Meine Übersetzung</string>
+    <string name="intro_translate">Übersetze außerirdische Sätze mit deiner Kamera</string>
+    <string name="intro_profile">Verwalte deine Übersetzungen</string>
+    <string name="intro_home">Suche nach außerirdischen Wörtern und ihren Übersetzungen</string>
+    <string name="intro_add_translation">Hast du eine neue Übersetzung gefunden? Füge sie hier hinzu!</string>
+    <string name="discovered_new_race">Hast du eine neue Rasse entdeckt?</string>
+    <string name="discovered_new_race_summary">Sende uns ihren Namen</string>
+    <string name="current_version_not_supported">Die installierte Version der App wird nicht mehr unterstützt</string>
+    <string name="app_name"></string>
+    <string name="race">Rasse</string>
 
 </resources>
