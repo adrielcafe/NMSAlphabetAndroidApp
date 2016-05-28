@@ -43,9 +43,6 @@
     <string name="alien_word">Alien Word</string>
     <string name="word">Word</string>
     <string name="race">Race</string>
-    <string name="english_translation">English Translation</string>
-    <string name="portuguese_translation">Portuguese Translation</string>
-    <string name="german_translation">German Translation</string>
     <string name="account">Account</string>
     <string name="language">Language</string>
     <string name="theme">Theme</string>
@@ -80,6 +77,13 @@
     <string name="current_version_not_supported">The current version of the app is no longer supported</string>
     <string name="select_an_image">Select an image</string>
     <string name="press_back_again">Press BACK again to quit</string>
+    <string name="service_unavailable">Service unavailable</string>
+    <string name="intro_home">Search for alien words and their translations</string>
+    <string name="intro_translate">Translate alien phrases with your camera</string>
+    <string name="intro_profile">Manage your translations</string>
+    <string name="intro_add_translation">Discovered a new translation? Add here!</string>
+    <string name="check_if_phrase_is_correct">Check if phrase is correct</string>
+    <string name="select_phrase_on_image">Select the phrase on the image</string>
 
     <string-array name="language_entries">
         <item>@string/english</item>

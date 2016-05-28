@@ -60,7 +60,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void init() {
         Glide.with(this)
-                .load(R.drawable.atlas)
+                .load(R.drawable.bg_splash)
                 .asGif()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(atlasView);
@@ -153,8 +153,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private boolean hasSignedIn(){
-        boolean hasSignedIn = Util.getSettings(this).getBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false);
-        return hasSignedIn;
+        return Util.getSettings(this).getBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false);
     }
 
     private boolean hasSignedInWithFacebook(){

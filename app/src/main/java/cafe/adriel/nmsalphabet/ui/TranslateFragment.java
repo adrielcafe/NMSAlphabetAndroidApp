@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -26,6 +27,8 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,6 +67,8 @@ public class TranslateFragment extends BaseFragment {
     private List<AlienWordTranslation> translations;
     private DynamicBox viewState;
 
+    @BindView(R.id.controls_layout)
+    LinearLayout controlsLayout;
     @BindView(R.id.search_layout)
     RelativeLayout searchLayout;
     @BindView(R.id.search)
@@ -132,19 +137,20 @@ public class TranslateFragment extends BaseFragment {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                final String text = TranslationUtil.extractTextFromImage(getContext(), event.image);
-                if(Util.isNotEmpty(text)){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                final String text = TranslationUtil.extractTextFromImage(getActivity(), event.image);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(Util.isNotEmpty(text)){
                             searchView.setText(text);
                             translatePhrase();
+                            Toast.makeText(getContext(), getString(R.string.check_if_phrase_is_correct), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.no_word_found_image), Toast.LENGTH_SHORT).show();
                         }
-                    });
-                } else {
-                    Toast.makeText(getContext(), getString(R.string.no_word_found_image), Toast.LENGTH_SHORT).show();
-                }
-                dialog.dismiss();
+                        dialog.dismiss();
+                    }
+                });
             }
         });
     }
@@ -221,12 +227,10 @@ public class TranslateFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
                 searchClearView.setVisibility(s.length() == 0 ? View.INVISIBLE : View.VISIBLE);
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -282,6 +286,9 @@ public class TranslateFragment extends BaseFragment {
         if(Util.isConnected(getContext())) {
             final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
             Util.hideSoftKeyboard(getActivity());
+            if(selectedRace == null){
+                selectedRace = DbUtil.getRaceByPosition(racesView.getSelectedIndex());
+            }
             if (Util.isNotEmpty(phrase) && selectedRace != null) {
                 translations = new ArrayList<>();
                 translatedPhraseView.setText("");
@@ -341,7 +348,12 @@ public class TranslateFragment extends BaseFragment {
     private void showWordTranslationsDialog(String translation){
         AlienWordTranslation t = getTranslation(translation);
         if(t != null) {
-            TranslationUtil.showTranslationsDialog(getContext(), t.getWord(), languageCode);
+            t.fetchIfNeededInBackground(new GetCallback<AlienWordTranslation>() {
+                @Override
+                public void done(AlienWordTranslation object, ParseException e) {
+                    TranslationUtil.showTranslationsDialog(getContext(), object.getRace(), object.getWord(), languageCode);
+                }
+            });
         }
     }
 
