@@ -140,7 +140,12 @@ public class WordsFragment extends BaseFragment {
     public void onEvent(TranslationUpdatedEvent event) {
         if (type != null && type == Type.PROFILE) {
             EventBus.getDefault().removeStickyEvent(TranslationUpdatedEvent.class);
-            profileAdapter.updateWordAndTranslations(event.word, event.translations);
+            if(profileAdapter == null) {
+                initAdapter();
+            }
+            if(profileAdapter != null) {
+                profileAdapter.updateWordAndTranslations(event.word, event.translations);
+            }
         }
     }
 
