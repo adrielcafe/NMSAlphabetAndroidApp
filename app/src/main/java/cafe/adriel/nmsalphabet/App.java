@@ -56,8 +56,6 @@ public class App extends Application {
         initFabric();
         initParse();
         initFacebook();
-
-        Util.printAppKeyHash(this);
     }
 
     @Subscribe(sticky = true)
