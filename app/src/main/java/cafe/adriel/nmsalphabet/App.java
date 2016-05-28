@@ -1,7 +1,7 @@
 package cafe.adriel.nmsalphabet;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -30,7 +30,7 @@ import io.fabric.sdk.android.Fabric;
 import io.paperdb.Paper;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     private static User user;
 
