@@ -49,7 +49,6 @@ public class SocialUtil {
                             .putString(Constant.SETTINGS_FACEBOOK_USER_ID, AccessToken.getCurrentAccessToken().getUserId())
                             .commit();
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
                     e.printStackTrace();
                 }
             }

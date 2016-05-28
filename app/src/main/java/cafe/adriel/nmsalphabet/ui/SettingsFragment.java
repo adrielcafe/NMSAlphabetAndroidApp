@@ -52,14 +52,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             settingsList.post(new Runnable() {
                 @Override
                 public void run() {
-                    updatePreferencies(settingsList);
+                    updatePreferences(settingsList);
                 }
             });
             settingsList.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
                     if(scrollState == SCROLL_STATE_IDLE) {
-                        updatePreferencies(settingsList);
+                        updatePreferences(settingsList);
                     }
                 }
                 @Override
@@ -152,7 +152,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         accountTheme.setSummary(getThemeEntry(theme));
     }
 
-    private void updatePreferencies(ListView accountList){
+    private void updatePreferences(ListView accountList){
         for(int i = 0; i < accountList.getChildCount(); i++) {
             try {
                 LinearLayout rootLayout = (LinearLayout) accountList.getChildAt(i);
@@ -175,7 +175,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private void changeStatus() {
         final Activity activity = getActivity();
-        if(activity != null) {
+        if(activity != null && isAdded()) {
             final AlertDialog dialog = Util.showLoadingDialog(activity);
             AsyncTask.execute(new Runnable() {
                 @Override
@@ -183,7 +183,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     App.signOut(activity);
                     startActivity(new Intent(activity, SplashActivity.class));
                     activity.finish();
-                    if(MainActivity.getInstance() != null){
+                    if (MainActivity.getInstance() != null) {
                         MainActivity.getInstance().finish();
                     }
                     dialog.dismiss();

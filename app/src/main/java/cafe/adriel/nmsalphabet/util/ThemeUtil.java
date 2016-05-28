@@ -25,7 +25,7 @@ public class ThemeUtil {
     public static String getCurrentTheme(Context context){
         try {
             currentTheme = PreferenceManager.getDefaultSharedPreferences(context)
-                    .getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
+                    .getString(Constant.SETTINGS_ACCOUNT_THEME, THEME_1);
             return currentTheme;
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +145,7 @@ public class ThemeUtil {
     public static Drawable getHeaderControlDrawable(Context context){
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
-        shape.setColor(ThemeUtil.getPrimaryDarkColor(context));
+        shape.setColor(getPrimaryDarkColor(context));
         shape.setAlpha(254);
         shape.setCornerRadius(250);
         return shape;
@@ -154,7 +154,7 @@ public class ThemeUtil {
     public static Drawable getWordRaceTitleDrawable(Context context){
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
-        shape.setColor(ThemeUtil.getAccentColor(context));
+        shape.setColor(getAccentColor(context));
         shape.setAlpha(254);
         shape.setCornerRadii(new float [] {0, 0, 250, 250, 250, 250, 0, 0});
         return shape;

@@ -65,12 +65,14 @@ public class TranslationEditorActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translation_editor);
         ButterKnife.bind(this);
-        getSupportActionBar().setElevation(0);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_close)
-                .color(Color.WHITE)
-                .sizeDp(16));
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setElevation(0);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(new IconicsDrawable(this)
+                    .icon(MaterialDesignIconic.Icon.gmi_close)
+                    .color(Color.WHITE)
+                    .sizeDp(16));
+        }
         setTitle(R.string.new_translation);
         init();
     }
@@ -296,13 +298,13 @@ public class TranslationEditorActivity extends BaseActivity {
         }
         if (translation != null) {
             try {
+                DbUtil.likeTranslation(translation, false);
                 translation.addUser(App.getUser());
-                translation.addLike(App.getUser());
                 translation.save();
                 if (currentTranslation != null && !currentTranslation.getTranslation().equals(translationStr)) {
                     try {
+                        DbUtil.dislikeTranslation(currentTranslation, false);
                         currentTranslation.removeUser(App.getUser());
-                        currentTranslation.removeLike(App.getUser());
                         currentTranslation.save();
                     } catch (Exception e) {
                         e.printStackTrace();

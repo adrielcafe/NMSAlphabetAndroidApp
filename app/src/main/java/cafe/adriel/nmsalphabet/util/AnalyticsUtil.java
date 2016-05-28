@@ -46,7 +46,7 @@ public class AnalyticsUtil {
         if(isInitialized()) {
             Answers.getInstance().logSearch(new SearchEvent()
                     .putQuery(word)
-                    .putCustomAttribute("race", race == null ? "ALL" : race.getName()));
+                    .putCustomAttribute("race", race == null ? "all" : race.getName()));
         }
     }
 
@@ -118,7 +118,7 @@ public class AnalyticsUtil {
     public static void sawEastereggEvent(User user){
         if(isInitialized()) {
             Answers.getInstance().logCustom(new CustomEvent("sawEasteregg")
-                    .putCustomAttribute("userId", user.getObjectId()));
+                    .putCustomAttribute("userId", user == null ? "anonymous" : user.getObjectId()));
         }
     }
 

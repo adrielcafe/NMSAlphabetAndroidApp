@@ -34,12 +34,16 @@ import cafe.adriel.nmsalphabet.ui.util.ViewPagerFadeTransformer;
 import cafe.adriel.nmsalphabet.util.AdUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
+import co.mobiwise.materialintro.animation.MaterialIntroListener;
 
 public class MainActivity extends BaseActivity {
 
     private static Activity instance;
     private static InterstitialAd interstitialAd;
-    private boolean backPressed;
+    private static WordsFragment homeFrag;
+    private static WordsFragment profileFrag;
+    private static TranslateFragment translateFrag;
+    private static boolean backPressed;
 
     @BindView(R.id.tabs)
     NavigationTabBar tabView;
@@ -117,8 +121,21 @@ public class MainActivity extends BaseActivity {
                 openTranslationEditor();
             }
         });
-        AdUtil.initBannerAd(this, adView, fabView);
         initTabs();
+        AdUtil.initBannerAd(this, adView, fabView);
+        Util.asyncCall(500, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Util.showShowcase(MainActivity.this, Constant.INTRO_HOME, R.string.intro_home, homeFrag.headerHomeLayout, new MaterialIntroListener() {
+                        @Override
+                        public void onUserClicked(String s) {
+                            Util.showShowcase(MainActivity.this, Constant.INTRO_ADD_TRANSLATION, R.string.intro_add_translation, fabView, null);
+                        }
+                    });
+                } catch (Exception e){ }
+            }
+        });
     }
 
     public static Activity getInstance(){
@@ -148,10 +165,22 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onEndTabSelected(NavigationTabBar.Model model, int index) {
                 Util.hideSoftKeyboard(MainActivity.this);
-                if(index == 0 || index == 2){
-                    fabView.show();
-                } else {
-                    fabView.hide();
+                switch (index){
+                    case 0:
+                        fabView.show();
+                        break;
+                    case 1:
+                        fabView.hide();
+                        try {
+                            Util.showShowcase(MainActivity.this, Constant.INTRO_TRANSLATE, R.string.intro_translate, translateFrag.controlsLayout, null);
+                        } catch (Exception e){ }
+                        break;
+                    case 2:
+                        fabView.show();
+                        try {
+                            Util.showShowcase(MainActivity.this, Constant.INTRO_PROFILE, R.string.intro_profile, profileFrag.wordsView, null);
+                        } catch (Exception e){ }
+                        break;
                 }
             }
         });
@@ -194,11 +223,14 @@ public class MainActivity extends BaseActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return WordsFragment.newInstance(WordsFragment.Type.HOME);
+                    homeFrag = WordsFragment.newInstance(WordsFragment.Type.HOME);
+                    return homeFrag;
                 case 1:
-                    return new TranslateFragment();
+                    translateFrag = new TranslateFragment();
+                    return translateFrag;
                 case 2:
-                    return WordsFragment.newInstance(WordsFragment.Type.PROFILE);
+                    profileFrag = WordsFragment.newInstance(WordsFragment.Type.PROFILE);
+                    return profileFrag;
                 default:
                     return null;
             }

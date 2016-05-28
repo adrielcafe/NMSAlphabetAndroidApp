@@ -1,11 +1,12 @@
+*.apk
 *.iml
 *.log
 *.hprof
 .gradle
-/local.properties
-/.idea
 .DS_Store
-/build
-/captures
 app/src/main/res/values/keys.xml
 app/fabric.properties
+/local.properties
+/.idea
+/build
+/captures

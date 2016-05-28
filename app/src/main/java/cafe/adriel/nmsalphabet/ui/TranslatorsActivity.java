@@ -25,7 +25,9 @@ public class TranslatorsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translators);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         setTitle(R.string.translators);
         ButterKnife.bind(this);
         init();
@@ -44,31 +46,39 @@ public class TranslatorsActivity extends BaseActivity {
     @Override
     protected void init() {
         adjustMarginAndPadding();
+        Triple<String, String, String> lastTranslator = null;
         for(Triple<String, String, String> translator : Constant.TRANSLATORS){
+            boolean showCountryFlag = true;
+            if(lastTranslator != null && lastTranslator.getA().equals(translator.getA())){
+                showCountryFlag = false;
+            }
             String language = translator.getA();
             String name = translator.getB();
             String twitter = translator.getC();
-            View translatorView = setupTranslator(language, name, twitter);
+            View translatorView = setupTranslator(language, name, twitter, showCountryFlag);
             translatorsLayout.addView(translatorView);
+            lastTranslator = translator;
         }
     }
 
-    private View setupTranslator(String language, String name, final String twitter){
+    private View setupTranslator(String language, String name, final String twitter, boolean showCountryFlag){
         View rootView = LayoutInflater.from(this).inflate(R.layout.list_item_translator, null, false);
         TranslatorViewHolder holder = new TranslatorViewHolder(rootView);
         holder.translatorNameView.setText(name);
         holder.translatorTwitterView.setText(twitter);
 
-        switch (language){
-            case LanguageUtil.LANGUAGE_EN:
-                holder.countryFlagView.setImageResource(R.drawable.flag_uk_big);
-                break;
-            case LanguageUtil.LANGUAGE_PT:
-                holder.countryFlagView.setImageResource(R.drawable.flag_brazil_big);
-                break;
-            case LanguageUtil.LANGUAGE_DE:
-                holder.countryFlagView.setImageResource(R.drawable.flag_germany_big);
-                break;
+        if(showCountryFlag) {
+            switch (language) {
+                case LanguageUtil.LANGUAGE_EN:
+                    holder.countryFlagView.setImageResource(R.drawable.flag_uk_big);
+                    break;
+                case LanguageUtil.LANGUAGE_PT:
+                    holder.countryFlagView.setImageResource(R.drawable.flag_brazil_big);
+                    break;
+                case LanguageUtil.LANGUAGE_DE:
+                    holder.countryFlagView.setImageResource(R.drawable.flag_germany_big);
+                    break;
+            }
         }
 
         if(Util.isNotEmpty(twitter)) {

@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,13 +26,13 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.goebl.david.Webb;
-
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -39,11 +40,19 @@ import java.util.List;
 
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
+import co.mobiwise.materialintro.animation.MaterialIntroListener;
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.view.MaterialIntroView;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class Util {
 
-    private static final Webb WEBB = Webb.create();
     private static final Handler ASYNC_HANDLER = new Handler();
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
+            .addInterceptor(new HttpLoggingInterceptor())
+            .build();
     private static final String[] PERMISSIONS = {
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -70,12 +79,12 @@ public class Util {
     private static ConnectivityManager connectivityManager;
     private static String deviceId;
 
-    public static boolean isEmpty(CharSequence cs) {
-        return cs == null || cs.length() == 0;
+    public static boolean isEmpty(String str) {
+        return str == null || str.length() == 0 || str.toLowerCase().equals("null");
     }
 
-    public static boolean isNotEmpty(CharSequence cs) {
-        return !isEmpty(cs);
+    public static boolean isNotEmpty(String str) {
+        return !isEmpty(str);
     }
 
     public static boolean isEmpty(List list) {
@@ -90,25 +99,55 @@ public class Util {
         return "#" + Integer.toHexString(color).replaceFirst("ff", "").toUpperCase();
     }
 
+    public static byte[] toByteArray(Bitmap image){
+        int maxSize = 1024000;
+        int quality = 95;
+        byte[] bytes;
+        do {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+            quality -= 10;
+            if(quality < 0){
+                break;
+            }
+        } while (bytes.length > maxSize);
+        return bytes;
+    }
+
     public static String toBase64(Bitmap image){
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        byte[] byteArray = toByteArray(image);
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    public static File toFile(Context context, Bitmap image, String name){
+        try {
+            File file = File.createTempFile(name, ".jpg", context.getCacheDir());
+            byte[] byteArray = toByteArray(image);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(byteArray);
+            fos.flush();
+            fos.close();
+            return file;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String removeSpecialCharacters(String text){
         return text.replaceAll("[^\\w\\s]+", "");
     }
 
-    public static Webb getWebb(){
-        return WEBB;
+    public static OkHttpClient getHttpClient(){
+        return HTTP_CLIENT;
     }
 
     public static String getDeviceId(Context context){
         if(isEmpty(deviceId)) {
             String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            deviceId = md5(androidId).toUpperCase();
+            String md5 = md5(androidId);
+            deviceId = isNotEmpty(md5) ? md5.toUpperCase() : null;
         }
         return deviceId;
     }
@@ -122,6 +161,25 @@ public class Util {
                 .setView(R.layout.dialog_loading)
                 .setCancelable(false)
                 .show();
+    }
+
+    public static void showShowcase(Activity activity, String id, @StringRes int textResId, View view, MaterialIntroListener listener){
+        try {
+            new MaterialIntroView.Builder(activity)
+                    .setUsageId(id)
+                    .setTarget(view)
+                    .setInfoText(activity.getString(textResId))
+                    .setFocusGravity(FocusGravity.CENTER)
+                    .setFocusType(Focus.NORMAL)
+                    .setDelayMillis(500)
+                    .setListener(listener)
+                    .enableIcon(true)
+                    .enableDotAnimation(true)
+                    .enableFadeAnimation(true)
+                    .dismissOnTouch(true)
+                    .performClick(false)
+                    .show();
+        } catch (Exception e){ }
     }
 
     public static void shareText(Activity activity, String text){
@@ -139,7 +197,7 @@ public class Util {
             }
         }
         if(!missingPermissions.isEmpty()){
-            ActivityCompat.requestPermissions(context, missingPermissions.toArray(new String[]{}), 0);
+            ActivityCompat.requestPermissions(context, missingPermissions.toArray(new String[missingPermissions.size()]), 0);
         }
     }
 
@@ -257,15 +315,14 @@ public class Util {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] array = md.digest(str.getBytes());
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < array.length; ++i) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            StringBuilder sb = new StringBuilder();
+            for (byte anArray : array) {
+                sb.append(Integer.toHexString((anArray & 0xFF) | 0x100).substring(1, 3));
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            Crashlytics.logException(e);
+            return null;
         }
-        return null;
     }
 
     private static boolean isConnectionFast(int type, int subType){

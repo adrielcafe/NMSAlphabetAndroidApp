@@ -1,5 +1,6 @@
 package cafe.adriel.nmsalphabet.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,14 +11,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.goebl.david.Webb;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,31 +32,41 @@ import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.adapter.TranslationAdapter;
 import cafe.adriel.nmsalphabet.ui.util.EndlessRecyclerOnScrollListener;
 import mehdi.sakout.dynamicbox.DynamicBox;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class TranslationUtil {
 
-    private static final String VISION_API_URL          = "https://vision.googleapis.com/v1/images:annotate?key=";
-    private static final String VISION_API_REQUEST_BODY =
+    private static final String OCR_SPACE_API_URL   = "https://apifree2.ocr.space/parse/image";
+    private static final String VISION_API_URL      = "https://vision.googleapis.com/v1/images:annotate?key=";
+    private static final String VISION_API_BODY     =
             "{\"requests\": [{\"features\": [{\"type\": \"TEXT_DETECTION\"}],\"image\": {\"content\": \"%s\"}}]}";
 
-    public static String extractTextFromImage(Context context, Bitmap image){
-        String base64Img = Util.toBase64(image);
-        String body = String.format(VISION_API_REQUEST_BODY, base64Img);
+    public static String extractTextFromImage(final Activity activity, Bitmap image){
+        String text;
         try {
-            JSONObject json = Util.getWebb()
-                    .post(VISION_API_URL + context.getString(R.string.google_vision_key))
-                    .header(Webb.HDR_CONTENT_TYPE, Webb.APP_JSON)
-                    .body(body)
-                    .ensureSuccess()
-                    .asJsonObject()
-                    .getBody();
-            String text = json.getJSONArray("responses")
-                    .getJSONObject(0)
-                    .getJSONArray("textAnnotations")
-                    .getJSONObject(0)
-                    .getString("description")
-                    .toUpperCase();
-            AnalyticsUtil.ocrEvent(text);
+            if(App.isPro(activity)) {
+                text = extractTextWithVisionApi(activity, image);
+                if(text == null){
+                    text = extractTextWithOcrSpaceApi(activity, image);
+                }
+            } else {
+                text = extractTextWithOcrSpaceApi(activity, image);
+            }
+            if(text == null){
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity, R.string.service_unavailable, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AnalyticsUtil.ocrEvent(activity.getString(R.string.service_unavailable));
+            } else {
+                AnalyticsUtil.ocrEvent(text);
+            }
             return text;
         } catch (Exception e){
             e.printStackTrace();
@@ -62,12 +74,79 @@ public class TranslationUtil {
         }
     }
 
-    public static void showTranslationsDialog(final Context context, final AlienWord word, final String languageCode){
+    private static String extractTextWithVisionApi(Context context, Bitmap image){
+        String base64Img = Util.toBase64(image);
+        String body = String.format(VISION_API_BODY, base64Img);
+        try {
+            RequestBody postBody = RequestBody.create(MediaType.parse(""), body);
+            Request request = new Request.Builder()
+                    .url(VISION_API_URL + context.getString(R.string.google_vision_key))
+                    .post(postBody)
+                    .header("Content-Type", "application/json")
+                    .build();
+            Response response = Util.getHttpClient().newCall(request).execute();
+            if(response.code() >= 200 && response.code() < 300) {
+                JSONObject json = new JSONObject(response.body().string());
+                return json.getJSONArray("responses")
+                        .getJSONObject(0)
+                        .getJSONArray("textAnnotations")
+                        .getJSONObject(0)
+                        .getString("description")
+                        .toUpperCase();
+            } else {
+                return null;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static String extractTextWithOcrSpaceApi(final Activity activity, Bitmap image){
+        File imageFile = Util.toFile(activity, image, "alien_phrase_");
+        try {
+            RequestBody formBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("apikey", activity.getString(R.string.ocr_space_key))
+                    .addFormDataPart("file", imageFile.getName(), RequestBody.create(MediaType.parse("image/jpg"), imageFile))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(OCR_SPACE_API_URL)
+                    .post(formBody)
+                    .build();
+            Response response = Util.getHttpClient().newCall(request).execute();
+            if(response.code() >= 200 && response.code() < 300) {
+                JSONObject json = new JSONObject(response.body().string());
+                final String error = json.getString("ErrorMessage");
+                if (Util.isEmpty(error)) {
+                    String text = json.getJSONArray("ParsedResults")
+                            .getJSONObject(0)
+                            .getString("ParsedText")
+                            .toUpperCase();
+                    return text;
+                } else {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void showTranslationsDialog(final Context context, final AlienRace race, final AlienWord word, final String languageCode){
         View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_translations, null, false);
         RecyclerView translationsView = (RecyclerView) rootView.findViewById(R.id.translations);
 
         final List<AlienWordTranslation> translations = new ArrayList<>();
-        final AlienRace race = DbUtil.getRaceById(word.getRace().getObjectId());
         final TranslationAdapter adapter = new TranslationAdapter(context, translations);
         final DynamicBox viewState = createViewState(context, translationsView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
@@ -197,7 +276,7 @@ public class TranslationUtil {
             likeView.setTextColor(Color.BLACK);
             dislikeView.setTextColor(context.getResources().getColor(R.color.gray));
 
-            DbUtil.likeTranslation(translation);
+            DbUtil.likeTranslation(translation, true);
             AnalyticsUtil.likeEvent(translation.getRace(), translation.getWord(), translation);
         }
     }
@@ -219,7 +298,7 @@ public class TranslationUtil {
             likeView.setTextColor(context.getResources().getColor(R.color.gray));
             dislikeView.setTextColor(Color.BLACK);
 
-            DbUtil.dislikeTranslation(translation);
+            DbUtil.dislikeTranslation(translation, true);
             AnalyticsUtil.dislikeEvent(translation.getRace(), translation.getWord(), translation);
         }
     }

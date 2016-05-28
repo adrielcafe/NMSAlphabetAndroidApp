@@ -120,7 +120,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         holder.seeAllTranslationsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seeAllTranslations(word);
+                seeAllTranslations(race, word);
             }
         });
         holder.shareTranslationView.setOnClickListener(new View.OnClickListener() {
@@ -249,8 +249,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         }
     }
 
-    private void seeAllTranslations(AlienWord word){
-        TranslationUtil.showTranslationsDialog(context, word, languageCode);
+    private void seeAllTranslations(AlienRace race, AlienWord word){
+        TranslationUtil.showTranslationsDialog(context, race, word, languageCode);
     }
 
     private void shareTranslation(AlienRace race, AlienWord word){

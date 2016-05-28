@@ -5,7 +5,7 @@ import com.parse.ParseCloud;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,12 +44,12 @@ public class DbUtil {
         try {
             List<AlienWordTranslation> likedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
                     .whereEqualTo("likes", App.getUser())
-                    .selectKeys(Arrays.asList("objectId"))
+                    .selectKeys(Collections.singletonList("objectId"))
                     .setLimit(PAGE_SIZE_LIKE_DISLIKE)
                     .find();
             List<AlienWordTranslation> dislikedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
                     .whereEqualTo("dislikes", App.getUser())
-                    .selectKeys(Arrays.asList("objectId"))
+                    .selectKeys(Collections.singletonList("objectId"))
                     .setLimit(PAGE_SIZE_LIKE_DISLIKE)
                     .find();
 
@@ -109,6 +109,15 @@ public class DbUtil {
         return null;
     }
 
+    public static AlienRace getRaceByPosition(int position){
+        loadCachedData();
+        if(races.size() < position){
+            return races.get(position);
+        } else {
+            return null;
+        }
+    }
+
     public static int getRacePosition(String id){
         loadCachedData();
         for(int i = 0; i < races.size(); i++){
@@ -138,22 +147,26 @@ public class DbUtil {
         return dislikes.contains(translation.getObjectId());
     }
 
-    public static void likeTranslation(AlienWordTranslation translation){
+    public static void likeTranslation(AlienWordTranslation translation, boolean save){
         loadCachedData();
         likes.add(translation.getObjectId());
         dislikes.remove(translation.getObjectId());
         translation.addLike(App.getUser());
         translation.removeDislike(App.getUser());
-        translation.saveInBackground();
+        if(save) {
+            translation.saveInBackground();
+        }
     }
 
-    public static void dislikeTranslation(AlienWordTranslation translation){
+    public static void dislikeTranslation(AlienWordTranslation translation, boolean save){
         loadCachedData();
         dislikes.add(translation.getObjectId());
         likes.remove(translation.getObjectId());
         translation.addDislike(App.getUser());
         translation.removeLike(App.getUser());
-        translation.saveInBackground();
+        if(save) {
+            translation.saveInBackground();
+        }
     }
 
     public static void getWords(String word, AlienRace race, int page, FindCallback<AlienWord> callback){

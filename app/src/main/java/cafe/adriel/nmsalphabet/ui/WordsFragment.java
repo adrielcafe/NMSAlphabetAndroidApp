@@ -393,18 +393,19 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void afterUpdateWords(int page, List<AlienWord> newWords, ParseException e){
-        if(words == null){
-            words = new ArrayList<>();
-        }
         if(page == 0){
+            resetAdapter();
             if(Util.isEmpty(newWords)){
                 viewState.showCustomView(Constant.STATE_EMPTY);
             } else {
-                words.addAll(newWords);
+                words = new ArrayList<>(newWords);
                 initAdapter();
                 viewState.hideAll();
             }
         } else if(Util.isNotEmpty(newWords)){
+            if(words == null){
+                words = new ArrayList<>();
+            }
             words.addAll(newWords);
             switch (type){
                 case HOME:
@@ -419,10 +420,10 @@ public class WordsFragment extends BaseFragment {
         if(e != null){
             e.printStackTrace();
         }
-        setLoadingList(false);
         if(refreshLayout != null) {
             refreshLayout.setRefreshing(false);
         }
+        setLoadingList(false);
     }
 
     private void refreshWords(){
@@ -455,15 +456,23 @@ public class WordsFragment extends BaseFragment {
         }
     }
 
+    private void resetAdapter(){
+        if(wordsView != null) {
+            wordsView.setAdapter(null);
+        }
+        homeAdapter = null;
+        profileAdapter = null;
+    }
+
     private void setLoadingList(final boolean loading){
         if(getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        if (loading) {
+                        if (loading && !refreshLayout.isRefreshing()) {
                             new FadeInAnimation(loadingView).animate();
-                        } else {
+                        } else if(loadingView.getVisibility() == View.VISIBLE){
                             Util.asyncCall(500, new Runnable() {
                                 @Override
                                 public void run() {

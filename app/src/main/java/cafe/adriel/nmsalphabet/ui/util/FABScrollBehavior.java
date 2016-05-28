@@ -44,9 +44,11 @@ public class FABScrollBehavior extends FloatingActionButton.Behavior {
                     public void onAnimationStart(View view) {
                         FABScrollBehavior.this.mIsAnimatingOut = true;
                     }
+
                     public void onAnimationCancel(View view) {
                         FABScrollBehavior.this.mIsAnimatingOut = false;
                     }
+
                     public void onAnimationEnd(View view) {
                         FABScrollBehavior.this.mIsAnimatingOut = false;
                         view.setVisibility(View.GONE);
