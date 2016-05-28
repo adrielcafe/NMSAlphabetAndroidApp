@@ -175,7 +175,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private void changeStatus() {
         final Activity activity = getActivity();
-        if(activity != null) {
+        if(activity != null && isAdded()) {
             final AlertDialog dialog = Util.showLoadingDialog(activity);
             AsyncTask.execute(new Runnable() {
                 @Override
@@ -183,7 +183,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     App.signOut(activity);
                     startActivity(new Intent(activity, SplashActivity.class));
                     activity.finish();
-                    if(MainActivity.getInstance() != null){
+                    if (MainActivity.getInstance() != null) {
                         MainActivity.getInstance().finish();
                     }
                     dialog.dismiss();
