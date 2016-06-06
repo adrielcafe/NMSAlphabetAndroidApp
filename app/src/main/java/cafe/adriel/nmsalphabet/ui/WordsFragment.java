@@ -470,7 +470,7 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(final boolean loading){
-        if(getActivity() != null) {
+        if(getActivity() != null && loadingView != null && refreshLayout != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
