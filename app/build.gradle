@@ -89,11 +89,12 @@ dependencies {
     compile 'com.tsengvn:Typekit:1.0.0@aar'
     compile 'com.github.deano2390:android-viewbadger:1.0.0@aar'
     compile 'cat.ereza:customactivityoncrash:1.5.0@aar'
-    compile 'io.github.kobakei:ratethisapp:1.0.3@aar'
+    compile 'io.github.kobakei:ratethisapp:1.0.4@aar'
     compile 'com.github.medyo:dynamicbox:1.2@aar'
     compile 'com.github.iammert:MaterialIntroView:1.5.2@aar'
     compile 'com.github.jkwiecien:EasyImage:1.2.3@aar'
     compile 'com.isseiaoki:simplecropview:1.1.4@aar'
+    compile 'com.github.tajchert:nammu:1.1.1@aar'
 }
 
 repositories {

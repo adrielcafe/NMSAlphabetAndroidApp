@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
-        <com.gigamole.library.NavigationTabBar
+        <com.gigamole.library.ntb.NavigationTabBar
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="50dp"
