@@ -29,6 +29,7 @@ import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.fabric.sdk.android.Fabric;
 import io.paperdb.Paper;
 import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.tajchert.nammu.Nammu;
 
 public class App extends MultiDexApplication {
 
@@ -42,6 +43,7 @@ public class App extends MultiDexApplication {
         EasyImage.configuration(this)
                 .saveInRootPicturesDirectory()
                 .setImagesFolderName(getString(R.string.app_name));
+        Nammu.init(this);
         Paper.init(this);
         Typekit.getInstance()
                 .addNormal(Typekit.createFromAsset(this, "fonts/LatoLatin-Regular.ttf"))

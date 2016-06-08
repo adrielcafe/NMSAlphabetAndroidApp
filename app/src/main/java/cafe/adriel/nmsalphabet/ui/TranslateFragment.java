@@ -57,6 +57,7 @@ import cafe.adriel.nmsalphabet.util.Util;
 import mehdi.sakout.dynamicbox.DynamicBox;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.tajchert.nammu.PermissionCallback;
 
 public class TranslateFragment extends BaseFragment {
 
@@ -167,7 +168,15 @@ public class TranslateFragment extends BaseFragment {
     @OnClick(R.id.fab)
     public void pickPicture(){
         if(Util.isConnected(getContext())) {
-            EasyImage.openChooserWithGallery(this, getString(R.string.select_an_image), REQUEST_PICK_PICTURE);
+            Util.askForPermissions(getActivity(), new PermissionCallback() {
+                @Override
+                public void permissionGranted() {
+                    EasyImage.openChooserWithGallery(TranslateFragment.this, getString(R.string.select_an_image), REQUEST_PICK_PICTURE);
+                }
+                @Override
+                public void permissionRefused() {
+                }
+            });
         }
     }
 
