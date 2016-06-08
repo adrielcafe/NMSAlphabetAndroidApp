@@ -49,8 +49,8 @@
     <string name="about">About</string>
     <string name="translators">Translators</string>
     <string name="translators_summary">This app is in your native language? Then thank these folks!</string>
-    <string name="discovered_new_race">Discovered a new race?</string>
-    <string name="discovered_new_race_summary">Send its name for us</string>
+    <string name="discovered_new_race">Did you discover a new alien language?</string>
+    <string name="discovered_new_race_summary">Send the name of the race to us</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_summary">Send suggestions or ask questions</string>
     <string name="share">Share</string>

@@ -80,8 +80,8 @@
     <string name="intro_profile">Verwalte deine Übersetzungen</string>
     <string name="intro_home">Suche nach außerirdischen Wörtern und ihren Übersetzungen</string>
     <string name="intro_add_translation">Hast du eine neue Übersetzung gefunden? Füge sie hier hinzu!</string>
-    <string name="discovered_new_race">Hast du eine neue Rasse entdeckt?</string>
-    <string name="discovered_new_race_summary">Sende uns ihren Namen</string>
+    <string name="discovered_new_race">Hast du eine neue außerirdische Sprache entdeckt?</string>
+    <string name="discovered_new_race_summary">Sende uns den Namen der Rasse</string>
     <string name="current_version_not_supported">Die installierte Version der App wird nicht mehr unterstützt</string>
     <string name="app_name"></string>
     <string name="race">Rasse</string>
