@@ -64,8 +64,8 @@
     <string name="close">Fechar</string>
     <string name="upgrade_to_pro_summary">Para quem não gosta de anúncios ou quer me pagar um {gmi-coffee}</string>
     <string name="upgrade_to_pro">Atualize para PRO</string>
-    <string name="discovered_new_race_summary">Envie o nome dela para nós</string>
-    <string name="discovered_new_race">Descobriu uma nova raça?</string>
+    <string name="discovered_new_race_summary">Envie o nome da raça para nós</string>
+    <string name="discovered_new_race">Descobriu um novo idioma alienígena?</string>
     <string name="translators">Tradutores</string>
     <string name="translators_summary">O aplicativo está em seu idioma nativo? Agradeça essas pessoas!</string>
     <string name="update">Atualizar</string>
