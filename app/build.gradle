@@ -4,13 +4,13 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
-        targetSdkVersion 23
-        versionCode 12
-        versionName "0.1.2 Beta"
+        targetSdkVersion 24
+        versionCode 99
+        versionName "0.9.9 Beta"
         multiDexEnabled true
     }
     productFlavors {
@@ -56,29 +56,29 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'com.android.support:multidex:1.0.1@aar'
-    compile 'com.android.support:support-v13:23.4.0'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:cardview-v7:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.google.android.gms:play-services-ads:9.0.0'
+    compile 'com.android.support:support-v13:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:cardview-v7:24.1.1'
+    compile 'com.android.support:recyclerview-v7:24.1.1'
+    compile 'com.google.android.gms:play-services-ads:9.2.1'
 
-    apt     'com.jakewharton:butterknife-compiler:8.0.1'
-    compile 'com.jakewharton:butterknife:8.0.1'
+    apt     'com.jakewharton:butterknife-compiler:8.2.1'
+    compile 'com.jakewharton:butterknife:8.2.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
-    compile 'com.squareup.okio:okio:1.8.0'
-    compile 'com.parse:parse-android:1.13.0@aar'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.parse:parse-android:1.13.1@aar'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
     compile 'com.parse.bolts:bolts-tasks:1.4.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.12.1@aar'
+    compile 'com.facebook.android:facebook-android-sdk:4.14.0@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
     compile('io.paperdb:paperdb:1.5@aar'){ transitive = true }
 
-    compile 'com.mikepenz:iconics-core:2.6.0@aar'
-    compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
+    compile 'com.mikepenz:iconics-core:2.6.7@aar'
+    compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.2@aar'
     compile 'com.github.ybq:Android-SpinKit:1.0.4@aar'
     compile 'com.github.2359media:EasyAndroidAnimations:0.8@aar'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4@aar'
@@ -89,7 +89,7 @@ dependencies {
     compile 'com.tsengvn:Typekit:1.0.0@aar'
     compile 'com.github.deano2390:android-viewbadger:1.0.0@aar'
     compile 'cat.ereza:customactivityoncrash:1.5.0@aar'
-    compile 'io.github.kobakei:ratethisapp:1.0.4@aar'
+    compile 'io.github.kobakei:ratethisapp:1.0.5@aar'
     compile 'com.github.medyo:dynamicbox:1.2@aar'
     compile 'com.github.iammert:MaterialIntroView:1.5.2@aar'
     compile 'com.github.jkwiecien:EasyImage:1.2.3@aar'
