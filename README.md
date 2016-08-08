@@ -1,4 +1,4 @@
-![NMS Alphabet Logo](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroid/master/app/src/free/res/mipmap-xxxhdpi/ic_launcher.png)
+![NMS Alphabet Logo](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroid/master/images/banner.jpg)
 
 > **NMS αβ** is an *unofficial* collaborative translator app for [No Man's Sky](http://no-mans-sky.com).
 
