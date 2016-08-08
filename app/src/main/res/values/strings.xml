@@ -4,43 +4,43 @@
     <string name="portuguese" translatable="false">Português</string>
     <string name="german" translatable="false">Deutsch</string>
 
-    <string name="quote">\"We are an impossibility in an impossible universe\"</string>
+    <string name="quote">\"We are an impossibility in an impossible universe\" - Ray Bradbury</string>
     <string name="connect_internet">Connect to the Internet</string>
-    <string name="nothing_found">Nothing Found</string>
+    <string name="nothing_found">Nothing found</string>
     <string name="no_translation_found">No translation found</string>
-    <string name="no_word_found_image">No word found at the image</string>
+    <string name="no_word_found_image">No word found in the image</string>
     <string name="translation_not_found">Translation not found</string>
-    <string name="try_another_language">Try in another language</string>
+    <string name="try_another_language">Maybe you try it in another language</string>
     <string name="home">Home</string>
     <string name="translate">Translate</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>
-    <string name="search_word">Search Word</string>
-    <string name="all_alien_races">All Alien Races</string>
-    <string name="select_alien_race">Select an Alien Race</string>
+    <string name="search_word">Search word</string>
+    <string name="all_alien_races">All alien races</string>
+    <string name="select_alien_race">Select an alien race</string>
     <string name="translate_at_least_in_one_language">Translate at least in one language</string>
-    <string name="signout">Sign Out</string>
-    <string name="signin">Sign In</string>
-    <string name="signin_facebook">Sign In with Facebook</string>
+    <string name="signout">Sign out</string>
+    <string name="signin">Sign in</string>
+    <string name="signin_facebook">Sign in with Facebook</string>
     <string name="signin_to_add_translations">Sign in to add translations</string>
-    <string name="not_now">Not Now</string>
-    <string name="new_translation">New Translation</string>
-    <string name="best_translation">Best Translation</string>
-    <string name="best_translations">Best Translations</string>
-    <string name="my_translation">My Translation</string>
-    <string name="my_translations">My Translations</string>
-    <string name="see_all_translations_with_icon">{gmi-view-list-alt} See All</string>
+    <string name="not_now">Not now</string>
+    <string name="new_translation">New translation</string>
+    <string name="best_translation">Best translation</string>
+    <string name="best_translations">Best translations</string>
+    <string name="my_translation">My translation</string>
+    <string name="my_translations">My translations</string>
+    <string name="see_all_translations_with_icon">{gmi-view-list-alt} See all</string>
     <string name="delete_with_icon">{gmi-delete} Delete</string>
     <string name="edit_with_icon">{gmi-edit} Edit</string>
     <string name="share_with_icon">{gmi-share} Share</string>
     <string name="delete">Delete</string>
-    <string name="delete_translation">Delete Translation</string>
+    <string name="delete_translation">Delete translation</string>
     <string name="translation_will_be_deleted_permanently">This translation will be deleted permanently.\nAre you sure?</string>
-    <string name="edit_translation">Edit Translation</string>
+    <string name="edit_translation">Edit translation</string>
     <string name="close">Close</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="alien_word">Alien Word</string>
+    <string name="alien_word">Alien word</string>
     <string name="word">Word</string>
     <string name="race">Race</string>
     <string name="account">Account</string>
@@ -48,23 +48,23 @@
     <string name="theme">Theme</string>
     <string name="about">About</string>
     <string name="translators">Translators</string>
-    <string name="translators_summary">This app is on your native language? Thanks these folk!</string>
-    <string name="discovered_new_race">Discovered a new race?</string>
-    <string name="discovered_new_race_summary">Send her name for us</string>
+    <string name="translators_summary">This app is in your native language? Then thank these folks!</string>
+    <string name="discovered_new_race">Did you discover a new alien language?</string>
+    <string name="discovered_new_race_summary">Send the name of the race to us</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_summary">Send suggestions or ask questions</string>
     <string name="share">Share</string>
     <string name="share_summary">Share this app with your friends</string>
     <string name="share_msg">Hey explorer, take a look at NMS Alphabet: an app for translate alien words of No Man\'s Sky!</string>
     <string name="rate">Rate</string>
-    <string name="rate_summary">Like this app? Give 5 stars on Google Play!</string>
+    <string name="rate_summary">Like this app? Give it 5 stars on Google Play!</string>
     <string name="version">Version</string>
     <string name="update">Update</string>
-    <string name="update_app">Update App</string>
+    <string name="update_app">Update app</string>
     <string name="connected_as">Connected as</string>
     <string name="type_alien_phrase">Type an alien phrase</string>
     <string name="type_alien_word">Type the alien word</string>
-    <string name="restart_app">Restart App</string>
+    <string name="restart_app">Restart app</string>
     <string name="refresh">Refresh</string>
     <string name="crash_msg">Looks like a black hole passed by here and crashes the app</string>
     <string name="theme1">Theme 1</string>
@@ -72,17 +72,17 @@
     <string name="theme3">Theme 3</string>
     <string name="theme4">Theme 4</string>
     <string name="theme5">Theme 5</string>
-    <string name="unknown_explorer">Unknown Explorer</string>
+    <string name="unknown_explorer">Unknown explorer</string>
     <string name="we_became_better">We became better</string>
-    <string name="current_version_not_supported">The current version of the app is no longer supported</string>
-    <string name="select_an_image">Select an image</string>
+    <string name="current_version_not_supported">The installed version of the app is no longer supported</string>
+    <string name="select_an_image">Select a source</string>
     <string name="press_back_again">Press BACK again to quit</string>
     <string name="service_unavailable">Service unavailable</string>
     <string name="intro_home">Search for alien words and their translations</string>
     <string name="intro_translate">Translate alien phrases with your camera</string>
     <string name="intro_profile">Manage your translations</string>
-    <string name="intro_add_translation">Discovered a new translation? Add here!</string>
-    <string name="check_if_phrase_is_correct">Check if phrase is correct</string>
+    <string name="intro_add_translation">Discovered a new translation? Add it here!</string>
+    <string name="check_if_phrase_is_correct">Check if the phrase is correct</string>
     <string name="select_phrase_on_image">Select the phrase on the image</string>
 
     <string-array name="language_entries">
@@ -110,8 +110,8 @@
         <item>theme4</item>
         <item>theme5</item>
     </string-array>
-    <string name="new_translation_with_icon">{gmi-plus} New Translation</string>
+    <string name="new_translation_with_icon">{gmi-plus} New translation</string>
     <string name="upgrade_to_pro">Upgrade to PRO</string>
-    <string name="upgrade_to_pro_summary">For those who doesn\'t like ads or want to pay me a {gmi-coffee}</string>
+    <string name="upgrade_to_pro_summary">For those who don\'t like ads or want to pay me a {gmi-coffee}</string>
 
 </resources>

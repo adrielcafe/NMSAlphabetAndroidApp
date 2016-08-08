@@ -233,6 +233,7 @@ public class TranslationEditorActivity extends BaseActivity {
                     String enTranslationStr = enTranslationView.getText().toString().toUpperCase();
                     String ptTranslationStr = ptTranslationView.getText().toString().toUpperCase();
                     String deTranslationStr = deTranslationView.getText().toString().toUpperCase();
+                    boolean isNewWord = false;
 
                     try {
                         race = DbUtil.getRaceByName(raceStr);
@@ -244,6 +245,7 @@ public class TranslationEditorActivity extends BaseActivity {
                                 word.setRace(race);
                                 word.setWord(wordStr);
                                 word.save();
+                                isNewWord = true;
                             }
                         }
                         word.addUser(App.getUser());
@@ -262,7 +264,10 @@ public class TranslationEditorActivity extends BaseActivity {
                             translations.add(translation);
                         }
 
-                        EventBus.getDefault().postSticky(new TranslationUpdatedEvent(word, translations));
+                        if(!isNewWord) {
+                            EventBus.getDefault().postSticky(new TranslationUpdatedEvent(word, translations));
+                        }
+
                         AnalyticsUtil.addTranslationEvent(race, word);
                         dialog.dismiss();
                         finish();

@@ -1,7 +1,7 @@
 package cafe.adriel.nmsalphabet;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -29,8 +29,9 @@ import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.fabric.sdk.android.Fabric;
 import io.paperdb.Paper;
 import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.tajchert.nammu.Nammu;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     private static User user;
 
@@ -42,6 +43,7 @@ public class App extends Application {
         EasyImage.configuration(this)
                 .saveInRootPicturesDirectory()
                 .setImagesFolderName(getString(R.string.app_name));
+        Nammu.init(this);
         Paper.init(this);
         Typekit.getInstance()
                 .addNormal(Typekit.createFromAsset(this, "fonts/LatoLatin-Regular.ttf"))
