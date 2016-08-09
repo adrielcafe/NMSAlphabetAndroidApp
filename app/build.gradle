@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         targetSdkVersion 24
-        versionCode 99
-        versionName "0.9.9 Beta"
+        versionCode 100
+        versionName "1.0.0"
         multiDexEnabled true
     }
     productFlavors {
@@ -33,7 +33,6 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -46,7 +45,6 @@ android {
     }
     dexOptions {
         preDexLibraries false
-        incremental true
         jumboMode true
         javaMaxHeapSize "3g"
     }
@@ -55,13 +53,13 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:multidex:1.0.1@aar'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:24.1.1'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:design:24.1.1'
     compile 'com.android.support:cardview-v7:24.1.1'
     compile 'com.android.support:recyclerview-v7:24.1.1'
-    compile 'com.google.android.gms:play-services-ads:9.2.1'
+    compile 'com.google.android.gms:play-services-ads:9.4.0'
 
     apt     'com.jakewharton:butterknife-compiler:8.2.1'
     compile 'com.jakewharton:butterknife:8.2.1'
@@ -73,17 +71,17 @@ dependencies {
     compile 'com.parse:parse-android:1.13.1@aar'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
     compile 'com.parse.bolts:bolts-tasks:1.4.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.14.0@aar'
+    compile 'com.facebook.android:facebook-android-sdk:4.14.1@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
     compile('io.paperdb:paperdb:1.5@aar'){ transitive = true }
 
-    compile 'com.mikepenz:iconics-core:2.6.7@aar'
+    compile 'com.mikepenz:iconics-core:2.7.2@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.2@aar'
     compile 'com.github.ybq:Android-SpinKit:1.0.4@aar'
     compile 'com.github.2359media:EasyAndroidAnimations:0.8@aar'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4@aar'
     compile 'com.github.devlight.navigationtabbar:library:1.2.0@aar'
-    compile 'com.jaredrummler:material-spinner:1.0.9@aar'
+    compile 'com.jaredrummler:material-spinner:1.1.0@aar'
     compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1@aar'
     compile 'com.ramotion.foldingcell:folding-cell:1.0.1@aar'
     compile 'com.tsengvn:Typekit:1.0.0@aar'

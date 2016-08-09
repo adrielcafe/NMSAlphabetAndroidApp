@@ -309,7 +309,7 @@ public class WordsFragment extends BaseFragment {
              public void onClick(View v) {
                  Util.getSettings(getContext()).edit()
                          .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
-                         .commit();
+                         .apply();
                  getActivity().finish();
                  startActivity(new Intent(getContext(), SplashActivity.class));
              }

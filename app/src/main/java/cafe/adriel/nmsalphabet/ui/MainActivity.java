@@ -40,10 +40,10 @@ import pl.tajchert.nammu.Nammu;
 public class MainActivity extends BaseActivity {
 
     private static Activity instance;
-    private static InterstitialAd interstitialAd;
-    private static WordsFragment homeFrag;
-    private static WordsFragment profileFrag;
-    private static TranslateFragment translateFrag;
+    private InterstitialAd interstitialAd;
+    private WordsFragment homeFrag;
+    private WordsFragment profileFrag;
+    private TranslateFragment translateFrag;
     private static boolean backPressed;
 
     @BindView(R.id.tabs)
@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Util.getSettings(activity).edit()
                                 .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
-                                .commit();
+                                .apply();
                         dialog.dismiss();
                         activity.finish();
                         activity.startActivity(new Intent(activity, SplashActivity.class));
