@@ -147,7 +147,7 @@ public class SplashActivity extends BaseActivity {
 
     private void afterSignIn(){
         App.loadAndCache();
-        Util.getSettings(this).edit().putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, true).commit();
+        Util.getSettings(this).edit().putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, true).apply();
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
     }

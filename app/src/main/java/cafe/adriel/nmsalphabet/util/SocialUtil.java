@@ -47,7 +47,7 @@ public class SocialUtil {
                     App.getUser().saveInBackground();
                     Util.getSettings(context).edit()
                             .putString(Constant.SETTINGS_FACEBOOK_USER_ID, AccessToken.getCurrentAccessToken().getUserId())
-                            .commit();
+                            .apply();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

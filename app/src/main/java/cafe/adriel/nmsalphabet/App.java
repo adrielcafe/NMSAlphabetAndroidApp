@@ -56,6 +56,8 @@ public class App extends MultiDexApplication {
         initFabric();
         initParse();
         initFacebook();
+
+//        Util.printAppKeyHash(this);
     }
 
     @Subscribe(sticky = true)
@@ -104,7 +106,7 @@ public class App extends MultiDexApplication {
     public static void signOut(Context context){
         SocialUtil.logOut();
         ParseUser.logOut();
-        Util.getSettings(context).edit().clear().commit();
+        Util.getSettings(context).edit().clear().apply();
         user = null;
     }
 

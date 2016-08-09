@@ -59,7 +59,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return words.size();
+        return words == null ? 0 : words.size();
     }
 
     @Override
