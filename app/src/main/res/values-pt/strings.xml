@@ -48,7 +48,7 @@
     <string name="theme3">Tema 3</string>
     <string name="theme4">Tema 4</string>
     <string name="theme5">Tema 5</string>
-    <string name="quote">\"Somos uma impossibilidade em um universo impossível\"</string>
+    <string name="quote">\"Somos uma impossibilidade em um universo impossível\" - Ray Bradbury</string>
     <string name="translate_at_least_in_one_language">Traduza em pelo menos um idioma</string>
     <string name="type_alien_word">Digite a palavra alienígena</string>
     <string name="unknown_explorer">Explorador Desconhecido</string>
@@ -64,8 +64,8 @@
     <string name="close">Fechar</string>
     <string name="upgrade_to_pro_summary">Para quem não gosta de anúncios ou quer me pagar um {gmi-coffee}</string>
     <string name="upgrade_to_pro">Atualize para PRO</string>
-    <string name="discovered_new_race_summary">Envie o nome dela para nós</string>
-    <string name="discovered_new_race">Descobriu uma nova raça?</string>
+    <string name="discovered_new_race_summary">Envie o nome da raça para nós</string>
+    <string name="discovered_new_race">Descobriu um novo idioma alienígena?</string>
     <string name="translators">Tradutores</string>
     <string name="translators_summary">O aplicativo está em seu idioma nativo? Agradeça essas pessoas!</string>
     <string name="update">Atualizar</string>

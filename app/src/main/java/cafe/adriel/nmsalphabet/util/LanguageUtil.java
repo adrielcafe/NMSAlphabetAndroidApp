@@ -35,7 +35,7 @@ public class LanguageUtil {
             Util.getSettings(context)
                     .edit()
                     .putString(Constant.SETTINGS_ACCOUNT_LANGUAGE, languageCode)
-                    .commit();
+                    .apply();
         }
         return languageCode;
     }

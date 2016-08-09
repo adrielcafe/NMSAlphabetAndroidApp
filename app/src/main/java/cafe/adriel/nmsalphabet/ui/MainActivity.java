@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
-import com.gigamole.library.NavigationTabBar;
+import com.gigamole.library.ntb.NavigationTabBar;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.kobakei.ratethisapp.RateThisApp;
@@ -30,19 +31,19 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.BuildConfig;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.ui.util.ViewPagerFadeTransformer;
 import cafe.adriel.nmsalphabet.util.AdUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import co.mobiwise.materialintro.animation.MaterialIntroListener;
+import pl.tajchert.nammu.Nammu;
 
 public class MainActivity extends BaseActivity {
 
     private static Activity instance;
-    private static InterstitialAd interstitialAd;
-    private static WordsFragment homeFrag;
-    private static WordsFragment profileFrag;
-    private static TranslateFragment translateFrag;
+    private InterstitialAd interstitialAd;
+    private WordsFragment homeFrag;
+    private WordsFragment profileFrag;
+    private TranslateFragment translateFrag;
     private static boolean backPressed;
 
     @BindView(R.id.tabs)
@@ -62,7 +63,6 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         RateThisApp.onStart(this);
         RateThisApp.showRateDialogIfNeeded(this);
-        Util.askForPermissions(this);
         init();
     }
 
@@ -94,6 +94,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Nammu.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
     @OnClick(R.id.fab)
     public void addTranslation(){
         if(Util.isConnected(this)) {
@@ -114,7 +119,6 @@ public class MainActivity extends BaseActivity {
         fabView.setImageDrawable(fabIcon);
         pagerView.setOffscreenPageLimit(2);
         pagerView.setAdapter(new TabPagerAdapter(getSupportFragmentManager()));
-        pagerView.setPageTransformer(false, new ViewPagerFadeTransformer());
         interstitialAd = AdUtil.initInterstitialAd(this, new Runnable() {
             @Override
             public void run() {
@@ -204,7 +208,7 @@ public class MainActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Util.getSettings(activity).edit()
                                 .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
-                                .commit();
+                                .apply();
                         dialog.dismiss();
                         activity.finish();
                         activity.startActivity(new Intent(activity, SplashActivity.class));
