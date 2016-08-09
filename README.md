@@ -2,7 +2,7 @@
 
 > **NMS αβ** is an *unofficial* collaborative translator app for [No Man's Sky](http://no-mans-sky.com).
 
-![Get it on Google Play](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/google-play.png)
+[![Get it on Google Play](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/google-play.png)](https://play.google.com/store/apps/details?id=cafe.adriel.nmsalphabet.free "Get it on Google Play")
 
 ## Launch Video
 [![NMS Alphabet Video](http://img.youtube.com/vi/HGlN-uAjj_s/0.jpg)](https://www.youtube.com/watch?v=HGlN-uAjj_s "NMS Alphabet video")
