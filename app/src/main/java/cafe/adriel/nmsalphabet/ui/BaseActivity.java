@@ -32,11 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         tintBars();
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
-    }
-
     protected abstract void init();
 
     @TargetApi(19)

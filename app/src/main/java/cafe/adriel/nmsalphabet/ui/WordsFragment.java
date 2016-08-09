@@ -140,7 +140,12 @@ public class WordsFragment extends BaseFragment {
     public void onEvent(TranslationUpdatedEvent event) {
         if (type != null && type == Type.PROFILE) {
             EventBus.getDefault().removeStickyEvent(TranslationUpdatedEvent.class);
-            profileAdapter.updateWordAndTranslations(event.word, event.translations);
+            if(profileAdapter == null) {
+                initAdapter();
+            }
+            if(profileAdapter != null) {
+                profileAdapter.updateWordAndTranslations(event.word, event.translations);
+            }
         }
     }
 
@@ -304,7 +309,7 @@ public class WordsFragment extends BaseFragment {
              public void onClick(View v) {
                  Util.getSettings(getContext()).edit()
                          .putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false)
-                         .commit();
+                         .apply();
                  getActivity().finish();
                  startActivity(new Intent(getContext(), SplashActivity.class));
              }
@@ -465,7 +470,7 @@ public class WordsFragment extends BaseFragment {
     }
 
     private void setLoadingList(final boolean loading){
-        if(getActivity() != null) {
+        if(getActivity() != null && loadingView != null && refreshLayout != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

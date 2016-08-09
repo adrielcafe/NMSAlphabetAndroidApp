@@ -17,9 +17,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
@@ -46,6 +44,8 @@ import co.mobiwise.materialintro.shape.FocusGravity;
 import co.mobiwise.materialintro.view.MaterialIntroView;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 
 public class Util {
 
@@ -171,7 +171,7 @@ public class Util {
                     .setInfoText(activity.getString(textResId))
                     .setFocusGravity(FocusGravity.CENTER)
                     .setFocusType(Focus.NORMAL)
-                    .setDelayMillis(500)
+                    .setDelayMillis(250)
                     .setListener(listener)
                     .enableIcon(true)
                     .enableDotAnimation(true)
@@ -189,15 +189,17 @@ public class Util {
                 .startChooser();
     }
 
-    public static void askForPermissions(Activity context){
+    public static void askForPermissions(final Activity activity, PermissionCallback callback){
         List<String> missingPermissions = new ArrayList<>();
         for(int i = 0; i < PERMISSIONS.length; i++){
-            if(ContextCompat.checkSelfPermission(context, PERMISSIONS[i]) != PackageManager.PERMISSION_GRANTED){
+            if(!Nammu.checkPermission(PERMISSIONS[i])){
                 missingPermissions.add(PERMISSIONS[i]);
             }
         }
-        if(!missingPermissions.isEmpty()){
-            ActivityCompat.requestPermissions(context, missingPermissions.toArray(new String[missingPermissions.size()]), 0);
+        if(missingPermissions.isEmpty()){
+            callback.permissionGranted();
+        } else {
+            Nammu.askForPermission(activity, missingPermissions.toArray(new String[missingPermissions.size()]), callback);
         }
     }
 

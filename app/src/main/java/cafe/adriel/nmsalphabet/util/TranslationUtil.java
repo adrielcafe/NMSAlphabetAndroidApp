@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ import okhttp3.Response;
 
 public class TranslationUtil {
 
-    private static final String OCR_SPACE_API_URL   = "https://apifree2.ocr.space/parse/image";
+    private static final String OCR_SPACE_API_URL   = "https://api.ocr.space/parse/image";
     private static final String VISION_API_URL      = "https://vision.googleapis.com/v1/images:annotate?key=";
     private static final String VISION_API_BODY     =
             "{\"requests\": [{\"features\": [{\"type\": \"TEXT_DETECTION\"}],\"image\": {\"content\": \"%s\"}}]}";
@@ -55,6 +56,7 @@ public class TranslationUtil {
                 }
             } else {
                 text = extractTextWithOcrSpaceApi(activity, image);
+	            Log.e("OCRSPACE", text+"");
             }
             if(text == null){
                 activity.runOnUiThread(new Runnable() {
@@ -85,7 +87,7 @@ public class TranslationUtil {
                     .header("Content-Type", "application/json")
                     .build();
             Response response = Util.getHttpClient().newCall(request).execute();
-            if(response.code() >= 200 && response.code() < 300) {
+            if(response.isSuccessful()) {
                 JSONObject json = new JSONObject(response.body().string());
                 return json.getJSONArray("responses")
                         .getJSONObject(0)
@@ -115,15 +117,14 @@ public class TranslationUtil {
                     .post(formBody)
                     .build();
             Response response = Util.getHttpClient().newCall(request).execute();
-            if(response.code() >= 200 && response.code() < 300) {
+            if(response.isSuccessful()) {
                 JSONObject json = new JSONObject(response.body().string());
                 final String error = json.getString("ErrorMessage");
                 if (Util.isEmpty(error)) {
-                    String text = json.getJSONArray("ParsedResults")
+                    return json.getJSONArray("ParsedResults")
                             .getJSONObject(0)
                             .getString("ParsedText")
                             .toUpperCase();
-                    return text;
                 } else {
                     activity.runOnUiThread(new Runnable() {
                         @Override
