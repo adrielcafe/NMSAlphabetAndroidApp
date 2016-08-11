@@ -259,7 +259,9 @@ public class WordsFragment extends BaseFragment {
         searchView.post(new Runnable() {
             @Override
             public void run() {
-                racesView.setHeight(searchClearView.getHeight());
+                if(racesView != null) {
+                    racesView.setHeight(searchClearView.getHeight());
+                }
             }
         });
     }
