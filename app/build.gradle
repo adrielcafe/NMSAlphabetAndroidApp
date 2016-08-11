@@ -77,10 +77,10 @@ dependencies {
 
     compile 'com.mikepenz:iconics-core:2.7.2@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.2@aar'
-    compile 'com.github.ybq:Android-SpinKit:1.0.4@aar'
+    compile 'com.github.ybq:Android-SpinKit:1.0.5@aar'
     compile 'com.github.2359media:EasyAndroidAnimations:0.8@aar'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4@aar'
-    compile 'com.github.devlight.navigationtabbar:library:1.2.0@aar'
+    compile 'com.github.devlight.navigationtabbar:navigationtabbar:1.2.3@aar'
     compile 'com.jaredrummler:material-spinner:1.1.0@aar'
     compile 'com.rohit.recycleritemclicksupport:recycleritemclicksupport:1.0.1@aar'
     compile 'com.ramotion.foldingcell:folding-cell:1.0.1@aar'

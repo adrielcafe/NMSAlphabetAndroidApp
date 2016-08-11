@@ -15,7 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
-import com.gigamole.library.ntb.NavigationTabBar;
+import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.kobakei.ratethisapp.RateThisApp;
@@ -160,6 +160,7 @@ public class MainActivity extends BaseActivity {
                 .Builder(getResources().getDrawable(userGender.equals(Constant.GENDER_FEMALE) ? R.drawable.tab_profile_female : R.drawable.tab_profile_male), tabColor)
                 .title(getString(R.string.profile)).build());
         tabView.setModels(models);
+        tabView.setBgColor(ThemeUtil.getPrimaryColor(this));
         tabView.setViewPager(pagerView);
         tabView.setOnTabBarSelectedIndexListener(new NavigationTabBar.OnTabBarSelectedIndexListener() {
             @Override

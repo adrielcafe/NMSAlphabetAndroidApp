@@ -477,15 +477,19 @@ public class WordsFragment extends BaseFragment {
                 @Override
                 public void run() {
                     try {
-                        if (loading && !refreshLayout.isRefreshing()) {
-                            new FadeInAnimation(loadingView).animate();
-                        } else if(loadingView.getVisibility() == View.VISIBLE){
-                            Util.asyncCall(500, new Runnable() {
-                                @Override
-                                public void run() {
-                                    new FadeOutAnimation(loadingView).animate();
-                                }
-                            });
+                        if(loadingView != null) {
+                            if (loading && !refreshLayout.isRefreshing()) {
+                                new FadeInAnimation(loadingView).animate();
+                            } else if (loadingView.getVisibility() == View.VISIBLE) {
+                                Util.asyncCall(500, new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(loadingView != null) {
+                                            new FadeOutAnimation(loadingView).animate();
+                                        }
+                                    }
+                                });
+                            }
                         }
                     } catch (Exception e){ }
                 }
