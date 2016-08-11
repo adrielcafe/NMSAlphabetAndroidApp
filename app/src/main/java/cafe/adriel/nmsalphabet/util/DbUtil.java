@@ -289,11 +289,11 @@ public class DbUtil {
     }
 
     public static Map<String, AlienWordTranslation> translateWords(List<String> words, AlienRace race, String language){
-        Map<String, Object> params = new HashMap<>();
-        params.put("words", words);
-        params.put("raceId", race.getObjectId());
-        params.put("language", language);
         try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("words", words);
+            params.put("raceId", race.getObjectId());
+            params.put("language", language);
             return ParseCloud.callFunction("translateWords", params);
         } catch (Exception e){
             e.printStackTrace();
