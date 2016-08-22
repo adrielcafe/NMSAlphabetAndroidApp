@@ -34,13 +34,6 @@
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme1.NoActionBar"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity
-            android:name=".ui.TranslationEditorActivity"
-            android:label="@string/new_translation"
             android:theme="@style/AppTheme1"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

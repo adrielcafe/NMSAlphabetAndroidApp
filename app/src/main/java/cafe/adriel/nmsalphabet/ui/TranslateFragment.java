@@ -27,8 +27,6 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
-import com.parse.GetCallback;
-import com.parse.ParseException;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,7 +52,6 @@ import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.TranslationUtil;
 import cafe.adriel.nmsalphabet.util.Util;
-import mehdi.sakout.dynamicbox.DynamicBox;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.tajchert.nammu.PermissionCallback;
@@ -66,7 +63,6 @@ public class TranslateFragment extends BaseFragment {
     private String languageCode;
     private AlienRace selectedRace;
     private List<AlienWordTranslation> translations;
-    private DynamicBox viewState;
 
     @BindView(R.id.controls_layout)
     LinearLayout controlsLayout;
@@ -182,18 +178,17 @@ public class TranslateFragment extends BaseFragment {
 
     @Override
     protected void init(){
-        viewState = TranslationUtil.createViewState(getContext(), translationLayout);
         translatedPhraseView.setMovementMethod(new TextViewClickMovement(getContext(), new TextViewClickMovement.OnTextViewClickMovementListener() {
             @Override
             public void onLinkClicked(String linkText, TextViewClickMovement.LinkType linkType) {
-                showWordTranslationsDialog(linkText);
+//                AlienWordTranslation translation = getTranslation(text);
+//                if(translation != null){
+//                    Toast.makeText(getContext(), translation.getWord().getWord(), Toast.LENGTH_SHORT).show();
+//                }
             }
             @Override
             public void onLongClick(String text) {
-                AlienWordTranslation translation = getTranslation(text);
-                if(translation != null){
-                    Toast.makeText(getContext(), translation.getWord().getWord(), Toast.LENGTH_SHORT).show();
-                }
+
             }
         }));
         initControls();
@@ -301,7 +296,6 @@ public class TranslateFragment extends BaseFragment {
             if (Util.isNotEmpty(phrase) && selectedRace != null) {
                 translations = new ArrayList<>();
                 translatedPhraseView.setText("");
-                viewState.showCustomView(Constant.STATE_LOADING);
                 AnalyticsUtil.translateEvent(selectedRace, phrase);
                 AsyncTask.execute(new Runnable() {
                     @Override
@@ -347,34 +341,6 @@ public class TranslateFragment extends BaseFragment {
         translationSeparatorView.setVisibility(View.VISIBLE);
         translationLayout.setVisibility(View.VISIBLE);
         translatedPhraseView.setText(Html.fromHtml(translatedPhraseStr));
-        if(Util.isNotEmpty(translatedPhraseStr)) {
-            viewState.hideAll();
-        } else {
-            viewState.showCustomView(Constant.STATE_EMPTY);
-        }
-    }
-
-    private void showWordTranslationsDialog(String translation){
-        AlienWordTranslation t = getTranslation(translation);
-        if(t != null) {
-            t.fetchIfNeededInBackground(new GetCallback<AlienWordTranslation>() {
-                @Override
-                public void done(AlienWordTranslation object, ParseException e) {
-                    TranslationUtil.showTranslationsDialog(getContext(), object.getRace(), object.getWord(), languageCode);
-                }
-            });
-        }
-    }
-
-    private AlienWordTranslation getTranslation(String translation){
-        if(translations != null) {
-            for (AlienWordTranslation t : translations) {
-                if (t != null && t.getTranslation().equals(translation)) {
-                    return t;
-                }
-            }
-        }
-        return null;
     }
 
     private boolean isPhraseValid(){

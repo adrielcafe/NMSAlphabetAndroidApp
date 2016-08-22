@@ -19,7 +19,7 @@ public class LanguageUtil {
     public static final String LANGUAGE_DE = "de";
 
     public static String getCurrentLanguageCode(Context context){
-        String languageCode = Util.getSettings(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, null);
+        String languageCode = Util.getSettings(context).getString(Constant.SETTINGS_GENERAL_LANGUAGE, null);
         if(Util.isEmpty(languageCode)) {
             Configuration conf = context.getResources().getConfiguration();
             switch (conf.locale.getLanguage()){
@@ -34,7 +34,7 @@ public class LanguageUtil {
             }
             Util.getSettings(context)
                     .edit()
-                    .putString(Constant.SETTINGS_ACCOUNT_LANGUAGE, languageCode)
+                    .putString(Constant.SETTINGS_GENERAL_LANGUAGE, languageCode)
                     .apply();
         }
         return languageCode;

@@ -4,9 +4,6 @@ import com.parse.ParseUser;
 
 import java.io.Serializable;
 
-import cafe.adriel.nmsalphabet.Constant;
-import cafe.adriel.nmsalphabet.util.Util;
-
 public class User extends ParseUser implements Serializable {
 
     public String getName(){
@@ -19,7 +16,7 @@ public class User extends ParseUser implements Serializable {
 
     public String getGender(){
         String gender = getString("gender");
-        return Util.isEmpty(gender) ? Constant.GENDER_MALE : gender;
+        return gender;
     }
 
     public void setGender(String gender){

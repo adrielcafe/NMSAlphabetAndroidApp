@@ -1,7 +1,6 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
@@ -13,7 +12,6 @@ import android.widget.LinearLayout;
 
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
-import com.tsengvn.typekit.TypekitContextWrapper;
 
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
@@ -62,12 +60,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 contentLayout.setPaddingRelative(0, contentLayout.getPaddingTop(), 0, Util.getNavigationBarHeight(this));
             } else if(Build.VERSION.SDK_INT == 18){
                 contentLayout.setPaddingRelative(0, 0, 0, 0);
-                if(this instanceof TranslationEditorActivity){
-                    LinearLayout childView = (LinearLayout) findViewById(R.id.form_layout);
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) childView.getLayoutParams();
-                    params.topMargin = 0;
-                    childView.setLayoutParams(params);
-                } else if(this instanceof SettingsActivity){
+                if(this instanceof SettingsActivity){
                     LinearLayout childView = (LinearLayout) contentLayout.getChildAt(0);
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) childView.getLayoutParams();
                     params.topMargin = params.bottomMargin;

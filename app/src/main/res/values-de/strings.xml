@@ -85,5 +85,6 @@
     <string name="current_version_not_supported">Die installierte Version der App wird nicht mehr unterstützt</string>
     <string name="app_name"></string>
     <string name="race">Rasse</string>
+    <string name="general">Allgemein</string>
 
 </resources>

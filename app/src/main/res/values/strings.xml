@@ -47,6 +47,7 @@
     <string name="language">Language</string>
     <string name="theme">Theme</string>
     <string name="about">About</string>
+    <string name="general">General</string>
     <string name="translators">Translators</string>
     <string name="translators_summary">This app is in your native language? Then thank these folks!</string>
     <string name="discovered_new_race">Did you discover a new alien language?</string>

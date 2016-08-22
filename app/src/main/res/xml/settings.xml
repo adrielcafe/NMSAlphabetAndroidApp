@@ -2,14 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:key="account"
-        android:title="@string/account">
-
-        <Preference
-            android:key="account_status" />
+        android:key="general"
+        android:title="@string/general">
 
         <ListPreference
-            android:key="account_language"
+            android:key="general_language"
             android:title="@string/language"
             android:dialogTitle="@string/language"
             android:entries="@array/language_entries"
@@ -17,7 +14,7 @@
             android:defaultValue="en"/>
 
         <cafe.adriel.nmsalphabet.ui.adapter.ThemePreferenceAdapter
-            android:key="account_theme"
+            android:key="general_theme"
             android:title="@string/theme"
             android:dialogTitle="@string/theme"
             android:entries="@array/theme_entries"
@@ -25,7 +22,7 @@
             android:defaultValue="theme1"/>
 
         <Preference
-            android:key="account_upgrade_pro"
+            android:key="general_upgrade_pro"
             android:title="@string/upgrade_to_pro"
             android:summary="@string/upgrade_to_pro_summary" />
 
@@ -34,11 +31,6 @@
     <PreferenceCategory
         android:key="about"
         android:title="@string/about">
-
-        <Preference
-            android:key="about_new_race"
-            android:title="@string/discovered_new_race"
-            android:summary="@string/discovered_new_race_summary" />
 
         <Preference
             android:key="about_feedback"

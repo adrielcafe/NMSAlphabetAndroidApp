@@ -84,5 +84,6 @@
     <string name="intro_translate">Traduza frases alienígenas com sua câmera</string>
     <string name="check_if_phrase_is_correct">Verifique se a frase está correta</string>
     <string name="select_phrase_on_image">Selecione a frase na imagem</string>
+    <string name="general">Geral</string>
 
 </resources>
