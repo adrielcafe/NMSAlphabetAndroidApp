@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.R;
+import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class SplashActivity extends BaseActivity {
@@ -70,7 +71,7 @@ public class SplashActivity extends BaseActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                App.loadAndCache();
+                DbUtil.cacheData();
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }

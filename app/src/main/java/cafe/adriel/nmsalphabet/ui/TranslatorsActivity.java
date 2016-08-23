@@ -70,13 +70,13 @@ public class TranslatorsActivity extends BaseActivity {
         if(showCountryFlag) {
             switch (language) {
                 case LanguageUtil.LANGUAGE_EN:
-                    holder.countryFlagView.setImageResource(R.drawable.flag_uk_big);
+                    holder.countryFlagView.setImageResource(R.drawable.flag_en_big);
                     break;
                 case LanguageUtil.LANGUAGE_PT:
-                    holder.countryFlagView.setImageResource(R.drawable.flag_brazil_big);
+                    holder.countryFlagView.setImageResource(R.drawable.flag_pt_big);
                     break;
                 case LanguageUtil.LANGUAGE_DE:
-                    holder.countryFlagView.setImageResource(R.drawable.flag_germany_big);
+                    holder.countryFlagView.setImageResource(R.drawable.flag_de_big);
                     break;
             }
         }

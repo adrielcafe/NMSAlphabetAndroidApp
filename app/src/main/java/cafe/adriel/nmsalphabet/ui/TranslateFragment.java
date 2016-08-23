@@ -50,7 +50,7 @@ import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
-import cafe.adriel.nmsalphabet.util.TranslationUtil;
+import cafe.adriel.nmsalphabet.util.OcrUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -61,8 +61,8 @@ public class TranslateFragment extends BaseFragment {
     private static final int REQUEST_PICK_PICTURE = 0;
 
     private String languageCode;
-    private AlienRace selectedRace;
-    private List<AlienWordTranslation> translations;
+    private String selectedRace;
+    private List<String> translations;
 
     @BindView(R.id.controls_layout)
     LinearLayout controlsLayout;
@@ -134,7 +134,7 @@ public class TranslateFragment extends BaseFragment {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                final String text = TranslationUtil.extractTextFromImage(getActivity(), event.image);
+                final String text = OcrUtil.extractTextFromImage(getActivity(), event.image);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -197,7 +197,7 @@ public class TranslateFragment extends BaseFragment {
     }
 
     private void initControls(){
-        List<String> races = DbUtil.getRacesName();
+        List<String> races = DbUtil.getRaces();
         races.add(0, getString(R.string.select_alien_race));
 
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
@@ -208,7 +208,7 @@ public class TranslateFragment extends BaseFragment {
         racesView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                selectedRace = DbUtil.getRaceByName(item);
+                selectedRace = item;
                 translatePhrase();
             }
         });
@@ -301,7 +301,7 @@ public class TranslateFragment extends BaseFragment {
                     @Override
                     public void run() {
                         final String[] words = phrase.split(" ");
-                        final Map<String, AlienWordTranslation> translatedWords = DbUtil
+                        final Map<String, String> translatedWords = DbUtil
                                 .translateWords(Arrays.asList(words), selectedRace, languageCode);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -321,14 +321,14 @@ public class TranslateFragment extends BaseFragment {
         startActivity(i);
     }
 
-    private void updateTranslatedPhrase(String[] words, Map<String, AlienWordTranslation> translatedWords){
+    private void updateTranslatedPhrase(String[] words, Map<String, String> translatedWords){
         final StringBuilder translatedPhrase = new StringBuilder();
         if(translatedWords != null){
             for(String word : words){
                 if(translatedWords.containsKey(word)) {
-                    AlienWordTranslation translation = translatedWords.get(word);
+                    String translation = translatedWords.get(word);
                     translations.add(translation);
-                    translatedPhrase.append("<a href='http://nms.ab'>" + translation.getTranslation() + "</a>");
+                    translatedPhrase.append("<a href='http://nms.ab'>" + translation + "</a>");
                 } else {
                     translatedPhrase.append("<font color='#D32F2F'>" + word + "</font>");
                 }

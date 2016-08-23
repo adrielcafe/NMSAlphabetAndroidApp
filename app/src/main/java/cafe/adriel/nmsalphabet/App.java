@@ -93,10 +93,6 @@ public class App extends MultiDexApplication {
         return Util.getPackageName(context).equals(Util.getProPackageName(context));
     }
 
-    public static void loadAndCache(){
-        DbUtil.cacheData();
-    }
-
     public static boolean forceUpdate(Context context){
         try {
             int updateVersion = ParseConfig.get().getInt("FORCE_UPDATE_VERSION", -1);

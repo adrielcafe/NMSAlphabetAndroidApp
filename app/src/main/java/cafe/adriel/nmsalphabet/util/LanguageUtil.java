@@ -70,13 +70,13 @@ public class LanguageUtil {
         try {
             if(language.equals(english) || language.equals(LANGUAGE_EN)){
                 languageCode = LANGUAGE_EN;
-                flagResId = R.drawable.flag_uk_small;
+                flagResId = R.drawable.flag_en_small;
             } else if(language.equals(portuguese) || language.equals(LANGUAGE_PT)){
                 languageCode = LANGUAGE_PT;
-                flagResId = R.drawable.flag_brazil_small;
+                flagResId = R.drawable.flag_pt_small;
             } else if(language.equals(german) || language.equals(LANGUAGE_DE)){
                 languageCode = LANGUAGE_DE;
-                flagResId = R.drawable.flag_germany_small;
+                flagResId = R.drawable.flag_de_small;
             }
             languageView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
         } catch (Exception e){ }
@@ -86,11 +86,11 @@ public class LanguageUtil {
     public static Drawable getLanguageFlagDrawable(Context context, String language){
         switch (language){
             case LANGUAGE_PT:
-                return context.getResources().getDrawable(R.drawable.flag_brazil_small);
+                return context.getResources().getDrawable(R.drawable.flag_pt_small);
             case LANGUAGE_DE:
-                return context.getResources().getDrawable(R.drawable.flag_germany_small);
+                return context.getResources().getDrawable(R.drawable.flag_de_small);
             default:
-                return context.getResources().getDrawable(R.drawable.flag_uk_small);
+                return context.getResources().getDrawable(R.drawable.flag_en_small);
         }
     }
 

@@ -29,7 +29,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo"/>
+        android:src="@drawable/logo_splash"/>
 
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/load"

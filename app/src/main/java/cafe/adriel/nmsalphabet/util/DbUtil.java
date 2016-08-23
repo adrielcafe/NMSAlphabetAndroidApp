@@ -1,125 +1,68 @@
 package cafe.adriel.nmsalphabet.util;
 
-import com.parse.ParseCloud;
-import com.parse.ParseQuery;
-
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import cafe.adriel.nmsalphabet.model.AlienRace;
-import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
+import cafe.adriel.nmsalphabet.Constant;
 import io.paperdb.Paper;
 
 public class DbUtil {
-    public static int PAGE_SIZE_LIKE_DISLIKE        = 100;
-    public static int PAGE_SIZE_RACES               = 100;
+    private static final String BOOK_NAME = "nmsalphabet";
+    private static final String BOOK_KEY_WORDS = "alienWords";
+    private static final String BOOK_KEY_TRANSLATIONS = "alienWordsTranslations";
 
-    private static List<AlienRace> races;
-    private static LinkedList<String> likes;
-    private static LinkedList<String> dislikes;
+    private static List<String> alienRaces;
+    private static Map<String, Integer> alienWords;
+    private static Map<String, List<String>> alienWordsTranslations;
 
     public static void cacheData(){
         Paper.book().destroy();
-        try {
-            List<AlienRace> races = ParseQuery.getQuery(AlienRace.class)
-                    .addAscendingOrder("name")
-                    .setLimit(PAGE_SIZE_RACES)
-                    .find();
-            AlienRace.unpinAll();
-            AlienRace.pinAllInBackground(races);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        try {
-            List<AlienWordTranslation> likedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
-//                    .whereEqualTo("likes", App.getUser())
-                    .selectKeys(Collections.singletonList("objectId"))
-                    .setLimit(PAGE_SIZE_LIKE_DISLIKE)
-                    .find();
-            List<AlienWordTranslation> dislikedTranslations = ParseQuery.getQuery(AlienWordTranslation.class)
-//                    .whereEqualTo("dislikes", App.getUser())
-                    .selectKeys(Collections.singletonList("objectId"))
-                    .setLimit(PAGE_SIZE_LIKE_DISLIKE)
-                    .find();
-
-            likes = new LinkedList<>();
-            dislikes = new LinkedList<>();
-
-            for(AlienWordTranslation translation : likedTranslations){
-                likes.add(translation.getObjectId());
-            }
-            for(AlienWordTranslation translation : dislikedTranslations){
-                dislikes.add(translation.getObjectId());
-            }
-
-            Paper.book().write("likes", likes);
-            Paper.book().write("dislikes", dislikes);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        Paper.book(BOOK_NAME)
+                .write(BOOK_KEY_WORDS, TranslationUtil.getAllRaceWords());
+        Paper.book(BOOK_NAME)
+                .write(BOOK_KEY_TRANSLATIONS, TranslationUtil.getAllTranslations());
     }
 
     private static void loadCachedData(){
-        if(races == null){
-            try {
-                races = ParseQuery.getQuery(AlienRace.class)
-                        .addAscendingOrder("name")
-                        .fromLocalDatastore()
-                        .find();
-            } catch (Exception e){
-                e.printStackTrace();
+        if(alienRaces == null) {
+            alienRaces = new ArrayList<>();
+            for (String race : Constant.ALIEN_RACES.keySet()){
+                alienRaces.add(Constant.ALIEN_RACES.get(race));
             }
         }
-        if(likes == null){
-            likes = Paper.book().read("likes", new LinkedList<String>());
+        if(alienWords == null){
+            alienWords = Paper.book(BOOK_NAME).read(BOOK_KEY_WORDS);
         }
-        if(dislikes == null){
-            dislikes = Paper.book().read("dislikes", new LinkedList<String>());
+        if(alienWordsTranslations == null){
+            alienWordsTranslations = Paper.book(BOOK_NAME).read(BOOK_KEY_TRANSLATIONS);
         }
     }
 
-    public static AlienRace getRaceByName(String name){
+    public static List<String> getRaces(){
         loadCachedData();
-        for(AlienRace race : races){
-            if(race.getName().toUpperCase().equals(name.toUpperCase())){
-                return race;
-            }
-        }
-        return null;
+        return alienRaces;
     }
 
-    public static AlienRace getRaceByPosition(int position){
+    public static String getRaceByPosition(int position){
         loadCachedData();
-        if(races.size() < position){
-            return races.get(position);
+        if(alienRaces.size() < position){
+            return alienRaces.get(position);
         } else {
             return null;
         }
     }
 
-    public static List<String> getRacesName(){
-        loadCachedData();
-        List<String> racesName = new ArrayList<>();
-        for(AlienRace race : races){
-            racesName.add(race.getName());
+    public static Map<String, String> translateWords(List<String> words, String race, String language){
+        List<String> wordsTranslations = alienWordsTranslations.get(language);
+        Map<String, String> wordsTranslated = new HashMap<>();
+        for(String word : words){
+            if(alienWords.keySet().contains(word)){
+                wordsTranslated.put(word, wordsTranslations.get(alienWords.get(word)));
+            }
         }
-        return racesName;
-    }
-
-    public static Map<String, AlienWordTranslation> translateWords(List<String> words, AlienRace race, String language){
-        try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("words", words);
-            params.put("raceId", race.getObjectId());
-            params.put("language", language);
-            return ParseCloud.callFunction("translateWords", params);
-        } catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
+        return wordsTranslated;
     }
 }

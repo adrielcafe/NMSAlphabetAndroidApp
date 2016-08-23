@@ -15,10 +15,10 @@ public class AnalyticsUtil {
         }
     }
 
-    public static void translateEvent(AlienRace race, String phrase){
+    public static void translateEvent(String race, String phrase){
         if(isInitialized()) {
             Answers.getInstance().logCustom(new CustomEvent("translate")
-                    .putCustomAttribute("race", race == null ? "" : race.getName())
+                    .putCustomAttribute("race", race == null ? "" : race)
                     .putCustomAttribute("phrase", phrase));
         }
     }
