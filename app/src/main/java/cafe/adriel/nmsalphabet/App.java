@@ -15,11 +15,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.SubscriberExceptionEvent;
 
-import cafe.adriel.nmsalphabet.model.AlienRace;
-import cafe.adriel.nmsalphabet.model.AlienWord;
-import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
-import cafe.adriel.nmsalphabet.model.User;
-import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import io.fabric.sdk.android.Fabric;
@@ -71,18 +66,6 @@ public class App extends MultiDexApplication {
     }
 
     private void initParse(){
-        ParseObject.registerSubclass(User.class);
-        ParseObject.registerSubclass(AlienRace.class);
-        ParseObject.registerSubclass(AlienWord.class);
-        ParseObject.registerSubclass(AlienWordTranslation.class);
-
-        // TODO Don't use Parse Server until get ready for production
-//        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-//                .applicationId(getString(R.string.parse_app_id))
-//                .server(Constant.PARSE_SERVER_URL)
-//                .enableLocalDataStore()
-//                .build());
-
         Parse.enableLocalDatastore(this);
         Parse.initialize(this);
         Parse.setLogLevel(BuildConfig.DEBUG ? Parse.LOG_LEVEL_VERBOSE : Parse.LOG_LEVEL_NONE);

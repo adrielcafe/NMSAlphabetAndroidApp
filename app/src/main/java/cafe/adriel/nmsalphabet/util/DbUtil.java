@@ -1,7 +1,6 @@
 package cafe.adriel.nmsalphabet.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +14,13 @@ public class DbUtil {
     private static final String BOOK_KEY_TRANSLATIONS = "alienWordsTranslations";
 
     private static List<String> alienRaces;
-    private static Map<String, Integer> alienWords;
+    private static Map<String, List<Triple<String, String, Integer>>> alienWords;
     private static Map<String, List<String>> alienWordsTranslations;
 
     public static void cacheData(){
         Paper.book().destroy();
         Paper.book(BOOK_NAME)
-                .write(BOOK_KEY_WORDS, TranslationUtil.getAllRaceWords());
+                .write(BOOK_KEY_WORDS, TranslationUtil.getAllWords());
         Paper.book(BOOK_NAME)
                 .write(BOOK_KEY_TRANSLATIONS, TranslationUtil.getAllTranslations());
     }
@@ -55,12 +54,15 @@ public class DbUtil {
         }
     }
 
-    public static Map<String, String> translateWords(List<String> words, String race, String language){
+    public static Map<String, String> translateWords(List<String> queryWords, String race, String language){
+        List<Triple<String, String, Integer>> words = alienWords.get(race);
         List<String> wordsTranslations = alienWordsTranslations.get(language);
         Map<String, String> wordsTranslated = new HashMap<>();
-        for(String word : words){
-            if(alienWords.keySet().contains(word)){
-                wordsTranslated.put(word, wordsTranslations.get(alienWords.get(word)));
+        for(String word : queryWords){
+            for(Triple<String, String, Integer> w : words) {
+                if (w.getB().equalsIgnoreCase(word)) {
+                    wordsTranslated.put(word, wordsTranslations.get(w.getC()));
+                }
             }
         }
         return wordsTranslated;

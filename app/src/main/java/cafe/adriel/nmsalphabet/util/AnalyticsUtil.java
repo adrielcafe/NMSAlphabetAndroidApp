@@ -3,7 +3,6 @@ package cafe.adriel.nmsalphabet.util;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
-import cafe.adriel.nmsalphabet.model.AlienRace;
 import io.fabric.sdk.android.Fabric;
 
 public class AnalyticsUtil {

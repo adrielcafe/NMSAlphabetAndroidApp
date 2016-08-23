@@ -43,14 +43,12 @@ import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.ImageCroppedEvent;
-import cafe.adriel.nmsalphabet.model.AlienRace;
-import cafe.adriel.nmsalphabet.model.AlienWordTranslation;
 import cafe.adriel.nmsalphabet.ui.util.TextViewClickMovement;
 import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
 import cafe.adriel.nmsalphabet.util.DbUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
-import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.OcrUtil;
+import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -328,9 +326,9 @@ public class TranslateFragment extends BaseFragment {
                 if(translatedWords.containsKey(word)) {
                     String translation = translatedWords.get(word);
                     translations.add(translation);
-                    translatedPhrase.append("<a href='http://nms.ab'>" + translation + "</a>");
+                    translatedPhrase.append("<a href='http://nms.ab'>" + translation.toUpperCase() + "</a>");
                 } else {
-                    translatedPhrase.append("<font color='#D32F2F'>" + word + "</font>");
+                    translatedPhrase.append("<font color='#D32F2F'>" + word.toUpperCase() + "</font>");
                 }
                 translatedPhrase.append(" ");
             }
