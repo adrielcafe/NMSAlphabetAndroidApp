@@ -223,6 +223,12 @@ public class Util {
         return context.getPackageName();
     }
 
+    public static String getFreePackageName(Context context){
+        return getPackageName(context)
+                .replace("dev", "free")
+                .replace("pro", "free");
+    }
+
     public static String getProPackageName(Context context){
         return getPackageName(context)
                 .replace("dev", "pro")
@@ -230,7 +236,7 @@ public class Util {
     }
 
     public static String getGooglePlayUrl(Context context){
-        return Constant.GOOGLE_PLAY_URL + getPackageName(context);
+        return Constant.GOOGLE_PLAY_URL + getFreePackageName(context);
     }
 
     public static void openUrl(Activity activity, String url){
