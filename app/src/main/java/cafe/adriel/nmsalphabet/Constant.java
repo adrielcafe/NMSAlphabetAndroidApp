@@ -32,18 +32,18 @@ public class Constant {
         put("vikeen", "Vi'keen");
     }};
     
-    public static final List<Triple<String, String, Integer>> LANGUAGES = Arrays.asList(
-        new Triple<>("en", "English", R.drawable.flag_en_small),
-        new Triple<>("pt", "Português", R.drawable.flag_pt_small),
-        new Triple<>("de", "Deutsch", R.drawable.flag_de_small),
-        new Triple<>("it", "Italiano", R.drawable.flag_it_small),
-        new Triple<>("fr", "Français", R.drawable.flag_fr_small),
-        new Triple<>("es", "Español", R.drawable.flag_es_small),
-        new Triple<>("nl", "Nederlandse", R.drawable.flag_nl_small),
-        new Triple<>("ru", "Pусский", R.drawable.flag_ru_small),
-        new Triple<>("ja", "日本語", R.drawable.flag_ja_small),
-        new Triple<>("ko", "한국말", R.drawable.flag_ko_small)
-    );
+    public static final Map<String, String> TRANSLATION_LANGUAGES = new HashMap<String, String>() {{
+        put("en", "English");
+        put("pt", "Português");
+        put("de", "Deutsch");
+        put("it", "Italiano");
+        put("fr", "Français");
+        put("es", "Español");
+        put("nl", "Nederlandse");
+        put("ru", "Pусский");
+        put("ja", "日本語");
+        put("ko", "한국말");
+    }};
 
     public static final List<Triple<String, String, String>> TRANSLATORS = Arrays.asList(
         new Triple<>(LanguageUtil.LANGUAGE_EN, "Adriel Café", "@adrielcafe"),

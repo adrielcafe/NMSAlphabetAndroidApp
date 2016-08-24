@@ -45,10 +45,11 @@ import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.event.ImageCroppedEvent;
 import cafe.adriel.nmsalphabet.ui.util.TextViewClickMovement;
 import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
-import cafe.adriel.nmsalphabet.util.DbUtil;
+import cafe.adriel.nmsalphabet.util.CacheUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.OcrUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
+import cafe.adriel.nmsalphabet.util.TranslationUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -95,7 +96,7 @@ public class TranslateFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, languageCode);
+        languageCode = TranslationUtil.updateLanguageFlag(getContext(), languageView, languageCode);
     }
 
     @Override
@@ -195,7 +196,7 @@ public class TranslateFragment extends BaseFragment {
     }
 
     private void initControls(){
-        List<String> races = DbUtil.getRaces();
+        List<String> races = CacheUtil.getRaces();
         races.add(0, getString(R.string.select_alien_race));
 
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
@@ -255,14 +256,14 @@ public class TranslateFragment extends BaseFragment {
     }
 
     private void initLanguage(){
-        String[] languages = getContext().getResources().getStringArray(R.array.language_entries);
+        List<String> languages = TranslationUtil.getLanguages();
         int languageIndex = 0;
 
         if(languageCode == null){
             languageCode = LanguageUtil.getCurrentLanguageCode(getContext());
         }
-        for (int i = 0; i < languages.length; i++){
-            if(languages[i].equals(LanguageUtil.languageCodeToLanguage(getContext(), languageCode))){
+        for (int i = 0; i < languages.size(); i++){
+            if(languages.get(i).equals(LanguageUtil.languageCodeToLanguage(getContext(), languageCode))){
                 languageIndex = i;
             }
         }
@@ -276,12 +277,12 @@ public class TranslateFragment extends BaseFragment {
         languageView.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, item);
+                languageCode = TranslationUtil.updateLanguageFlag(getContext(), languageView, item);
                 translatePhrase();
             }
         });
 
-        languageCode = LanguageUtil.updateLanguageFlag(getContext(), languageView, languageCode);
+        languageCode = TranslationUtil.updateLanguageFlag(getContext(), languageView, languageCode);
     }
 
     private void translatePhrase(){
@@ -289,7 +290,7 @@ public class TranslateFragment extends BaseFragment {
             final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
             Util.hideSoftKeyboard(getActivity());
             if(selectedRace == null){
-                selectedRace = DbUtil.getRaceByPosition(racesView.getSelectedIndex());
+                selectedRace = CacheUtil.getRaceByPosition(racesView.getSelectedIndex());
             }
             if (Util.isNotEmpty(phrase) && selectedRace != null) {
                 translations = new ArrayList<>();
@@ -299,7 +300,7 @@ public class TranslateFragment extends BaseFragment {
                     @Override
                     public void run() {
                         final String[] words = phrase.split(" ");
-                        final Map<String, String> translatedWords = DbUtil
+                        final Map<String, String> translatedWords = CacheUtil
                                 .translateWords(Arrays.asList(words), selectedRace, languageCode);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -326,7 +327,7 @@ public class TranslateFragment extends BaseFragment {
                 if(translatedWords.containsKey(word)) {
                     String translation = translatedWords.get(word);
                     translations.add(translation);
-                    translatedPhrase.append("<a href='http://nms.ab'>" + translation.toUpperCase() + "</a>");
+                    translatedPhrase.append(translation.toUpperCase());
                 } else {
                     translatedPhrase.append("<font color='#D32F2F'>" + word.toUpperCase() + "</font>");
                 }

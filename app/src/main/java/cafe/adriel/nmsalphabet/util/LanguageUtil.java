@@ -5,8 +5,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-import com.jaredrummler.materialspinner.MaterialSpinner;
-
 import java.util.Locale;
 
 import cafe.adriel.nmsalphabet.Constant;
@@ -59,28 +57,6 @@ public class LanguageUtil {
         Configuration conf = res.getConfiguration();
         conf.locale = new Locale(language.toLowerCase());
         res.updateConfiguration(conf, res.getDisplayMetrics());
-    }
-
-    public static String updateLanguageFlag(Context context, MaterialSpinner languageView, String language){
-        String languageCode = null;
-        String english = context.getString(R.string.english);
-        String portuguese = context.getString(R.string.portuguese);
-        String german = context.getString(R.string.german);
-        int flagResId = -1;
-        try {
-            if(language.equals(english) || language.equals(LANGUAGE_EN)){
-                languageCode = LANGUAGE_EN;
-                flagResId = R.drawable.flag_en_small;
-            } else if(language.equals(portuguese) || language.equals(LANGUAGE_PT)){
-                languageCode = LANGUAGE_PT;
-                flagResId = R.drawable.flag_pt_small;
-            } else if(language.equals(german) || language.equals(LANGUAGE_DE)){
-                languageCode = LANGUAGE_DE;
-                flagResId = R.drawable.flag_de_small;
-            }
-            languageView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
-        } catch (Exception e){ }
-        return languageCode;
     }
 
     public static Drawable getLanguageFlagDrawable(Context context, String language){

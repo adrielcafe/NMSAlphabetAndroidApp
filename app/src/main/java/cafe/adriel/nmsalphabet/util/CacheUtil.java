@@ -1,5 +1,7 @@
 package cafe.adriel.nmsalphabet.util;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.Map;
 import cafe.adriel.nmsalphabet.Constant;
 import io.paperdb.Paper;
 
-public class DbUtil {
+public class CacheUtil {
     private static final String BOOK_NAME = "nmsalphabet";
     private static final String BOOK_KEY_WORDS = "alienWords";
     private static final String BOOK_KEY_TRANSLATIONS = "alienWordsTranslations";
@@ -54,9 +56,10 @@ public class DbUtil {
         }
     }
 
-    public static Map<String, String> translateWords(List<String> queryWords, String race, String language){
+    public static Map<String, String> translateWords(List<String> queryWords, String race, String languageCode){
         List<Triple<String, String, Integer>> words = alienWords.get(race);
-        List<String> wordsTranslations = alienWordsTranslations.get(language);
+        Log.e("LANGUAGE", languageCode+"");
+        List<String> wordsTranslations = alienWordsTranslations.get(languageCode);
         Map<String, String> wordsTranslated = new HashMap<>();
         for(String word : queryWords){
             for(Triple<String, String, Integer> w : words) {
