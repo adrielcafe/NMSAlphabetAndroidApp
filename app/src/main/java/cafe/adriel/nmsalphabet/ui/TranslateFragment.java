@@ -162,7 +162,7 @@ public class TranslateFragment extends BaseFragment {
 
     @OnClick(R.id.fab)
     public void pickPicture(){
-        if(Util.isConnected(getContext())) {
+        if(Util.isConnected(getContext(), true)) {
             Util.askForPermissions(getActivity(), new PermissionCallback() {
                 @Override
                 public void permissionGranted() {
@@ -197,7 +197,9 @@ public class TranslateFragment extends BaseFragment {
 
     private void initControls(){
         List<String> races = CacheUtil.getRaces();
-        races.add(0, getString(R.string.select_alien_race));
+        if(!races.get(0).equals(getString(R.string.select_alien_race))) {
+            races.add(0, getString(R.string.select_alien_race));
+        }
 
         racesView.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
         racesView.setBackgroundColor(ThemeUtil.getPrimaryDarkColor(getContext()));
@@ -286,31 +288,29 @@ public class TranslateFragment extends BaseFragment {
     }
 
     private void translatePhrase(){
-        if(Util.isConnected(getContext())) {
-            final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
-            Util.hideSoftKeyboard(getActivity());
-            if(selectedRace == null){
-                selectedRace = CacheUtil.getRaceByPosition(racesView.getSelectedIndex());
-            }
-            if (Util.isNotEmpty(phrase) && selectedRace != null) {
-                translations = new ArrayList<>();
-                translatedPhraseView.setText("");
-                AnalyticsUtil.translateEvent(selectedRace, phrase);
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        final String[] words = phrase.split(" ");
-                        final Map<String, String> translatedWords = CacheUtil
-                                .translateWords(Arrays.asList(words), selectedRace, languageCode);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateTranslatedPhrase(words, translatedWords);
-                            }
-                        });
-                    }
-                });
-            }
+        final String phrase = Util.removeSpecialCharacters(searchView.getText().toString().trim());
+        Util.hideSoftKeyboard(getActivity());
+        if(selectedRace == null){
+            selectedRace = CacheUtil.getRaceByPosition(racesView.getSelectedIndex());
+        }
+        if (Util.isNotEmpty(phrase) && selectedRace != null) {
+            translations = new ArrayList<>();
+            translatedPhraseView.setText("");
+            AnalyticsUtil.translateEvent(selectedRace, phrase);
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    final String[] words = phrase.split(" ");
+                    final Map<String, String> translatedWords = CacheUtil
+                            .translateWords(Arrays.asList(words), selectedRace, languageCode);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateTranslatedPhrase(words, translatedWords);
+                        }
+                    });
+                }
+            });
         }
     }
 

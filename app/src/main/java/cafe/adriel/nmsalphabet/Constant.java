@@ -15,15 +15,20 @@ public class Constant {
 
     public static final String EXTRA_IMAGE_PATH = "imageUri";
 
-    public static final String SETTINGS_GENERAL             = "general";
-    public static final String SETTINGS_GENERAL_LANGUAGE    = "general_language";
-    public static final String SETTINGS_GENERAL_THEME       = "general_theme";
-    public static final String SETTINGS_GENERAL_UPGRADE_PRO = "general_upgrade_pro";
-    public static final String SETTINGS_ABOUT_TRANSLATORS   = "about_translators";
-    public static final String SETTINGS_ABOUT_FEEDBACK      = "about_feedback";
-    public static final String SETTINGS_ABOUT_SHARE         = "about_share";
-    public static final String SETTINGS_ABOUT_RATE          = "about_rate";
-    public static final String SETTINGS_ABOUT_VERSION	    = "about_version";
+    public static final String SETTINGS_GENERAL                 = "general";
+    public static final String SETTINGS_GENERAL_LANGUAGE        = "general_language";
+    public static final String SETTINGS_GENERAL_THEME           = "general_theme";
+    public static final String SETTINGS_GENERAL_UPGRADE_PRO     = "general_upgrade_pro";
+    public static final String SETTINGS_STATISTICS_ATLAS_PATH   = "statistics_atlas_path";
+    public static final String SETTINGS_STATISTICS_GEK          = "statistics_gek";
+    public static final String SETTINGS_STATISTICS_KORVAX       = "statistics_korvax";
+    public static final String SETTINGS_STATISTICS_VIKEEN       = "statistics_vikeen";
+    public static final String SETTINGS_ABOUT_TRANSLATORS       = "about_translators";
+    public static final String SETTINGS_ABOUT_FEEDBACK          = "about_feedback";
+    public static final String SETTINGS_ABOUT_SHARE             = "about_share";
+    public static final String SETTINGS_ABOUT_RATE              = "about_rate";
+    public static final String SETTINGS_ABOUT_VERSION	        = "about_version";
+    public static final String SETTINGS_SHOW_UPDATE_MESSAGE     = "show_update_message";
 
     public static final Map<String, String> ALIEN_RACES = new HashMap<String, String>() {{
         put("atlaspath", "Atlas Path");

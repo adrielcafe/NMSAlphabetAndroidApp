@@ -20,6 +20,7 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.adapter.ThemePreferenceAdapter;
+import cafe.adriel.nmsalphabet.util.CacheUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
@@ -107,6 +108,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         languagePreference = (ListPreference) findPreference(Constant.SETTINGS_GENERAL_LANGUAGE);
         themePreference = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_GENERAL_THEME);
         Preference generalUpgradePro = findPreference(Constant.SETTINGS_GENERAL_UPGRADE_PRO);
+        Preference statisticsAtlasPath = findPreference(Constant.SETTINGS_STATISTICS_ATLAS_PATH);
+        Preference statisticsGek = findPreference(Constant.SETTINGS_STATISTICS_GEK);
+        Preference statisticsKorvax = findPreference(Constant.SETTINGS_STATISTICS_KORVAX);
+        Preference statisticsVikeen = findPreference(Constant.SETTINGS_STATISTICS_VIKEEN);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
         Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
@@ -123,13 +128,19 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             PreferenceCategory general = (PreferenceCategory) findPreference(Constant.SETTINGS_GENERAL);
             general.removePreference(generalUpgradePro);
         }
-        aboutVersion.setSummary(Util.getAppVersionName(getActivity()));
+
+        statisticsAtlasPath.setSummary(CacheUtil.countWords(getContext(), getString(R.string.atlas_path)));
+        statisticsGek.setSummary(CacheUtil.countWords(getContext(), getString(R.string.gek)));
+        statisticsKorvax.setSummary(CacheUtil.countWords(getContext(), getString(R.string.korvax)));
+        statisticsVikeen.setSummary(CacheUtil.countWords(getContext(), getString(R.string.vikeen)));
 
         String language = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_GENERAL_LANGUAGE, LanguageUtil.LANGUAGE_EN);
         this.languagePreference.setSummary(getLanguageEntry(language));
 
         String theme = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_GENERAL_THEME, ThemeUtil.THEME_1);
         themePreference.setSummary(getThemeEntry(theme));
+
+        aboutVersion.setSummary(Util.getAppVersionName(getActivity()));
     }
 
     private void updatePreferences(ListView accountList){

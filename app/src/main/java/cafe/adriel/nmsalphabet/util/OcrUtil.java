@@ -3,7 +3,6 @@ package cafe.adriel.nmsalphabet.util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -35,7 +34,6 @@ public class OcrUtil {
                 }
             } else {
                 text = extractTextWithOcrSpaceApi(activity, image);
-	            Log.e("OCRSPACE", text+"");
             }
             if(text == null){
                 activity.runOnUiThread(new Runnable() {

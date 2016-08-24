@@ -1,13 +1,15 @@
 package cafe.adriel.nmsalphabet.util;
 
-import android.util.Log;
+import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cafe.adriel.nmsalphabet.Constant;
+import cafe.adriel.nmsalphabet.R;
 import io.paperdb.Paper;
 
 public class CacheUtil {
@@ -23,8 +25,14 @@ public class CacheUtil {
         Paper.book().destroy();
         Paper.book(BOOK_NAME)
                 .write(BOOK_KEY_WORDS, TranslationUtil.getAllWords());
-        Paper.book(BOOK_NAME)
-                .write(BOOK_KEY_TRANSLATIONS, TranslationUtil.getAllTranslations());
+        if(!Paper.book(BOOK_NAME).exist(BOOK_KEY_TRANSLATIONS)) {
+            Paper.book(BOOK_NAME)
+                    .write(BOOK_KEY_TRANSLATIONS, TranslationUtil.getAllTranslations());
+        }
+    }
+
+    public static boolean hasCachedData(){
+        return Paper.book(BOOK_NAME).exist(BOOK_KEY_WORDS) && Paper.book(BOOK_NAME).exist(BOOK_KEY_TRANSLATIONS);
     }
 
     private static void loadCachedData(){
@@ -33,6 +41,7 @@ public class CacheUtil {
             for (String race : Constant.ALIEN_RACES.keySet()){
                 alienRaces.add(Constant.ALIEN_RACES.get(race));
             }
+            Collections.sort(alienRaces);
         }
         if(alienWords == null){
             alienWords = Paper.book(BOOK_NAME).read(BOOK_KEY_WORDS);
@@ -58,16 +67,21 @@ public class CacheUtil {
 
     public static Map<String, String> translateWords(List<String> queryWords, String race, String languageCode){
         List<Triple<String, String, Integer>> words = alienWords.get(race);
-        Log.e("LANGUAGE", languageCode+"");
         List<String> wordsTranslations = alienWordsTranslations.get(languageCode);
         Map<String, String> wordsTranslated = new HashMap<>();
-        for(String word : queryWords){
-            for(Triple<String, String, Integer> w : words) {
-                if (w.getB().equalsIgnoreCase(word)) {
-                    wordsTranslated.put(word, wordsTranslations.get(w.getC()));
+        if(words != null) {
+            for (String word : queryWords) {
+                for (Triple<String, String, Integer> w : words) {
+                    if (w.getB().equalsIgnoreCase(word)) {
+                        wordsTranslated.put(word, wordsTranslations.get(w.getC()));
+                    }
                 }
             }
         }
         return wordsTranslated;
+    }
+
+    public static String countWords(Context context, String race){
+        return alienWords.get(race).size() + " " + context.getString(R.string.known_words);
     }
 }

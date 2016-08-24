@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         targetSdkVersion 24
-        versionCode 101
-        versionName "1.0.1"
+        versionCode 110
+        versionName "1.1.0"
         multiDexEnabled true
     }
     productFlavors {
@@ -59,8 +59,8 @@ dependencies {
     compile 'com.android.support:design:24.1.1'
     compile 'com.google.android.gms:play-services-ads:9.4.0'
 
-    apt     'com.jakewharton:butterknife-compiler:8.2.1'
-    compile 'com.jakewharton:butterknife:8.2.1'
+    apt     'com.jakewharton:butterknife-compiler:8.3.0'
+    compile 'com.jakewharton:butterknife:8.3.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
@@ -74,7 +74,6 @@ dependencies {
     compile 'com.mikepenz:iconics-core:2.8.0@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.2@aar'
     compile 'com.github.ybq:Android-SpinKit:1.0.5@aar'
-    compile 'com.github.2359media:EasyAndroidAnimations:0.8@aar'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.4@aar'
     compile 'com.jaredrummler:material-spinner:1.1.0@aar'
     compile 'com.tsengvn:Typekit:1.0.0@aar'

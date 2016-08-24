@@ -7,7 +7,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.parse.Parse;
 import com.parse.ParseConfig;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.tsengvn.typekit.Typekit;
 
@@ -56,7 +55,7 @@ public class App extends MultiDexApplication {
     }
 
     private void initFabric(){
-        if(Util.isConnected(this)) {
+        if(Util.isConnected(this, false)) {
             Fabric fabric = new Fabric.Builder(this)
                     .kits(new Crashlytics(), new Answers())
                     .debuggable(true)

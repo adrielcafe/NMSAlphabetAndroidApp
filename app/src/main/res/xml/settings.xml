@@ -29,6 +29,28 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="statistics"
+        android:title="@string/statistics">
+
+        <Preference
+            android:key="statistics_atlas_path"
+            android:title="@string/atlas_path" />
+
+        <Preference
+            android:key="statistics_gek"
+            android:title="@string/gek" />
+
+        <Preference
+            android:key="statistics_korvax"
+            android:title="@string/korvax" />
+
+        <Preference
+            android:key="statistics_vikeen"
+            android:title="@string/vikeen" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="about"
         android:title="@string/about">
 

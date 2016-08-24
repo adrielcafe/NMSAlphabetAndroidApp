@@ -1,10 +1,13 @@
 package cafe.adriel.nmsalphabet.ui;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.util.AdUtil;
 import cafe.adriel.nmsalphabet.util.Util;
@@ -47,6 +51,12 @@ public class MainActivity extends BaseActivity {
         RateThisApp.onStart(this);
         RateThisApp.showRateDialogIfNeeded(this);
         init();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        showUpdateMsg();
     }
 
     @Override
@@ -104,5 +114,23 @@ public class MainActivity extends BaseActivity {
 
     private void openSettings(){
         startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    private void showUpdateMsg() {
+        if(Util.getSettings(this).getBoolean(Constant.SETTINGS_SHOW_UPDATE_MESSAGE, true)){
+            Util.getSettings(this)
+                    .edit()
+                    .putBoolean(Constant.SETTINGS_SHOW_UPDATE_MESSAGE, false)
+                    .apply();
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.update_msg)
+                    .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .show();
+        }
     }
 }

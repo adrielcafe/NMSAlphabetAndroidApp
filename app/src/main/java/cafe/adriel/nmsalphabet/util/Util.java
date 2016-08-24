@@ -257,13 +257,13 @@ public class Util {
         }
     }
 
-    public static boolean isConnected(final Context context){
+    public static boolean isConnected(final Context context, boolean showToast){
         if(connectivityManager == null) {
             connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         }
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         boolean isConnected = (info != null && info.isConnected() && isConnectionFast(info.getType(), info.getSubtype()));
-        if(!isConnected && context instanceof Activity){
+        if(!isConnected && showToast && context instanceof Activity){
             ((Activity) context).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
