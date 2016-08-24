@@ -3,9 +3,9 @@ package cafe.adriel.nmsalphabet.util;
 import java.io.Serializable;
 
 public class Triple<T, U, V> implements Serializable {
-    T a;
-    U b;
-    V c;
+    private T a;
+    private U b;
+    private V c;
 
     public Triple(T a, U b, V c) {
         this.a = a;

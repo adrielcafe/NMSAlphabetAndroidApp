@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.StringRes;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
@@ -24,7 +23,6 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -38,10 +36,6 @@ import java.util.List;
 
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
-import co.mobiwise.materialintro.animation.MaterialIntroListener;
-import co.mobiwise.materialintro.shape.Focus;
-import co.mobiwise.materialintro.shape.FocusGravity;
-import co.mobiwise.materialintro.view.MaterialIntroView;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pl.tajchert.nammu.Nammu;
@@ -59,12 +53,6 @@ public class Util {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    public static InputFilter alienWordFilter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            String chr = source+"";
-            return chr.isEmpty() || !Character.isLetterOrDigit(chr.charAt(0)) ? "" : chr.toUpperCase();
-        }
-    };
     public static InputFilter alienWordTranslationFilter = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             String chr = source+"";
@@ -163,25 +151,6 @@ public class Util {
                 .show();
     }
 
-    public static void showShowcase(Activity activity, String id, @StringRes int textResId, View view, MaterialIntroListener listener){
-        try {
-            new MaterialIntroView.Builder(activity)
-                    .setUsageId(id)
-                    .setTarget(view)
-                    .setInfoText(activity.getString(textResId))
-                    .setFocusGravity(FocusGravity.CENTER)
-                    .setFocusType(Focus.NORMAL)
-                    .setDelayMillis(250)
-                    .setListener(listener)
-                    .enableIcon(true)
-                    .enableDotAnimation(true)
-                    .enableFadeAnimation(true)
-                    .dismissOnTouch(true)
-                    .performClick(false)
-                    .show();
-        } catch (Exception e){ }
-    }
-
     public static void shareText(Activity activity, String text){
         ShareCompat.IntentBuilder.from(activity)
                 .setType("text/plain")
@@ -216,10 +185,6 @@ public class Util {
         }
     }
 
-    public static InputFilter getWordInputFilter(){
-        return alienWordFilter;
-    }
-
     public static InputFilter getTranslationInputFilter(){
         return alienWordTranslationFilter;
     }
@@ -244,16 +209,6 @@ public class Util {
         }
     }
 
-    public static int getStatusBarHeight(Context context){
-        Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            return resources.getDimensionPixelSize(resourceId);
-        } else {
-            return 0;
-        }
-    }
-
     public static int getNavigationBarHeight(Context context){
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
@@ -268,6 +223,12 @@ public class Util {
         return context.getPackageName();
     }
 
+    public static String getFreePackageName(Context context){
+        return getPackageName(context)
+                .replace("dev", "free")
+                .replace("pro", "free");
+    }
+
     public static String getProPackageName(Context context){
         return getPackageName(context)
                 .replace("dev", "pro")
@@ -275,7 +236,7 @@ public class Util {
     }
 
     public static String getGooglePlayUrl(Context context){
-        return Constant.GOOGLE_PLAY_URL + getPackageName(context);
+        return Constant.GOOGLE_PLAY_URL + getFreePackageName(context);
     }
 
     public static void openUrl(Activity activity, String url){
@@ -296,13 +257,13 @@ public class Util {
         }
     }
 
-    public static boolean isConnected(final Context context){
+    public static boolean isConnected(final Context context, boolean showToast){
         if(connectivityManager == null) {
             connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         }
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         boolean isConnected = (info != null && info.isConnected() && isConnectionFast(info.getType(), info.getSubtype()));
-        if(!isConnected && context instanceof Activity){
+        if(!isConnected && showToast && context instanceof Activity){
             ((Activity) context).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

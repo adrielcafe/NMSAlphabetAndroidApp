@@ -29,70 +29,10 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo"/>
-
-    <LinearLayout
-        android:id="@+id/signin_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="50dp"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <RelativeLayout
-            android:id="@+id/facebook_signin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:padding="15dp"
-            android:orientation="horizontal"
-            android:background="@drawable/button_white"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerHorizontal="true"
-                android:text="{gmi-facebook}"
-                android:textColor="@android:color/black"
-                android:textAppearance="@android:style/TextAppearance.Large"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/signin_facebook"
-                android:textColor="@android:color/black"
-                app:font="custom1"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/anonymous_signin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:orientation="horizontal"
-            android:background="@drawable/button_white_outline"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/not_now"
-                android:textColor="@android:color/white"
-                app:font="custom1"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
+        android:src="@drawable/logo_splash"/>
 
     <com.github.ybq.android.spinkit.SpinKitView
-        android:id="@+id/load"
+        android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="75dp"
@@ -100,6 +40,22 @@
         android:layout_alignParentBottom="true"
         app:SpinKit_Color="@android:color/white"
         app:SpinKit_Style="ThreeBounce" />
+
+    <Button
+        android:id="@+id/enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:padding="15dp"
+        android:text="@string/enter"
+        android:textColor="@android:color/black"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textAllCaps="true"
+        android:background="@drawable/button_white"
+        android:visibility="gone"
+        app:font="custom1"/>
 
     <TextView
         android:id="@+id/app_version"

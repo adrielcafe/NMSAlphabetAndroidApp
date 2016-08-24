@@ -18,16 +18,19 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
-        <com.gigamole.library.ntb.NavigationTabBar
-            android:id="@+id/tabs"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:elevation="0dp"
-            app:ntb_scaled="false"
-            app:ntb_titled="true"
-            app:ntb_title_mode="active"
-            app:ntb_active_color="@android:color/white"
-            app:ntb_inactive_color="@color/bg_gray"/>
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/logo_toolbar"/>
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -37,11 +40,12 @@
         android:background="@color/bg_gray"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+        <fragment
+            android:id="@+id/translate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/ad" />
+            android:layout_above="@+id/ad"
+            class="cafe.adriel.nmsalphabet.ui.TranslateFragment"/>
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/ad"
@@ -53,13 +57,5 @@
             app:adUnitId="@string/main_ad_unit_id"/>
 
     </RelativeLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_behavior="cafe.adriel.nmsalphabet.ui.util.FABScrollBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

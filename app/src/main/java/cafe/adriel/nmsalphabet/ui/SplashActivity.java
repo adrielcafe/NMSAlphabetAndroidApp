@@ -5,40 +5,30 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.easyandroidanimations.library.Animation;
-import com.easyandroidanimations.library.AnimationListener;
-import com.easyandroidanimations.library.FadeInAnimation;
-import com.easyandroidanimations.library.FadeOutAnimation;
 import com.github.ybq.android.spinkit.SpinKitView;
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cafe.adriel.nmsalphabet.App;
-import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
-import cafe.adriel.nmsalphabet.util.AnalyticsUtil;
-import cafe.adriel.nmsalphabet.util.SocialUtil;
+import cafe.adriel.nmsalphabet.util.CacheUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class SplashActivity extends BaseActivity {
 
     @BindView(R.id.atlas)
     ImageView atlasView;
-    @BindView(R.id.signin_layout)
-    LinearLayout signInLayout;
-    @BindView(R.id.load)
-    SpinKitView loadView;
+    @BindView(R.id.loading)
+    SpinKitView loadingView;
+    @BindView(R.id.enter)
+    Button enterView;
     @BindView(R.id.app_version)
     TextView appVersionView;
 
@@ -52,12 +42,6 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     protected void init() {
         Glide.with(this)
                 .load(R.drawable.bg_splash)
@@ -67,120 +51,62 @@ public class SplashActivity extends BaseActivity {
 
         appVersionView.setText(Util.getAppVersionName(this));
 
+        enter(null);
+    }
+
+    @OnClick(R.id.enter)
+    public void enter(View v){
+        setLoading(true);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                if(Util.isConnected(SplashActivity.this)) {
-                    if (!App.forceUpdate(SplashActivity.this)) {
-                        if (hasSignedIn()) {
-                            setLoading(true);
-                            if (hasSignedInWithFacebook()) {
-                                facebookSignIn();
-                            } else {
-                                anonymousSignIn();
-                            }
-                        } else {
-                            setLoading(false);
-                        }
-                    } else {
-                        finish();
-                        startActivity(new Intent(SplashActivity.this, UpdateActivity.class));
-                    }
+                if(Util.isConnected(SplashActivity.this, false)){
+                    enterWithInternet();
                 } else {
-                    setLoading(false);
+                    enterWithoutInternet();
                 }
             }
         });
     }
 
-    @OnClick(R.id.facebook_signin)
-    public void facebookSignIn(){
-        if(Util.isConnected(this)) {
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    setLoading(true);
-                    if(hasSignedInWithFacebook()){
-                        afterSignIn();
-                    } else {
-                        ParseFacebookUtils.logInWithReadPermissionsInBackground(SplashActivity.this, Constant.FACEBOOK_PERMISSIONS, new LogInCallback() {
-                            @Override
-                            public void done(ParseUser user, ParseException err) {
-                                if (user == null) {
-                                    setLoading(false);
-                                } else {
-                                    if (user.isNew()) {
-                                        AnalyticsUtil.signUpEvent("Facebook");
-                                    } else {
-                                        AnalyticsUtil.signInEvent("Facebook");
-                                    }
-                                    AsyncTask.execute(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            SocialUtil.updateFacebookProfile(SplashActivity.this);
-                                            SocialUtil.updateFabricProfile();
-                                            afterSignIn();
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
-                }
-            });
+    private void enterWithInternet(){
+        if (!App.forceUpdate(SplashActivity.this)) {
+            if(Util.isConnected(SplashActivity.this, false)) {
+                CacheUtil.cacheData();
+            }
+            if(CacheUtil.hasCachedData()) {
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                finish();
+            } else {
+                setLoading(false);
+                Util.isConnected(SplashActivity.this, true);
+            }
+        } else {
+            startActivity(new Intent(SplashActivity.this, UpdateActivity.class));
+            finish();
         }
     }
 
-    @OnClick(R.id.anonymous_signin)
-    public void anonymousSignIn(){
-        if(Util.isConnected(this)) {
-            setLoading(true);
-            AnalyticsUtil.signInEvent("Anonymous");
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    afterSignIn();
-                }
-            });
+    private void enterWithoutInternet(){
+        if(CacheUtil.hasCachedData()) {
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            finish();
+        } else {
+            setLoading(false);
+            Util.isConnected(SplashActivity.this, true);
         }
     }
 
-    private void afterSignIn(){
-        App.loadAndCache();
-        Util.getSettings(this).edit().putBoolean(Constant.SETTINGS_HAS_SIGNED_IN, true).apply();
-        startActivity(new Intent(SplashActivity.this, MainActivity.class));
-        finish();
-    }
-
-    private boolean hasSignedIn(){
-        return Util.getSettings(this).getBoolean(Constant.SETTINGS_HAS_SIGNED_IN, false);
-    }
-
-    private boolean hasSignedInWithFacebook(){
-        ParseUser parseUser = ParseUser.getCurrentUser();
-        return parseUser != null && parseUser.isAuthenticated() && parseUser.isLinked("facebook");
-    }
-
-    private void setLoading(final boolean load){
+    private void setLoading(final boolean loading){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final View fadeInView;
-                final View fadeOutView;
-                if(load){
-                    fadeInView = loadView;
-                    fadeOutView = signInLayout;
+                if (loading) {
+                    loadingView.setVisibility(View.VISIBLE);
+                    enterView.setVisibility(View.GONE);
                 } else {
-                    fadeInView = signInLayout;
-                    fadeOutView = loadView;
-                }
-                if(fadeInView.getVisibility() != View.VISIBLE) {
-                    new FadeOutAnimation(fadeOutView).setListener(new AnimationListener() {
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            new FadeInAnimation(fadeInView).animate();
-                        }
-                    }).animate();
+                    loadingView.setVisibility(View.GONE);
+                    enterView.setVisibility(View.VISIBLE);
                 }
             }
         });

@@ -11,21 +11,21 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 public class TextViewClickMovement extends LinkMovementMethod {
-    private final OnTextViewClickMovementListener mListener;
-    private final GestureDetector mGestureDetector;
-    private TextView mWidget;
-    private Spannable mBuffer;
+    private final OnTextViewClickMovementListener listener;
+    private final GestureDetector gestureDetector;
+    private TextView tex;
+    private Spannable spannable;
 
     public TextViewClickMovement(final Context context, final OnTextViewClickMovementListener listener) {
-        mListener = listener;
-        mGestureDetector = new GestureDetector(context, new SimpleOnGestureListener());
+        this.listener = listener;
+        gestureDetector = new GestureDetector(context, new SimpleOnGestureListener());
     }
 
     @Override
     public boolean onTouchEvent(final TextView widget, final Spannable buffer, final MotionEvent event) {
-        mWidget = widget;
-        mBuffer = buffer;
-        mGestureDetector.onTouchEvent(event);
+        tex = widget;
+        spannable = buffer;
+        gestureDetector.onTouchEvent(event);
         return false;
     }
 
@@ -50,15 +50,15 @@ public class TextViewClickMovement extends LinkMovementMethod {
 
         @Override
         public void onLongPress(MotionEvent e) {
-            final String linkText = getLinkText(mWidget, mBuffer, e);
-            if (mListener != null) {
-                mListener.onLongClick(linkText);
+            final String linkText = getLinkText(tex, spannable, e);
+            if (listener != null) {
+                listener.onLongClick(linkText);
             }
         }
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent event) {
-            final String linkText = getLinkText(mWidget, mBuffer, event);
+            final String linkText = getLinkText(tex, spannable, event);
             LinkType linkType = LinkType.NONE;
 
             if (Patterns.PHONE.matcher(linkText).matches()) {
@@ -69,8 +69,8 @@ public class TextViewClickMovement extends LinkMovementMethod {
                 linkType = LinkType.EMAIL_ADDRESS;
             }
 
-            if (mListener != null) {
-                mListener.onLinkClicked(linkText, linkType);
+            if (listener != null) {
+                listener.onLinkClicked(linkText, linkType);
             }
 
             return false;

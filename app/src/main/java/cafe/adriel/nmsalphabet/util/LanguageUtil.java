@@ -5,8 +5,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-import com.jaredrummler.materialspinner.MaterialSpinner;
-
 import java.util.Locale;
 
 import cafe.adriel.nmsalphabet.Constant;
@@ -19,7 +17,7 @@ public class LanguageUtil {
     public static final String LANGUAGE_DE = "de";
 
     public static String getCurrentLanguageCode(Context context){
-        String languageCode = Util.getSettings(context).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, null);
+        String languageCode = Util.getSettings(context).getString(Constant.SETTINGS_GENERAL_LANGUAGE, null);
         if(Util.isEmpty(languageCode)) {
             Configuration conf = context.getResources().getConfiguration();
             switch (conf.locale.getLanguage()){
@@ -34,7 +32,7 @@ public class LanguageUtil {
             }
             Util.getSettings(context)
                     .edit()
-                    .putString(Constant.SETTINGS_ACCOUNT_LANGUAGE, languageCode)
+                    .putString(Constant.SETTINGS_GENERAL_LANGUAGE, languageCode)
                     .apply();
         }
         return languageCode;
@@ -61,36 +59,14 @@ public class LanguageUtil {
         res.updateConfiguration(conf, res.getDisplayMetrics());
     }
 
-    public static String updateLanguageFlag(Context context, MaterialSpinner languageView, String language){
-        String languageCode = null;
-        String english = context.getString(R.string.english);
-        String portuguese = context.getString(R.string.portuguese);
-        String german = context.getString(R.string.german);
-        int flagResId = -1;
-        try {
-            if(language.equals(english) || language.equals(LANGUAGE_EN)){
-                languageCode = LANGUAGE_EN;
-                flagResId = R.drawable.flag_uk_small;
-            } else if(language.equals(portuguese) || language.equals(LANGUAGE_PT)){
-                languageCode = LANGUAGE_PT;
-                flagResId = R.drawable.flag_brazil_small;
-            } else if(language.equals(german) || language.equals(LANGUAGE_DE)){
-                languageCode = LANGUAGE_DE;
-                flagResId = R.drawable.flag_germany_small;
-            }
-            languageView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(flagResId), null, languageView.getCompoundDrawables()[2], null);
-        } catch (Exception e){ }
-        return languageCode;
-    }
-
     public static Drawable getLanguageFlagDrawable(Context context, String language){
         switch (language){
             case LANGUAGE_PT:
-                return context.getResources().getDrawable(R.drawable.flag_brazil_small);
+                return context.getResources().getDrawable(R.drawable.flag_pt_small);
             case LANGUAGE_DE:
-                return context.getResources().getDrawable(R.drawable.flag_germany_small);
+                return context.getResources().getDrawable(R.drawable.flag_de_small);
             default:
-                return context.getResources().getDrawable(R.drawable.flag_uk_small);
+                return context.getResources().getDrawable(R.drawable.flag_en_small);
         }
     }
 

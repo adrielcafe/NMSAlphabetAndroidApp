@@ -55,7 +55,7 @@ public class CropImageActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     public void cropImage(){
-        if(Util.isConnected(this)) {
+        if(Util.isConnected(this, true)) {
             Bitmap croppedImage = cropView.getCroppedBitmap();
             EventBus.getDefault().postSticky(new ImageCroppedEvent(croppedImage));
             finish();
@@ -63,12 +63,15 @@ public class CropImageActivity extends AppCompatActivity {
     }
 
     protected void init() {
-        Glide.with(this).load(imagePath).asBitmap().into(new SimpleTarget<Bitmap>(1024, 1024) {
-            @Override
-            public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                cropView.setImageBitmap(bitmap);
-            }
-        });
+        Glide.with(this)
+                .load(imagePath)
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>(1024, 1024) {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        cropView.setImageBitmap(bitmap);
+                    }
+                });
         Drawable fabIcon = new IconicsDrawable(this)
                 .icon(MaterialDesignIconic.Icon.gmi_crop)
                 .color(Color.WHITE)

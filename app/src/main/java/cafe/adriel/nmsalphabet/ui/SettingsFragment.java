@@ -1,18 +1,14 @@
 package cafe.adriel.nmsalphabet.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
@@ -24,14 +20,15 @@ import cafe.adriel.nmsalphabet.App;
 import cafe.adriel.nmsalphabet.Constant;
 import cafe.adriel.nmsalphabet.R;
 import cafe.adriel.nmsalphabet.ui.adapter.ThemePreferenceAdapter;
+import cafe.adriel.nmsalphabet.util.CacheUtil;
 import cafe.adriel.nmsalphabet.util.LanguageUtil;
 import cafe.adriel.nmsalphabet.util.ThemeUtil;
 import cafe.adriel.nmsalphabet.util.Util;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private ListPreference accountLanguage;
-    private ThemePreferenceAdapter accountTheme;
+    private ListPreference languagePreference;
+    private ThemePreferenceAdapter themePreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +36,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         LanguageUtil.updateLanguage(getActivity());
         addPreferencesFromResource(R.xml.settings);
         init();
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -71,14 +69,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()){
-            case Constant.SETTINGS_ACCOUNT_STATUS:
-                changeStatus();
-                break;
-            case Constant.SETTINGS_ACCOUNT_UPGRADE_PRO:
+            case Constant.SETTINGS_GENERAL_UPGRADE_PRO:
                 upgradePro();
-                break;
-            case Constant.SETTINGS_ABOUT_NEW_RACE:
-                sendNewRace();
                 break;
             case Constant.SETTINGS_ABOUT_FEEDBACK:
                 sendFeedback();
@@ -100,12 +92,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(getActivity() != null) {
             switch (key) {
-                case Constant.SETTINGS_ACCOUNT_LANGUAGE:
-                    String language = sharedPreferences.getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LanguageUtil.LANGUAGE_EN);
+                case Constant.SETTINGS_GENERAL_LANGUAGE:
+                    String language = sharedPreferences.getString(Constant.SETTINGS_GENERAL_LANGUAGE, LanguageUtil.LANGUAGE_EN);
                     changeLanguage(language);
                     break;
-                case Constant.SETTINGS_ACCOUNT_THEME:
-                    String theme = sharedPreferences.getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
+                case Constant.SETTINGS_GENERAL_THEME:
+                    String theme = sharedPreferences.getString(Constant.SETTINGS_GENERAL_THEME, ThemeUtil.THEME_1);
                     changeTheme(theme);
                     break;
             }
@@ -113,43 +105,42 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private void init(){
-        accountLanguage = (ListPreference) findPreference(Constant.SETTINGS_ACCOUNT_LANGUAGE);
-        accountTheme = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_ACCOUNT_THEME);
-        PreferenceCategory account = (PreferenceCategory) findPreference(Constant.SETTINGS_ACCOUNT);
-        Preference accountStatus = findPreference(Constant.SETTINGS_ACCOUNT_STATUS);
-        Preference accountUpgradePro = findPreference(Constant.SETTINGS_ACCOUNT_UPGRADE_PRO);
-        Preference aboutNewRace = findPreference(Constant.SETTINGS_ABOUT_NEW_RACE);
+        languagePreference = (ListPreference) findPreference(Constant.SETTINGS_GENERAL_LANGUAGE);
+        themePreference = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_GENERAL_THEME);
+        Preference generalUpgradePro = findPreference(Constant.SETTINGS_GENERAL_UPGRADE_PRO);
+        Preference statisticsAtlasPath = findPreference(Constant.SETTINGS_STATISTICS_ATLAS_PATH);
+        Preference statisticsGek = findPreference(Constant.SETTINGS_STATISTICS_GEK);
+        Preference statisticsKorvax = findPreference(Constant.SETTINGS_STATISTICS_KORVAX);
+        Preference statisticsVikeen = findPreference(Constant.SETTINGS_STATISTICS_VIKEEN);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
         Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
         Preference aboutRate = findPreference(Constant.SETTINGS_ABOUT_RATE);
         Preference aboutVersion = findPreference(Constant.SETTINGS_ABOUT_VERSION);
 
-        accountStatus.setOnPreferenceClickListener(this);
-        accountUpgradePro.setOnPreferenceClickListener(this);
-        aboutNewRace.setOnPreferenceClickListener(this);
+        generalUpgradePro.setOnPreferenceClickListener(this);
         aboutFeedback.setOnPreferenceClickListener(this);
         aboutTranslators.setOnPreferenceClickListener(this);
         aboutShare.setOnPreferenceClickListener(this);
         aboutRate.setOnPreferenceClickListener(this);
 
-        if(App.isSignedIn()){
-            accountStatus.setTitle(getString(R.string.connected_as) + " " + App.getUser().getName());
-            accountStatus.setSummary(R.string.signout);
-        } else {
-            accountStatus.setTitle(R.string.signin);
-            accountStatus.setSummary(R.string.signin_to_add_translations);
-        }
         if(App.isPro(getActivity())){
-            account.removePreference(accountUpgradePro);
+            PreferenceCategory general = (PreferenceCategory) findPreference(Constant.SETTINGS_GENERAL);
+            general.removePreference(generalUpgradePro);
         }
+
+        statisticsAtlasPath.setSummary(CacheUtil.countWords(getContext(), getString(R.string.atlas_path)));
+        statisticsGek.setSummary(CacheUtil.countWords(getContext(), getString(R.string.gek)));
+        statisticsKorvax.setSummary(CacheUtil.countWords(getContext(), getString(R.string.korvax)));
+        statisticsVikeen.setSummary(CacheUtil.countWords(getContext(), getString(R.string.vikeen)));
+
+        String language = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_GENERAL_LANGUAGE, LanguageUtil.LANGUAGE_EN);
+        this.languagePreference.setSummary(getLanguageEntry(language));
+
+        String theme = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_GENERAL_THEME, ThemeUtil.THEME_1);
+        themePreference.setSummary(getThemeEntry(theme));
+
         aboutVersion.setSummary(Util.getAppVersionName(getActivity()));
-
-        String language = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_ACCOUNT_LANGUAGE, LanguageUtil.LANGUAGE_EN);
-        accountLanguage.setSummary(getLanguageEntry(language));
-
-        String theme = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_ACCOUNT_THEME, ThemeUtil.THEME_1);
-        accountTheme.setSummary(getThemeEntry(theme));
     }
 
     private void updatePreferences(ListView accountList){
@@ -173,33 +164,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
     }
 
-    private void changeStatus() {
-        final Activity activity = getActivity();
-        if(activity != null && isAdded()) {
-            final AlertDialog dialog = Util.showLoadingDialog(activity);
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    App.signOut(activity);
-                    startActivity(new Intent(activity, SplashActivity.class));
-                    activity.finish();
-                    if (MainActivity.getInstance() != null) {
-                        MainActivity.getInstance().finish();
-                    }
-                    dialog.dismiss();
-                }
-            });
-        }
-    }
-
     private void changeLanguage(String language){
-        accountLanguage.setSummary(getLanguageEntry(language));
+        this.languagePreference.setSummary(getLanguageEntry(language));
         Util.restartActivity(MainActivity.getInstance());
         Util.restartActivity(getActivity());
     }
 
     private void changeTheme(String theme){
-        accountTheme.setSummary(getThemeEntry(theme));
+        themePreference.setSummary(getThemeEntry(theme));
         Util.restartActivity(MainActivity.getInstance());
         Util.restartActivity(getActivity());
     }
@@ -210,39 +182,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         startActivity(i);
     }
 
-    private void sendNewRace() {
-        String subject;
-        if(App.isSignedIn()) {
-            subject = String.format("%s - New race discovered by %s [ID: %s]", getString(R.string.app_name), App.getUser().getName(), App.getUser().getObjectId());
-        } else {
-            subject = getString(R.string.app_name) + " - New race discovered";
-        }
-        Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
-        i.putExtra(Intent.EXTRA_SUBJECT, subject);
-        i.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(new StringBuilder()
-                .append("<b>Race Name: </b>")
-                .append("<br>")
-                .append("<b>System and planet where you find her: </b>")
-                .append("<br>")
-                .append("<b>Other info: </b>")
-                .append("<br><br>")
-                .append("<i>* You can attach a photo if you want</i>")
-                .toString())
-        );
-        startActivity(Intent.createChooser(i, getActivity().getString(R.string.feedback)));
-    }
-
     private void showTranslators(){
         startActivity(new Intent(getActivity(), TranslatorsActivity.class));
     }
 
     private void sendFeedback() {
-        String subject;
-        if(App.isSignedIn()) {
-            subject = String.format("%s - Feedback from %s [ID: %s]", getString(R.string.app_name), App.getUser().getName(), App.getUser().getObjectId());
-        } else {
-            subject = getString(R.string.app_name) + " - Feedback";
-        }
+        String subject = getString(R.string.app_name) + " - Feedback";
         Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + Constant.CONTACT_EMAIL));
         i.putExtra(Intent.EXTRA_SUBJECT, subject);
         startActivity(Intent.createChooser(i, getActivity().getString(R.string.feedback)));

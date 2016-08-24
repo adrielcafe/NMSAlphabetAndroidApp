@@ -2,21 +2,18 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_white">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/bg_white"
-        android:weightSum="1">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/controls_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:gravity="center"
+            android:layout_height="wrap_content"
             android:padding="20dp"
             android:orientation="vertical"
             android:background="?colorPrimary"
@@ -25,25 +22,27 @@
             <com.jaredrummler.materialspinner.MaterialSpinner
                 android:id="@+id/races"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="20dp"
                 android:textAppearance="@android:style/TextAppearance.Medium"/>
 
             <RelativeLayout
                 android:id="@+id/search_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp">
+                android:layout_height="50dp"
+                android:layout_marginBottom="5dp"
+                android:padding="10dp">
 
                 <EditText
                     android:id="@+id/search"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/search_clear"
-                    android:singleLine="true"
+                    android:lines="1"
+                    android:maxLines="1"
                     android:hint="@string/type_alien_phrase"
                     android:textColorHint="@color/gray"
                     android:textAppearance="@android:style/TextAppearance.Medium"
@@ -73,8 +72,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:orientation="vertical">
 
@@ -99,7 +97,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_gravity="center"
-                android:background="@color/gray_light"
                 android:visibility="invisible"/>
 
             <ScrollView
@@ -109,7 +106,6 @@
                 android:paddingBottom="20dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:background="@color/bg_white"
                 android:visibility="invisible">
 
                 <TextView
@@ -130,7 +126,7 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|center_vertical"
+        android:layout_gravity="bottom|end|right"
         android:layout_margin="@dimen/fab_margin"/>
 
 </FrameLayout>

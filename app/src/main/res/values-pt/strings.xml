@@ -39,7 +39,7 @@
     <string name="type_alien_phrase">Digite uma frase alienígena</string>
     <string name="best_translation">Melhor Tradução</string>
     <string name="restart_app">Reiniciar Aplicativo</string>
-    <string name="crash_msg">Parece que um buraco negro passou por aqui e quebrou o app</string>
+    <string name="crash_msg">Parece que um buraco negro quebrou o app</string>
     <string name="refresh">Atualizar</string>
     <string name="nothing_found">Nada foi encontrado</string>
     <string name="theme">Tema</string>
@@ -84,5 +84,10 @@
     <string name="intro_translate">Traduza frases alienígenas com sua câmera</string>
     <string name="check_if_phrase_is_correct">Verifique se a frase está correta</string>
     <string name="select_phrase_on_image">Selecione a frase na imagem</string>
+    <string name="general">Geral</string>
+    <string name="enter">Entrar</string>
+    <string name="statistics">Estatísticas</string>
+    <string name="known_words">Palavras conhecidas</string>
+    <string name="update_msg">Olá exploradores!\n\nUma vez que não é possível ver as palavras alienígenas, e as suas traduções, que descobrimos no jogo, NMS αβ agora é um tradutor autônomo.\n\nNovas traduções serão adicionadas a cada dia. Você pode verificar as estatísticas na tela de configurações.\n\nObrigado por sua paciência, nos vemos no centro da galáxia!</string>
 
 </resources>
