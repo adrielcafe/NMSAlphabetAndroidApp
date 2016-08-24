@@ -1,6 +1,6 @@
 ![NMS Alphabet Logo](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/banner.jpg)
 
-> **NMS αβ** is an *unofficial* collaborative translator app for [No Man's Sky](http://no-mans-sky.com).
+> **NMS αβ** is an *unofficial* translator app for [No Man's Sky](http://no-mans-sky.com).
 
 [![Get it on Google Play](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/google-play.png)](https://play.google.com/store/apps/details?id=cafe.adriel.nmsalphabet.free "Get it on Google Play")
 
@@ -10,18 +10,18 @@
 ## Description
 With NMS αβ (Alphabet) you can translate entire sentences of alien languages found in the procedural universe of No Man's Sky.
 
-This is a collaborative dictionary, we count on you to share your own translations (which you will learn while playing).
-
 Features:
-* [OCR](https://en.wikipedia.org/wiki/Optical_character_recognition) support: You can take a picture of an alien phrase on your TV or monitor and the app will search for the best translation
-* Add, share, and manage translations you have learned to help other players
-* Multi-Language: English, Português, Deutsch
-* 5 themes inspired on game
+- [OCR](https://en.wikipedia.org/wiki/Optical_character_recognition) support: You can take a picture of an alien phrase on your TV or monitor and the app will search for the best translation
+- Multi-Language: English, Português, Deutsch
+- Translate words from Korvax, Gek, VI'keen and Atlas Path
+- Translate for 10 languages: English, Português, Deutsch, Italiano, Français, Español, Nederlandse, Pусский, 日本語 and 한국말 
+- 5 themes inspired on game
 
 A [Web version](https://github.com/adrielcafe/NMSAlphabetWeb) is on the way, stay tuned!
 
 ## Screenshots
-![NMS Alphabet Screenshot 1](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/nms-alphabet-1.jpg) ![NMS Alphabet Screenshot 2](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/nms-alphabet-2.jpg) ![NMS Alphabet Screenshot 3](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/nms-alphabet-3.jpg) ![NMS Alphabet Screenshot 4](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/nms-alphabet-4.jpg)
+![NMS Alphabet Screenshot 1](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/nms-alphabet-1.jpg) ![NMS Alphabet Screenshot 2](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/nms-alphabet-2.jpg) 
+![NMS Alphabet Screenshot 3](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/nms-alphabet-3.jpg) ![NMS Alphabet Screenshot 4](https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/images/nms-alphabet-4.jpg)
  
 ## License
 > The MIT License (MIT)

@@ -17,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class TranslationUtil {
-    private static final String BASE_URL = "https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/dev/alienwords";
+    private static final String BASE_URL = "https://raw.githubusercontent.com/adrielcafe/NMSAlphabetAndroidApp/master/alienwords";
     private static final String RACE_WORDS_URL = BASE_URL + "/%s.txt";
     private static final String TRANSLATIONS_URL = BASE_URL + "/translations/%s.txt";
 
