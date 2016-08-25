@@ -129,10 +129,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             general.removePreference(generalUpgradePro);
         }
 
-        statisticsAtlasPath.setSummary(CacheUtil.countWords(getContext(), getString(R.string.atlas_path)));
-        statisticsGek.setSummary(CacheUtil.countWords(getContext(), getString(R.string.gek)));
-        statisticsKorvax.setSummary(CacheUtil.countWords(getContext(), getString(R.string.korvax)));
-        statisticsVikeen.setSummary(CacheUtil.countWords(getContext(), getString(R.string.vikeen)));
+        statisticsAtlasPath.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.atlas_path)));
+        statisticsGek.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.gek)));
+        statisticsKorvax.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.korvax)));
+        statisticsVikeen.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.vikeen)));
 
         String language = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_GENERAL_LANGUAGE, LanguageUtil.LANGUAGE_EN);
         this.languagePreference.setSummary(getLanguageEntry(language));

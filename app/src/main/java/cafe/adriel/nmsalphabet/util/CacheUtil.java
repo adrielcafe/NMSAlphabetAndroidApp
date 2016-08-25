@@ -27,7 +27,7 @@ public class CacheUtil {
                 .write(BOOK_KEY_WORDS, TranslationUtil.getAllWords());
         if(!Paper.book(BOOK_NAME).exist(BOOK_KEY_TRANSLATIONS)) {
             Paper.book(BOOK_NAME)
-                    .write(BOOK_KEY_TRANSLATIONS, TranslationUtil.getAllTranslations());
+                .write(BOOK_KEY_TRANSLATIONS, TranslationUtil.getAllTranslations());
         }
     }
 
