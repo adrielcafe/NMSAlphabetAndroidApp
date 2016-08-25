@@ -244,7 +244,9 @@ public class TranslateFragment extends BaseFragment {
         searchView.post(new Runnable() {
             @Override
             public void run() {
-                racesView.setHeight(searchLayout.getHeight());
+                if(racesView != null && searchLayout != null) {
+                    racesView.setHeight(searchLayout.getHeight());
+                }
             }
         });
     }
