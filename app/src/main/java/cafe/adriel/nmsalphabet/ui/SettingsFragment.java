@@ -111,7 +111,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Preference statisticsAtlasPath = findPreference(Constant.SETTINGS_STATISTICS_ATLAS_PATH);
         Preference statisticsGek = findPreference(Constant.SETTINGS_STATISTICS_GEK);
         Preference statisticsKorvax = findPreference(Constant.SETTINGS_STATISTICS_KORVAX);
-        Preference statisticsVikeen = findPreference(Constant.SETTINGS_STATISTICS_VIKEEN);
+        Preference statisticsVykeen = findPreference(Constant.SETTINGS_STATISTICS_VYKEEN);
         Preference aboutFeedback = findPreference(Constant.SETTINGS_ABOUT_FEEDBACK);
         Preference aboutTranslators = findPreference(Constant.SETTINGS_ABOUT_TRANSLATORS);
         Preference aboutShare = findPreference(Constant.SETTINGS_ABOUT_SHARE);
@@ -132,7 +132,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         statisticsAtlasPath.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.atlas_path)));
         statisticsGek.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.gek)));
         statisticsKorvax.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.korvax)));
-        statisticsVikeen.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.vikeen)));
+        statisticsVykeen.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.vykeen)));
 
         String language = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constant.SETTINGS_GENERAL_LANGUAGE, LanguageUtil.LANGUAGE_EN);
         this.languagePreference.setSummary(getLanguageEntry(language));

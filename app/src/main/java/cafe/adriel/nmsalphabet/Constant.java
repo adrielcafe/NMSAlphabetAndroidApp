@@ -22,7 +22,7 @@ public class Constant {
     public static final String SETTINGS_STATISTICS_ATLAS_PATH   = "statistics_atlas_path";
     public static final String SETTINGS_STATISTICS_GEK          = "statistics_gek";
     public static final String SETTINGS_STATISTICS_KORVAX       = "statistics_korvax";
-    public static final String SETTINGS_STATISTICS_VIKEEN       = "statistics_vikeen";
+    public static final String SETTINGS_STATISTICS_VYKEEN       = "statistics_vykeen";
     public static final String SETTINGS_ABOUT_TRANSLATORS       = "about_translators";
     public static final String SETTINGS_ABOUT_FEEDBACK          = "about_feedback";
     public static final String SETTINGS_ABOUT_SHARE             = "about_share";
@@ -34,7 +34,7 @@ public class Constant {
         put("atlaspath", "Atlas Path");
         put("gek", "Gek");
         put("korvax", "Korvax");
-        put("vikeen", "Vi'keen");
+        put("vykeen", "Vy'keen");
     }};
     
     public static final Map<String, String> TRANSLATION_LANGUAGES = new HashMap<String, String>() {{

@@ -13,7 +13,7 @@ With NMS αβ (Alphabet) you can translate entire sentences of alien languages f
 Features:
 - [OCR](https://en.wikipedia.org/wiki/Optical_character_recognition) support: You can take a picture of an alien phrase on your TV or monitor and the app will search for the best translation
 - Multi-Language: English, Português, Deutsch
-- Translate words from Korvax, Gek, VI'keen and Atlas Path
+- Translate words from Korvax, Gek, Vy'keen and Atlas Path
 - Translate for 10 languages: English, Português, Deutsch, Italiano, Français, Español, Nederlandse, Pусский, 日本語 and 한국말 
 - 5 themes inspired on game
 

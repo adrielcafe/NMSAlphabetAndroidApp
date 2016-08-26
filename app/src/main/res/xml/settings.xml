@@ -45,8 +45,8 @@
             android:title="@string/korvax" />
 
         <Preference
-            android:key="statistics_vikeen"
-            android:title="@string/vikeen" />
+            android:key="statistics_vykeen"
+            android:title="@string/vykeen" />
 
     </PreferenceCategory>
 
