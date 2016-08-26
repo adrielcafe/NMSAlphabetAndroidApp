@@ -81,9 +81,11 @@ public class TranslationUtil {
         String url = String.format(RACE_WORDS_URL, race);
         List<String> words = getListFromUrl(url);
         for(String word : words){
-            String[] wordWithTranslationIndex = word.split(" ");
-            int translationIndex = Integer.parseInt(wordWithTranslationIndex[0]) - 1;
-            wordsTriple.add(new Triple<>(race, wordWithTranslationIndex[1], translationIndex));
+            try {
+                String[] wordWithTranslationIndex = word.split(" ");
+                int translationIndex = Integer.parseInt(wordWithTranslationIndex[0]) - 1;
+                wordsTriple.add(new Triple<>(race, wordWithTranslationIndex[1], translationIndex));
+            } catch (Exception e){ }
         }
         return wordsTriple;
     }
