@@ -69,9 +69,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()){
-            case Constant.SETTINGS_GENERAL_UPGRADE_PRO:
-                upgradePro();
-                break;
             case Constant.SETTINGS_ABOUT_FEEDBACK:
                 sendFeedback();
                 break;
@@ -107,7 +104,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void init(){
         languagePreference = (ListPreference) findPreference(Constant.SETTINGS_GENERAL_LANGUAGE);
         themePreference = (ThemePreferenceAdapter) findPreference(Constant.SETTINGS_GENERAL_THEME);
-        Preference generalUpgradePro = findPreference(Constant.SETTINGS_GENERAL_UPGRADE_PRO);
         Preference statisticsAtlasPath = findPreference(Constant.SETTINGS_STATISTICS_ATLAS_PATH);
         Preference statisticsGek = findPreference(Constant.SETTINGS_STATISTICS_GEK);
         Preference statisticsKorvax = findPreference(Constant.SETTINGS_STATISTICS_KORVAX);
@@ -118,16 +114,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         Preference aboutRate = findPreference(Constant.SETTINGS_ABOUT_RATE);
         Preference aboutVersion = findPreference(Constant.SETTINGS_ABOUT_VERSION);
 
-        generalUpgradePro.setOnPreferenceClickListener(this);
         aboutFeedback.setOnPreferenceClickListener(this);
         aboutTranslators.setOnPreferenceClickListener(this);
         aboutShare.setOnPreferenceClickListener(this);
         aboutRate.setOnPreferenceClickListener(this);
-
-        if(App.isPro(getActivity())){
-            PreferenceCategory general = (PreferenceCategory) findPreference(Constant.SETTINGS_GENERAL);
-            general.removePreference(generalUpgradePro);
-        }
 
         statisticsAtlasPath.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.atlas_path)));
         statisticsGek.setSummary(CacheUtil.countWords(getActivity(), getString(R.string.gek)));
@@ -174,12 +164,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         themePreference.setSummary(getThemeEntry(theme));
         Util.restartActivity(MainActivity.getInstance());
         Util.restartActivity(getActivity());
-    }
-
-    private void upgradePro(){
-        Uri marketUri = Uri.parse(Constant.MARKET_URI + Util.getProPackageName(getActivity()));
-        Intent i = new Intent(Intent.ACTION_VIEW, marketUri);
-        startActivity(i);
     }
 
     private void showTranslators(){

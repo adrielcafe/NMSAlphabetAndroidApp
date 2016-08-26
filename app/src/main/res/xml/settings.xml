@@ -21,11 +21,6 @@
             android:entryValues="@array/theme_values"
             android:defaultValue="theme1"/>
 
-        <Preference
-            android:key="general_upgrade_pro"
-            android:title="@string/upgrade_to_pro"
-            android:summary="@string/upgrade_to_pro_summary" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
