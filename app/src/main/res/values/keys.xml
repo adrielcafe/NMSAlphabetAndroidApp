@@ -5,13 +5,11 @@
         <string name="parse_app_id" translatable="false">20A2FAB7ED2645B4D3B25DCC372AB208AF62DDB5251D72733924045CE7F3781D</string>
     -->
 
+    <string name="play_public_key" translatable="false">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnFWo6f5XYy0lHoeMkrbMtVotzNoQM5aGOtUdzWfBXQrPsQV/X4ox7YVzP937aAPPrptGaQ6FnoxKvMesEfOjiyf03BCSpuvzBB+FktbygLU1mer4AhDOzFeP/IZwgya9wo9BZHJsOD9OaXNCrmq3pVicLSAxRd5bEIVj3ZFtQz/bzBxDThAitZ7qTU6RHdADCuK5cBZMmRd0q9xsz+YXQx+oAl4j6V14DnqTUYU4qjBIRWhZPx+mbMGxbIA0DoSLqfZej9x1TgrrkcTfqX/f612YJLoUELVZ7qxqk9xOey6BsoZ4ZXrXnKAumOYvjvZ5HVrPnk36VbeBUOlRHRj0mQIDAQAB</string>
     <string name="parse_app_id" translatable="false">opu6rH8YJpyQew8ohv3k30oAsQD1VC5qKj5hn2Bk</string>
     <string name="parse_key" translatable="false">dgGqdW3dmnKGZ4TiR7cGWbFhXoqQJz3fkDal51SD</string>
-    <string name="facebook_app_id" translatable="false">987056394665556</string>
     <string name="google_vision_key" translatable="false">AIzaSyCpE4Xz221f9pDkd9j1wlsR5HKaQik8Tr4</string>
     <string name="ocr_space_key" translatable="false">55eb5409ba88957</string>
-    <string name="main_ad_unit_id" translatable="false">ca-app-pub-4970231820354491/3571842967</string>
-    <string name="add_translation_ad_unit_id" translatable="false">ca-app-pub-4970231820354491/8002042564</string>
-    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-4970231820354491/9059973360</string>
+    <string name="ad_unit_id" translatable="false">ca-app-pub-4970231820354491/3571842967</string>
 
 </resources>

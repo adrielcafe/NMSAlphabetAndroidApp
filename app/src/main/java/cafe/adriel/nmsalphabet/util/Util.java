@@ -158,6 +158,10 @@ public class Util {
                 .startChooser();
     }
 
+    public static boolean matchesBillingPayload(String payload){
+        return Constant.BILLING_PAYLOAD.equals(payload);
+    }
+
     public static void askForPermissions(final Activity activity, PermissionCallback callback){
         List<String> missingPermissions = new ArrayList<>();
         for(int i = 0; i < PERMISSIONS.length; i++){

@@ -13,6 +13,11 @@ public class Constant {
     public static final String GOOGLE_PLAY_URL  = "https://play.google.com/store/apps/details?id=";
     public static final String MARKET_URI       = "market://details?id=";
 
+    public static final int REQUEST_PRO_UPGRADE = 0;
+
+    public static final String SKU_PRO_UPGRADE = "pro_upgrade";
+    public static final String BILLING_PAYLOAD = "d0872fa8-a955-4137-9aae-f1c5e8af9941";
+
     public static final String EXTRA_IMAGE_PATH = "imageUri";
 
     public static final String SETTINGS_GENERAL_LANGUAGE        = "general_language";
@@ -26,7 +31,7 @@ public class Constant {
     public static final String SETTINGS_ABOUT_SHARE             = "about_share";
     public static final String SETTINGS_ABOUT_RATE              = "about_rate";
     public static final String SETTINGS_ABOUT_VERSION	        = "about_version";
-    public static final String SETTINGS_SHOW_UPDATE_MESSAGE     = "show_update_message";
+    public static final String SETTINGS_IS_PRO                  = "is_pro";
 
     public static final Map<String, String> ALIEN_RACES = new HashMap<String, String>() {{
         put("atlaspath", "Atlas Path");

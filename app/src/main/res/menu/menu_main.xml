@@ -5,9 +5,15 @@
     tools:context=".ui.MainActivity">
 
     <item
+        android:id="@+id/pro_upgrade"
+        android:title="@string/upgrade_to_pro"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/settings"
         android:title="@string/settings"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         app:showAsAction="always" />
 
 </menu>
