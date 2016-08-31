@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cafe.adriel.nmsalphabet">
 
+    <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -77,18 +78,10 @@
             android:theme="@style/AppTheme1.NoActionBar.Transparent"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-        <activity
-            android:label="@string/app_name"
-            android:name="com.facebook.FacebookActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="ddc31cab4f4e58777548048f200abae359a82d7b"/>
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
         <meta-data
             android:name="com.parse.APPLICATION_ID"
             android:value="@string/parse_app_id" />

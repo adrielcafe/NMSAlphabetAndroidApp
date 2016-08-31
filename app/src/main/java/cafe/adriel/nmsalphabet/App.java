@@ -43,8 +43,6 @@ public class App extends MultiDexApplication {
 
         initFabric();
         initParse();
-
-//        Util.printAppKeyHash(this);
     }
 
     @Subscribe(sticky = true)
@@ -71,8 +69,16 @@ public class App extends MultiDexApplication {
         ParseUser.enableRevocableSessionInBackground();
     }
 
+    public static void setIsPro(Context context, boolean isPro){
+        Util.getSettings(context)
+                .edit()
+                .putBoolean(Constant.SETTINGS_IS_PRO, isPro)
+                .apply();
+    }
+
     public static boolean isPro(Context context){
-        return Util.getPackageName(context).equals(Util.getProPackageName(context));
+        return Util.getSettings(context)
+                .getBoolean(Constant.SETTINGS_IS_PRO, false);
     }
 
     public static boolean forceUpdate(Context context){

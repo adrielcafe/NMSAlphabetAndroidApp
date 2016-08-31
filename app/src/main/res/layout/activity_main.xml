@@ -54,7 +54,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             app:adSize="SMART_BANNER"
-            app:adUnitId="@string/main_ad_unit_id"/>
+            app:adUnitId="@string/ad_unit_id"/>
 
     </RelativeLayout>
 
