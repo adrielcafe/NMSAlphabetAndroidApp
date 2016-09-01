@@ -8,8 +8,8 @@ android {
     buildToolsVersion "24.0.1"
     defaultConfig {
         targetSdkVersion 24
-        versionCode 115
-        versionName "1.1.5"
+        versionCode 116
+        versionName "1.1.6"
         multiDexEnabled true
     }
     productFlavors {
