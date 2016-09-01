@@ -179,7 +179,11 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void proUpgrade() {
-        billingHelper.launchPurchaseFlow(this, Constant.SKU_PRO_UPGRADE, Constant.REQUEST_PRO_UPGRADE, this, Constant.BILLING_PAYLOAD);
+        try {
+            billingHelper.launchPurchaseFlow(this, Constant.SKU_PRO_UPGRADE, Constant.REQUEST_PRO_UPGRADE, this, Constant.BILLING_PAYLOAD);
+        } catch (Exception e){
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
+        }
     }
 
     private void openSettings(){

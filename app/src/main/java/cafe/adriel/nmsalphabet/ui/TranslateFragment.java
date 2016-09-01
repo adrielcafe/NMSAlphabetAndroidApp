@@ -215,7 +215,6 @@ public class TranslateFragment extends BaseFragment {
         });
 
         searchLayout.setBackground(ThemeUtil.getHeaderControlDrawable(getContext()));
-        searchView.setFilters(new InputFilter[] { Util.getTranslationInputFilter() });
         searchView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

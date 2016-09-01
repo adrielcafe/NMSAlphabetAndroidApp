@@ -53,17 +53,6 @@ public class Util {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    public static InputFilter alienWordTranslationFilter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            String chr = source+"";
-            if(chr.isEmpty() || chr.equals(" ") || chr.equals("-")){
-                return null;
-            } else {
-                return !Character.isLetterOrDigit(chr.charAt(0)) ? "" : chr.toUpperCase();
-            }
-        }
-    };
-
     private static ConnectivityManager connectivityManager;
     private static String deviceId;
 
@@ -187,10 +176,6 @@ public class Util {
             InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }
-    }
-
-    public static InputFilter getTranslationInputFilter(){
-        return alienWordTranslationFilter;
     }
 
     public static SharedPreferences getSettings(Context context){
